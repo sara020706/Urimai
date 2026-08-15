@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Emblem: Protective Shield with Radiant Chakra / Sprout in 66dp safe zone (centered around 54,54) -->
+    
+    <!-- Outer Shield Glow / Border -->
+    <path
+        android:pathData="M54,26 C68,26 78,32 78,46 C78,64 54,80 54,80 C54,80 30,64 30,46 C30,32 40,26 54,26 Z"
+        android:strokeWidth="2.5"
+        android:strokeColor="#FFB020"
+        android:fillColor="#15FFFFFF" />
+        
+    <!-- Shield Core -->
+    <path
+        android:pathData="M54,30 C65,30 74,35 74,47 C74,61 54,75 54,75 C54,75 34,61 34,47 C34,35 43,30 54,30 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="30"
+                android:endX="54"
+                android:endY="75"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF9E1B" />
+                <item android:offset="1.0" android:color="#E65100" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Inner Civic Wheel / Ashoka Chakra rays motif -->
+    <path
+        android:pathData="M54,48m-11,0a11,11 0 1,0 22,0a11,11 0 1,0 -22,0"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M54,48m-8,0a8,8 0 1,0 16,0a8,8 0 1,0 -16,0"
+        android:fillColor="#0D2744" />
+    <path
+        android:pathData="M54,48m-3,0a3,3 0 1,0 6,0a3,3 0 1,0 -6,0"
+        android:fillColor="#FFB020" />
+
+    <!-- 8 Chakra Spokes -->
+    <path
+        android:pathData="M54,40 L54,56 M46,48 L62,48 M48.3,42.3 L59.7,53.7 M48.3,53.7 L59.7,42.3"
+        android:strokeWidth="1.2"
+        android:strokeColor="#FFFFFF" />
+
+    <!-- Entitlement / Star accent on top -->
+    <path
+        android:pathData="M54,23 L55.5,26.5 L59,27 L56.5,29.5 L57,33 L54,31 L51,33 L51.5,29.5 L49,27 L52.5,26.5 Z"
+        android:fillColor="#FFD54F" />
+</vector>

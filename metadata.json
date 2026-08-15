@@ -1,0 +1,6 @@
+{
+  "name": "Urimai",
+  "description": "AI-assisted Government Scheme & Form Eligibility Assistant for Indian citizens",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
