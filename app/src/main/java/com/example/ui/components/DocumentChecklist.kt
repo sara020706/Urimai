@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.data.local.UploadedDocumentEntity
 import com.example.data.model.SchemeDocument
 import com.example.ui.theme.*
 
@@ -25,6 +26,9 @@ fun DocumentChecklist(
     requiredDocuments: List<SchemeDocument>,
     ownedDocuments: Set<String>,
     onToggleDocument: (String) -> Unit,
+    uploadedDocuments: List<UploadedDocumentEntity> = emptyList(),
+    onUploadDocument: (documentName: String, fileUri: String, fileName: String, mimeType: String?) -> Unit = { _, _, _, _ -> },
+    onRemoveUpload: (UploadedDocumentEntity) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val readyDocs = requiredDocuments.filter { doc ->
@@ -171,6 +175,18 @@ fun DocumentChecklist(
                                 style = MaterialTheme.typography.bodySmall,
                                 fontSize = 11.sp,
                                 color = TextTertiaryLight
+                            )
+
+                            Spacer(modifier = Modifier.height(6.dp))
+
+                            val existingUpload = uploadedDocuments.firstOrNull { it.documentName == doc.name }
+                            DocumentUploadRow(
+                                documentName = doc.name,
+                                existingUpload = existingUpload,
+                                onUpload = { fileUri, fileName, mimeType ->
+                                    onUploadDocument(doc.name, fileUri, fileName, mimeType)
+                                },
+                                onRemove = onRemoveUpload
                             )
                         }
                     }

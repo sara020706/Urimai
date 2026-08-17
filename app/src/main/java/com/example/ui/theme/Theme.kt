@@ -1,7 +1,6 @@
 package com.example.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -61,7 +60,10 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun MyApplicationTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    // The UI is designed exclusively against the light civic palette (many composables use
+    // hardcoded light colors like CivicNavy900 for text). Following the system dark theme here
+    // would make that text unreadable against a dark background, so we always render light.
+    darkTheme: Boolean = false,
     dynamicColor: Boolean = false, // Use our handcrafted civic theme for consistent branding
     content: @Composable () -> Unit,
 ) {

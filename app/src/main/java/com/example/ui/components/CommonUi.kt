@@ -11,6 +11,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -106,30 +110,70 @@ fun LanguageSelector(
     onLanguageSelected: (AppLanguage) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
-            .background(CivicNavy50)
-            .border(1.dp, BorderLight, RoundedCornerShape(24.dp))
-            .padding(3.dp),
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        AppLanguage.entries.forEach { lang ->
-            val isSelected = lang == currentLanguage
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(if (isSelected) CivicNavy800 else Color.Transparent)
-                    .clickable { onLanguageSelected(lang) }
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
-                    .testTag("lang_${lang.code}"),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = lang.nativeLabel,
-                    color = if (isSelected) Color.White else CivicNavy700,
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        Row(
+            modifier = Modifier
+                .clip(RoundedCornerShape(20.dp))
+                .background(CivicNavy50)
+                .border(1.dp, BorderLight, RoundedCornerShape(20.dp))
+                .clickable { expanded = true }
+                .padding(horizontal = 10.dp, vertical = 6.dp)
+                .testTag("language_selector_button"),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Translate,
+                contentDescription = "Change language",
+                tint = CivicNavy700,
+                modifier = Modifier.size(15.dp)
+            )
+            Text(
+                text = currentLanguage.nativeLabel,
+                color = CivicNavy800,
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = null,
+                tint = CivicNavy700,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            AppLanguage.entries.forEach { lang ->
+                val isSelected = lang == currentLanguage
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = lang.nativeLabel,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            color = if (isSelected) CivicNavy800 else TextSecondaryLight
+                        )
+                    },
+                    onClick = {
+                        onLanguageSelected(lang)
+                        expanded = false
+                    },
+                    trailingIcon = {
+                        if (isSelected) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = null,
+                                tint = CivicNavy800,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    },
+                    modifier = Modifier.testTag("lang_option_${lang.code}")
                 )
             }
         }

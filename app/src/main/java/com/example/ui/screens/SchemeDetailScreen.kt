@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.data.local.UploadedDocumentEntity
 import com.example.data.model.*
 import com.example.ui.components.*
 import com.example.ui.theme.*
@@ -46,6 +47,10 @@ fun SchemeDetailScreen(
     onReloadExplanation: () -> Unit,
     // Document toggle
     onToggleDocument: (String) -> Unit,
+    // On-device document uploads
+    uploadedDocuments: List<UploadedDocumentEntity> = emptyList(),
+    onUploadDocument: (documentName: String, fileUri: String, fileName: String, mimeType: String?) -> Unit = { _, _, _, _ -> },
+    onRemoveUpload: (UploadedDocumentEntity) -> Unit = {},
     // Navigation to edit profile for missing criteria
     onNavigateToEditProfile: () -> Unit,
     // AI Q&A Chat
@@ -400,7 +405,10 @@ fun SchemeDetailScreen(
                 DocumentChecklist(
                     requiredDocuments = matchResult.requiredDocuments,
                     ownedDocuments = profile.ownedDocuments,
-                    onToggleDocument = onToggleDocument
+                    onToggleDocument = onToggleDocument,
+                    uploadedDocuments = uploadedDocuments,
+                    onUploadDocument = onUploadDocument,
+                    onRemoveUpload = onRemoveUpload
                 )
             }
 

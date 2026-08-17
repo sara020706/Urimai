@@ -33,6 +33,7 @@ fun ProfileViewEditScreen(
     onProfileChange: (UserProfile) -> Unit,
     onSaveAndRecalculate: () -> Unit,
     onBack: () -> Unit,
+    onLogOut: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var editableProfile by remember { mutableStateOf(profile) }
@@ -56,56 +57,6 @@ fun ProfileViewEditScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Preset Demo Switcher
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = CivicNavy50),
-                border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
-            ) {
-                Column(
-                    modifier = Modifier.padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "Quick Load Demo Profile:",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = CivicNavy800
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        PresetButton(
-                            label = "Arun (Student)",
-                            onClick = {
-                                editableProfile = UserProfile.DEMO_ARUN_STUDENT
-                                onProfileChange(UserProfile.DEMO_ARUN_STUDENT)
-                            },
-                            modifier = Modifier.weight(1f)
-                        )
-                        PresetButton(
-                            label = "Meena (Farmer)",
-                            onClick = {
-                                editableProfile = UserProfile.DEMO_MEENA_FARMER
-                                onProfileChange(UserProfile.DEMO_MEENA_FARMER)
-                            },
-                            modifier = Modifier.weight(1f)
-                        )
-                        PresetButton(
-                            label = "Rajesh (Biz)",
-                            onClick = {
-                                editableProfile = UserProfile.DEMO_RAJESH_ENTREPRENEUR
-                                onProfileChange(UserProfile.DEMO_RAJESH_ENTREPRENEUR)
-                            },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-
             // Editable Card
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -244,6 +195,21 @@ fun ProfileViewEditScreen(
             }
 
             PrivacyNoticeCard()
+
+            OutlinedButton(
+                onClick = onLogOut,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(46.dp)
+                    .testTag("log_out_button"),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = CrimsonPrimary),
+                border = ButtonDefaults.outlinedButtonBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(CrimsonPrimary.copy(alpha = 0.4f)))
+            ) {
+                Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(6.dp))
+                Text("Log Out", fontWeight = FontWeight.Bold)
+            }
         }
 
         // Bottom Save CTA
@@ -302,31 +268,6 @@ private fun AttributeCheckboxRow(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = CivicNavy900
-        )
-    }
-}
-
-@Composable
-private fun PresetButton(
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(SurfaceLight)
-            .border(1.dp, BorderLight, RoundedCornerShape(8.dp))
-            .clickable { onClick() }
-            .padding(vertical = 6.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            fontWeight = FontWeight.SemiBold,
-            color = CivicNavy800,
-            fontSize = 11.sp
         )
     }
 }

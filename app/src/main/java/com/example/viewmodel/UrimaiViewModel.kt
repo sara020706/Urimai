@@ -1,9 +1,14 @@
 package com.example.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ai.UrimaiAiService
+import com.example.data.local.UploadedDocumentEntity
 import com.example.data.model.*
+import com.example.data.repository.AuthRepository
+import com.example.data.repository.AuthResult
+import com.example.data.repository.DocumentRepository
 import com.example.data.repository.SchemeRepository
 import com.example.engine.EligibilityEngine
 import kotlinx.coroutines.delay
@@ -17,12 +22,103 @@ data class ChatMessage(
     val timestamp: Long = System.currentTimeMillis()
 )
 
-class UrimaiViewModel : ViewModel() {
+data class AuthUiState(
+    val isLoggedIn: Boolean = false,
+    val userId: Long? = null,
+    val displayName: String? = null,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
+)
 
-    private val _userProfile = MutableStateFlow(UserProfile.DEMO_ARUN_STUDENT)
+class UrimaiViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val authRepository = AuthRepository(application)
+    private val documentRepository = DocumentRepository(application)
+
+    private val _authState = MutableStateFlow(AuthUiState())
+    val authState: StateFlow<AuthUiState> = _authState.asStateFlow()
+
+    val uploadedDocuments: StateFlow<List<UploadedDocumentEntity>> = _authState
+        .map { it.userId }
+        .distinctUntilChanged()
+        .flatMapLatest { userId ->
+            if (userId == null) flowOf(emptyList()) else documentRepository.observeForUser(userId)
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    fun logIn(username: String, password: String) {
+        viewModelScope.launch {
+            _authState.value = _authState.value.copy(isLoading = true, errorMessage = null)
+            when (val result = authRepository.logIn(username, password)) {
+                is AuthResult.Success -> {
+                    _authState.value = AuthUiState(
+                        isLoggedIn = true,
+                        userId = result.userId,
+                        displayName = result.displayName
+                    )
+                    _userProfile.value = UserProfile(name = result.displayName)
+                }
+                is AuthResult.Failure -> _authState.value = _authState.value.copy(
+                    isLoading = false,
+                    errorMessage = result.message
+                )
+            }
+        }
+    }
+
+    fun signUp(username: String, password: String, displayName: String) {
+        viewModelScope.launch {
+            _authState.value = _authState.value.copy(isLoading = true, errorMessage = null)
+            when (val result = authRepository.signUp(username, password, displayName)) {
+                is AuthResult.Success -> {
+                    _authState.value = AuthUiState(
+                        isLoggedIn = true,
+                        userId = result.userId,
+                        displayName = result.displayName
+                    )
+                    _userProfile.value = UserProfile(name = result.displayName)
+                }
+                is AuthResult.Failure -> _authState.value = _authState.value.copy(
+                    isLoading = false,
+                    errorMessage = result.message
+                )
+            }
+        }
+    }
+
+    fun clearAuthError() {
+        _authState.value = _authState.value.copy(errorMessage = null)
+    }
+
+    fun logOut() {
+        _authState.value = AuthUiState()
+    }
+
+    fun uploadDocument(documentName: String, fileUri: String, fileName: String, mimeType: String?) {
+        val userId = _authState.value.userId ?: return
+        viewModelScope.launch {
+            documentRepository.saveUpload(userId, documentName, fileUri, fileName, mimeType)
+        }
+        toggleDocumentOwnedIfMissing(documentName)
+    }
+
+    fun removeUploadedDocument(document: UploadedDocumentEntity) {
+        viewModelScope.launch {
+            documentRepository.removeUpload(document)
+        }
+    }
+
+    private fun toggleDocumentOwnedIfMissing(documentName: String) {
+        val current = _userProfile.value.ownedDocuments
+        if (current.none { it.equals(documentName, ignoreCase = true) }) {
+            _userProfile.value = _userProfile.value.copy(ownedDocuments = current + documentName)
+        }
+    }
+
+    private val _userProfile = MutableStateFlow(UserProfile())
     val userProfile: StateFlow<UserProfile> = _userProfile.asStateFlow()
 
-    private val _savedSchemeIds = MutableStateFlow<Set<String>>(setOf("sch_vidya_lakshmi"))
+    private val _savedSchemeIds = MutableStateFlow<Set<String>>(emptySet())
     val savedSchemeIds: StateFlow<Set<String>> = _savedSchemeIds.asStateFlow()
 
     private val _selectedLanguage = MutableStateFlow(AppLanguage.ENGLISH)
@@ -37,21 +133,8 @@ class UrimaiViewModel : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _selectedSchemeId = MutableStateFlow<String?>("sch_vidya_lakshmi")
+    private val _selectedSchemeId = MutableStateFlow<String?>(null)
     val selectedSchemeId: StateFlow<String?> = _selectedSchemeId.asStateFlow()
-
-    // Onboarding & AI extraction state
-    private val _onboardingStep = MutableStateFlow(1)
-    val onboardingStep: StateFlow<Int> = _onboardingStep.asStateFlow()
-
-    private val _naturalLanguageInput = MutableStateFlow("")
-    val naturalLanguageInput: StateFlow<String> = _naturalLanguageInput.asStateFlow()
-
-    private val _isAiExtracting = MutableStateFlow(false)
-    val isAiExtracting: StateFlow<Boolean> = _isAiExtracting.asStateFlow()
-
-    private val _extractedProfilePreview = MutableStateFlow<UserProfile?>(null)
-    val extractedProfilePreview: StateFlow<UserProfile?> = _extractedProfilePreview.asStateFlow()
 
     // Analyzing animation state
     private val _isAnalyzing = MutableStateFlow(false)
@@ -79,7 +162,7 @@ class UrimaiViewModel : ViewModel() {
     // Computed: Scheme Evaluation Results recalculated automatically whenever profile changes!
     val allEvaluationResults: StateFlow<List<SchemeMatchResult>> = _userProfile.map { profile ->
         EligibilityEngine.evaluateAll(profile, SchemeRepository.allSchemes)
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, EligibilityEngine.evaluateAll(UserProfile.DEMO_ARUN_STUDENT, SchemeRepository.allSchemes))
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, EligibilityEngine.evaluateAll(UserProfile(), SchemeRepository.allSchemes))
 
     // Filtered matches for the dashboard
     val filteredMatches: StateFlow<List<SchemeMatchResult>> = combine(
@@ -146,54 +229,6 @@ class UrimaiViewModel : ViewModel() {
 
     fun updateProfile(newProfile: UserProfile) {
         _userProfile.value = newProfile
-    }
-
-    fun loadDemoProfile(profile: UserProfile) {
-        _userProfile.value = profile
-        _extractedProfilePreview.value = null
-    }
-
-    fun setOnboardingStep(step: Int) {
-        _onboardingStep.value = step.coerceIn(1, 4)
-    }
-
-    fun nextOnboardingStep() {
-        if (_onboardingStep.value < 4) {
-            _onboardingStep.value += 1
-        }
-    }
-
-    fun previousOnboardingStep() {
-        if (_onboardingStep.value > 1) {
-            _onboardingStep.value -= 1
-        }
-    }
-
-    fun setNaturalLanguageInput(text: String) {
-        _naturalLanguageInput.value = text
-    }
-
-    fun extractProfileFromText() {
-        val input = _naturalLanguageInput.value.trim()
-        if (input.isBlank()) return
-
-        viewModelScope.launch {
-            _isAiExtracting.value = true
-            val extracted = UrimaiAiService.extractProfileFromNaturalLanguage(input)
-            _extractedProfilePreview.value = extracted
-            _isAiExtracting.value = false
-        }
-    }
-
-    fun applyExtractedProfile() {
-        val extracted = _extractedProfilePreview.value ?: return
-        _userProfile.value = extracted
-        _extractedProfilePreview.value = null
-        _naturalLanguageInput.value = ""
-    }
-
-    fun cancelExtractedProfile() {
-        _extractedProfilePreview.value = null
     }
 
     fun toggleDocumentOwned(docName: String) {
