@@ -22,10 +22,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.data.local.UploadedDocumentEntity
 import com.example.data.model.UserProfile
 import com.example.ui.components.CivicHeader
+import com.example.ui.components.DocumentUploadRow
 import com.example.ui.components.PrivacyNoticeCard
 import com.example.ui.theme.*
+
+val COMMON_DOCUMENT_TYPES = listOf(
+    "Aadhaar Card",
+    "PAN Card",
+    "Bank Account Passbook",
+    "Income Certificate",
+    "Student ID / Bonafide Certificate",
+    "10th / 12th Marksheet",
+    "Community / Caste Certificate",
+    "Land Ownership / Patta Document",
+    "Land Ownership / NOC Document",
+    "UDID / Disability Medical Certificate",
+    "Postgraduate / Professional Degree Certificate",
+    "Detailed Project Report (DPR)",
+    "Statement of Purpose & Resume",
+    "Ration Card",
+    "Domicile Certificate",
+    "Voter ID Card"
+)
 
 @Composable
 fun ProfileViewEditScreen(
@@ -34,6 +55,9 @@ fun ProfileViewEditScreen(
     onSaveAndRecalculate: () -> Unit,
     onBack: () -> Unit,
     onLogOut: () -> Unit = {},
+    uploadedDocuments: List<UploadedDocumentEntity> = emptyList(),
+    onUploadDocument: (documentName: String, fileUri: String, fileName: String, mimeType: String?) -> Unit = { _, _, _, _ -> },
+    onRemoveUpload: (UploadedDocumentEntity) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var editableProfile by remember { mutableStateOf(profile) }
@@ -191,6 +215,47 @@ fun ProfileViewEditScreen(
                         checked = editableProfile.disabilityStatus != "No" && editableProfile.disabilityStatus != null,
                         onChecked = { editableProfile = editableProfile.copy(disabilityStatus = if (it) "Yes" else "No") }
                     )
+                }
+            }
+
+            // My Documents Vault
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+                border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Column {
+                        Text(
+                            text = "My Documents",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = CivicNavy900
+                        )
+                        Text(
+                            text = "Upload documents once here — they'll be checked against every scheme you may qualify for.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextSecondaryLight
+                        )
+                    }
+
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        COMMON_DOCUMENT_TYPES.forEach { docName ->
+                            val existingUpload = uploadedDocuments.firstOrNull { it.documentName == docName }
+                            DocumentUploadRow(
+                                documentName = docName,
+                                existingUpload = existingUpload,
+                                onUpload = { fileUri, fileName, mimeType ->
+                                    onUploadDocument(docName, fileUri, fileName, mimeType)
+                                },
+                                onRemove = onRemoveUpload
+                            )
+                        }
+                    }
                 }
             }
 

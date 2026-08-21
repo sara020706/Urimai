@@ -1,11 +1,13 @@
 package com.example.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
@@ -25,10 +27,8 @@ import com.example.ui.theme.*
 fun DocumentChecklist(
     requiredDocuments: List<SchemeDocument>,
     ownedDocuments: Set<String>,
-    onToggleDocument: (String) -> Unit,
     uploadedDocuments: List<UploadedDocumentEntity> = emptyList(),
-    onUploadDocument: (documentName: String, fileUri: String, fileName: String, mimeType: String?) -> Unit = { _, _, _, _ -> },
-    onRemoveUpload: (UploadedDocumentEntity) -> Unit = {},
+    onNavigateToDocumentVault: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val readyDocs = requiredDocuments.filter { doc ->
@@ -114,16 +114,19 @@ fun DocumentChecklist(
             }
 
             Text(
-                text = "Check off documents you currently have available:",
+                text = "Documents are uploaded once in your profile and checked here automatically:",
                 style = MaterialTheme.typography.bodySmall,
                 color = TextSecondaryLight
             )
 
-            // Document items list
+            // Document items list (read-only status; uploads happen in the profile's document vault)
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 requiredDocuments.forEach { doc ->
                     val isOwned = ownedDocuments.any { owned ->
                         owned.contains(doc.name, ignoreCase = true) || doc.name.contains(owned, ignoreCase = true)
+                    }
+                    val existingUpload = uploadedDocuments.firstOrNull {
+                        it.documentName.contains(doc.name, ignoreCase = true) || doc.name.contains(it.documentName, ignoreCase = true)
                     }
 
                     Row(
@@ -135,14 +138,11 @@ fun DocumentChecklist(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Checkbox(
-                            checked = isOwned,
-                            onCheckedChange = { onToggleDocument(doc.name) },
-                            modifier = Modifier.testTag("doc_check_${doc.id}"),
-                            colors = CheckboxDefaults.colors(
-                                checkedColor = EmeraldDark,
-                                checkmarkColor = SurfaceLight
-                            )
+                        Icon(
+                            imageVector = if (isOwned) Icons.Default.Check else Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = if (isOwned) EmeraldDark else AmberDark,
+                            modifier = Modifier.size(18.dp).testTag("doc_status_${doc.id}")
                         )
 
                         Column(modifier = Modifier.weight(1f)) {
@@ -176,21 +176,43 @@ fun DocumentChecklist(
                                 fontSize = 11.sp,
                                 color = TextTertiaryLight
                             )
-
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            val existingUpload = uploadedDocuments.firstOrNull { it.documentName == doc.name }
-                            DocumentUploadRow(
-                                documentName = doc.name,
-                                existingUpload = existingUpload,
-                                onUpload = { fileUri, fileName, mimeType ->
-                                    onUploadDocument(doc.name, fileUri, fileName, mimeType)
-                                },
-                                onRemove = onRemoveUpload
-                            )
+                            if (existingUpload != null) {
+                                Text(
+                                    text = "Uploaded: ${existingUpload.fileName}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = EmeraldText
+                                )
+                            }
                         }
                     }
                 }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(CivicNavy50)
+                    .clickable { onNavigateToDocumentVault() }
+                    .padding(horizontal = 12.dp, vertical = 10.dp)
+                    .testTag("go_to_document_vault"),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Upload or manage documents in your profile",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = SaffronDark
+                )
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = SaffronDark,
+                    modifier = Modifier.size(18.dp)
+                )
             }
         }
     }

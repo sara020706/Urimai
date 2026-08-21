@@ -231,15 +231,6 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
         _userProfile.value = newProfile
     }
 
-    fun toggleDocumentOwned(docName: String) {
-        val current = _userProfile.value.ownedDocuments.toMutableSet()
-        if (current.contains(docName)) {
-            current.remove(docName)
-        } else {
-            current.add(docName)
-        }
-        _userProfile.value = _userProfile.value.copy(ownedDocuments = current)
-    }
 
     fun startAnalysisAnimation(onComplete: () -> Unit) {
         viewModelScope.launch {

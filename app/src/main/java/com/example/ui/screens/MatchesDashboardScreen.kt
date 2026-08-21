@@ -45,6 +45,7 @@ fun MatchesDashboardScreen(
     onEditProfile: () -> Unit,
     onViewSavedSchemes: () -> Unit,
     onExploreHowItWorks: () -> Unit,
+    onCheckEligibility: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -130,6 +131,17 @@ fun MatchesDashboardScreen(
                             currentLanguage = currentLanguage,
                             onLanguageSelected = onLanguageChange
                         )
+
+                        IconButton(
+                            onClick = onEditProfile,
+                            modifier = Modifier.size(36.dp).testTag("profile_icon_nav")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = "Profile",
+                                tint = CivicNavy800
+                            )
+                        }
                     }
                 }
 
@@ -193,6 +205,23 @@ fun MatchesDashboardScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
             contentPadding = PaddingValues(top = 14.dp, bottom = 24.dp)
         ) {
+            // Check Eligibility CTA
+            item {
+                Button(
+                    onClick = onCheckEligibility,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .testTag("check_eligibility_btn"),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = SaffronPrimary, contentColor = CivicNavy900)
+                ) {
+                    Icon(Icons.Default.FactCheck, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Check Eligibility", fontWeight = FontWeight.Bold)
+                }
+            }
+
             // Search Input
             item {
                 OutlinedTextField(

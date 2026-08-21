@@ -114,6 +114,9 @@ fun UrimaiApp(
                 },
                 onExploreHowItWorks = {
                     viewModel.setShowHowItWorks(true)
+                },
+                onCheckEligibility = {
+                    navController.navigate(UrimaiDestinations.PROFILE_VIEW_EDIT)
                 }
             )
         }
@@ -135,12 +138,7 @@ fun UrimaiApp(
                     aiExplanation = aiExplanationMap[schemeResult.scheme.id],
                     isLoadingExplanation = isGeneratingExplanation,
                     onReloadExplanation = { viewModel.loadSchemeExplanation(schemeResult.scheme.id, forceReload = true) },
-                    onToggleDocument = { viewModel.toggleDocumentOwned(it) },
                     uploadedDocuments = uploadedDocuments,
-                    onUploadDocument = { documentName, fileUri, fileName, mimeType ->
-                        viewModel.uploadDocument(documentName, fileUri, fileName, mimeType)
-                    },
-                    onRemoveUpload = { viewModel.removeUploadedDocument(it) },
                     onNavigateToEditProfile = { navController.navigate(UrimaiDestinations.PROFILE_VIEW_EDIT) },
                     chatMessages = chatMessages,
                     isChatLoading = isChatLoading,
@@ -183,7 +181,12 @@ fun UrimaiApp(
                     navController.navigate(UrimaiDestinations.LOGIN) {
                         popUpTo(0)
                     }
-                }
+                },
+                uploadedDocuments = uploadedDocuments,
+                onUploadDocument = { documentName, fileUri, fileName, mimeType ->
+                    viewModel.uploadDocument(documentName, fileUri, fileName, mimeType)
+                },
+                onRemoveUpload = { viewModel.removeUploadedDocument(it) }
             )
         }
     }
