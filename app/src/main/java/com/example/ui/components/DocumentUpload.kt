@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.data.local.UploadedDocumentEntity
+import com.example.data.model.UploadedDocumentEntity
 import com.example.ui.theme.*
 
 private fun queryFileName(context: android.content.Context, uri: Uri): String {

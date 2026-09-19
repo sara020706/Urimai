@@ -4,11 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ai.UrimaiAiService
-import com.example.data.local.UploadedDocumentEntity
 import com.example.data.model.*
 import com.example.data.repository.AuthRepository
 import com.example.data.repository.AuthResult
 import com.example.data.repository.DocumentRepository
+import com.example.data.repository.ProfileRepository
+import com.example.data.repository.SavedSchemesRepository
 import com.example.data.repository.SchemeRepository
 import com.example.engine.EligibilityEngine
 import kotlinx.coroutines.delay
@@ -34,17 +35,40 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
 
     private val authRepository = AuthRepository(application)
     private val documentRepository = DocumentRepository(application)
+    private val profileRepository = ProfileRepository(application)
+    private val savedSchemesRepository = SavedSchemesRepository(application)
 
     private val _authState = MutableStateFlow(AuthUiState())
     val authState: StateFlow<AuthUiState> = _authState.asStateFlow()
 
-    val uploadedDocuments: StateFlow<List<UploadedDocumentEntity>> = _authState
-        .map { it.userId }
-        .distinctUntilChanged()
-        .flatMapLatest { userId ->
-            if (userId == null) flowOf(emptyList()) else documentRepository.observeForUser(userId)
+    private val _uploadedDocuments = MutableStateFlow<List<UploadedDocumentEntity>>(emptyList())
+    val uploadedDocuments: StateFlow<List<UploadedDocumentEntity>> = _uploadedDocuments.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val restored = authRepository.restoreSession()
+            if (restored is AuthResult.Success) {
+                _authState.value = AuthUiState(
+                    isLoggedIn = true,
+                    userId = restored.userId,
+                    displayName = restored.displayName
+                )
+                loadRemoteData()
+            }
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    }
+
+    private fun loadRemoteData() {
+        viewModelScope.launch {
+            profileRepository.getProfile()?.let { _userProfile.value = it }
+        }
+        viewModelScope.launch {
+            _uploadedDocuments.value = documentRepository.listDocuments()
+        }
+        viewModelScope.launch {
+            _savedSchemeIds.value = savedSchemesRepository.getSavedSchemeIds()
+        }
+    }
 
     fun logIn(username: String, password: String) {
         viewModelScope.launch {
@@ -56,7 +80,7 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
                         userId = result.userId,
                         displayName = result.displayName
                     )
-                    _userProfile.value = UserProfile(name = result.displayName)
+                    loadRemoteData()
                 }
                 is AuthResult.Failure -> _authState.value = _authState.value.copy(
                     isLoading = false,
@@ -76,7 +100,7 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
                         userId = result.userId,
                         displayName = result.displayName
                     )
-                    _userProfile.value = UserProfile(name = result.displayName)
+                    loadRemoteData()
                 }
                 is AuthResult.Failure -> _authState.value = _authState.value.copy(
                     isLoading = false,
@@ -91,20 +115,28 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun logOut() {
+        viewModelScope.launch { authRepository.logOut() }
         _authState.value = AuthUiState()
+        _userProfile.value = UserProfile()
+        _uploadedDocuments.value = emptyList()
+        _savedSchemeIds.value = emptySet()
     }
 
     fun uploadDocument(documentName: String, fileUri: String, fileName: String, mimeType: String?) {
-        val userId = _authState.value.userId ?: return
         viewModelScope.launch {
-            documentRepository.saveUpload(userId, documentName, fileUri, fileName, mimeType)
+            val uploaded = documentRepository.uploadDocument(documentName, fileUri, fileName, mimeType)
+            if (uploaded != null) {
+                _uploadedDocuments.value = _uploadedDocuments.value + uploaded
+                toggleDocumentOwnedIfMissing(documentName)
+                persistProfile()
+            }
         }
-        toggleDocumentOwnedIfMissing(documentName)
     }
 
     fun removeUploadedDocument(document: UploadedDocumentEntity) {
         viewModelScope.launch {
             documentRepository.removeUpload(document)
+            _uploadedDocuments.value = _uploadedDocuments.value.filterNot { it.id == document.id }
         }
     }
 
@@ -219,18 +251,30 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
 
     fun toggleSaveScheme(schemeId: String) {
         val current = _savedSchemeIds.value.toMutableSet()
+        val nowSaved: Boolean
         if (current.contains(schemeId)) {
             current.remove(schemeId)
+            nowSaved = false
         } else {
             current.add(schemeId)
+            nowSaved = true
         }
         _savedSchemeIds.value = current
+        viewModelScope.launch {
+            if (nowSaved) savedSchemesRepository.saveScheme(schemeId) else savedSchemesRepository.unsaveScheme(schemeId)
+        }
     }
 
     fun updateProfile(newProfile: UserProfile) {
         _userProfile.value = newProfile
+        persistProfile()
     }
 
+    private fun persistProfile() {
+        viewModelScope.launch {
+            profileRepository.updateProfile(_userProfile.value)
+        }
+    }
 
     fun startAnalysisAnimation(onComplete: () -> Unit) {
         viewModelScope.launch {

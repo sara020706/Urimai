@@ -19,8 +19,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.data.local.UploadedDocumentEntity
 import com.example.data.model.SchemeDocument
+import com.example.data.model.UploadedDocumentEntity
 import com.example.ui.theme.*
 
 @Composable

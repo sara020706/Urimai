@@ -1,37 +1,59 @@
 package com.example.data.repository
 
 import android.content.Context
-import com.example.data.local.AppDatabase
-import com.example.data.local.UploadedDocumentEntity
-import kotlinx.coroutines.flow.Flow
+import android.net.Uri
+import com.example.data.model.UploadedDocumentEntity
+import com.example.data.remote.ApiClient
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
-class DocumentRepository(context: Context) {
-    private val db = AppDatabase.getInstance(context)
-    private val dao = db.uploadedDocumentDao()
+class DocumentRepository(private val context: Context) {
+    private val api = ApiClient.getService(context)
 
-    fun observeForUser(userId: Long): Flow<List<UploadedDocumentEntity>> =
-        dao.observeForUser(userId)
-
-    suspend fun saveUpload(
-        userId: Long,
-        documentName: String,
-        fileUri: String,
-        fileName: String,
-        mimeType: String?
-    ) {
-        dao.insert(
+    suspend fun listDocuments(): List<UploadedDocumentEntity> {
+        val response = api.listDocuments()
+        val body = response.body() ?: return emptyList()
+        return body.map {
             UploadedDocumentEntity(
-                userId = userId,
-                documentName = documentName,
-                fileUri = fileUri,
-                fileName = fileName,
-                mimeType = mimeType,
-                uploadedAt = System.currentTimeMillis()
+                id = it.id,
+                documentName = it.documentName,
+                fileName = it.fileName,
+                mimeType = it.mimeType,
+                uploadedAt = it.uploadedAt
             )
-        )
+        }
+    }
+
+    suspend fun uploadDocument(documentName: String, fileUri: String, fileName: String, mimeType: String?): UploadedDocumentEntity? {
+        val uri = Uri.parse(fileUri)
+        val tempFile = File.createTempFile("upload", null, context.cacheDir)
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            tempFile.outputStream().use { output -> input.copyTo(output) }
+        }
+
+        val mediaType = (mimeType ?: "application/octet-stream").toMediaTypeOrNull()
+        val filePart = MultipartBody.Part.createFormData("file", fileName, tempFile.asRequestBody(mediaType))
+        val namePart = documentName.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        return try {
+            val response = api.uploadDocument(namePart, filePart)
+            val body = response.body() ?: return null
+            UploadedDocumentEntity(
+                id = body.id,
+                documentName = body.documentName,
+                fileName = body.fileName,
+                mimeType = body.mimeType,
+                uploadedAt = body.uploadedAt
+            )
+        } finally {
+            tempFile.delete()
+        }
     }
 
     suspend fun removeUpload(document: UploadedDocumentEntity) {
-        dao.delete(document)
+        api.deleteDocument(document.id)
     }
 }

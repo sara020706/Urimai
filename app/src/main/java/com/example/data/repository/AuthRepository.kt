@@ -1,12 +1,13 @@
 package com.example.data.repository
 
 import android.content.Context
-import android.util.Base64
-import com.example.data.local.AppDatabase
-import com.example.data.local.UserAccountEntity
-import java.security.SecureRandom
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.PBEKeySpec
+import com.example.data.remote.ApiClient
+import com.example.data.remote.ApiErrorBody
+import com.example.data.remote.LogInRequest
+import com.example.data.remote.SessionManager
+import com.example.data.remote.SignUpRequest
+import com.squareup.moshi.Moshi
+import retrofit2.Response
 
 sealed class AuthResult {
     data class Success(val userId: Long, val displayName: String) : AuthResult()
@@ -14,8 +15,9 @@ sealed class AuthResult {
 }
 
 class AuthRepository(context: Context) {
-    private val db = AppDatabase.getInstance(context)
-    private val dao = db.userAccountDao()
+    private val api = ApiClient.getService(context)
+    private val sessionManager = SessionManager(context)
+    private val errorAdapter = Moshi.Builder().build().adapter(ApiErrorBody::class.java)
 
     suspend fun signUp(username: String, password: String, displayName: String): AuthResult {
         val normalizedUsername = username.trim().lowercase()
@@ -25,48 +27,50 @@ class AuthRepository(context: Context) {
         if (password.length < 4) {
             return AuthResult.Failure("Password must be at least 4 characters.")
         }
-        if (dao.findByUsername(normalizedUsername) != null) {
-            return AuthResult.Failure("An account with this username already exists.")
-        }
 
-        val salt = generateSalt()
-        val hash = hashPassword(password, salt)
-        val id = dao.insert(
-            UserAccountEntity(
-                username = normalizedUsername,
-                passwordHash = hash,
-                salt = salt,
-                displayName = displayName.ifBlank { username },
-                createdAt = System.currentTimeMillis()
-            )
-        )
-        return AuthResult.Success(id, displayName.ifBlank { username })
+        return try {
+            val response = api.signUp(SignUpRequest(normalizedUsername, password, displayName.ifBlank { username }))
+            handleAuthResponse(response)
+        } catch (e: Exception) {
+            AuthResult.Failure("Could not reach the server. Check your connection and try again.")
+        }
     }
 
     suspend fun logIn(username: String, password: String): AuthResult {
         val normalizedUsername = username.trim().lowercase()
-        val account = dao.findByUsername(normalizedUsername)
-            ?: return AuthResult.Failure("No account found for this username.")
+        if (normalizedUsername.isBlank() || password.isBlank()) {
+            return AuthResult.Failure("Username and password are required.")
+        }
 
-        val hash = hashPassword(password, account.salt)
-        return if (hash == account.passwordHash) {
-            AuthResult.Success(account.id, account.displayName)
-        } else {
-            AuthResult.Failure("Incorrect password.")
+        return try {
+            val response = api.logIn(LogInRequest(normalizedUsername, password))
+            handleAuthResponse(response)
+        } catch (e: Exception) {
+            AuthResult.Failure("Could not reach the server. Check your connection and try again.")
         }
     }
 
-    private fun generateSalt(): String {
-        val bytes = ByteArray(16)
-        SecureRandom().nextBytes(bytes)
-        return Base64.encodeToString(bytes, Base64.NO_WRAP)
+    suspend fun logOut() {
+        sessionManager.clearSession()
     }
 
-    private fun hashPassword(password: String, salt: String): String {
-        val saltBytes = Base64.decode(salt, Base64.NO_WRAP)
-        val spec = PBEKeySpec(password.toCharArray(), saltBytes, 10_000, 256)
-        val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
-        val hashBytes = factory.generateSecret(spec).encoded
-        return Base64.encodeToString(hashBytes, Base64.NO_WRAP)
+    suspend fun restoreSession(): AuthResult? {
+        val token = sessionManager.currentToken() ?: return null
+        val userId = sessionManager.currentUserId() ?: return null
+        val displayName = sessionManager.currentDisplayName() ?: return null
+        return AuthResult.Success(userId, displayName)
+    }
+
+    private suspend fun handleAuthResponse(response: Response<com.example.data.remote.AuthResponse>): AuthResult {
+        val body = response.body()
+        if (response.isSuccessful && body != null) {
+            val userId = body.userId.toLong()
+            sessionManager.saveSession(body.token, userId, body.displayName)
+            return AuthResult.Success(userId, body.displayName)
+        }
+        val message = response.errorBody()?.string()?.let {
+            try { errorAdapter.fromJson(it)?.error } catch (_: Exception) { null }
+        } ?: "Something went wrong. Please try again."
+        return AuthResult.Failure(message)
     }
 }
