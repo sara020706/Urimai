@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.navigation.UrimaiApp
 import com.example.ui.theme.MyApplicationTheme
+import com.example.viewmodel.AdminViewModel
+import com.example.viewmodel.QnaViewModel
 import com.example.viewmodel.UrimaiViewModel
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +23,13 @@ class MainActivity : ComponentActivity() {
     setContent {
       MyApplicationTheme {
         val viewModel: UrimaiViewModel = viewModel()
+        val qnaViewModel: QnaViewModel = viewModel()
+        val adminViewModel: AdminViewModel = viewModel()
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
           UrimaiApp(
             viewModel = viewModel,
+            qnaViewModel = qnaViewModel,
+            adminViewModel = adminViewModel,
             modifier = Modifier.padding(innerPadding)
           )
         }

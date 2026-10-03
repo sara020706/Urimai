@@ -20,7 +20,10 @@ data class LogInRequest(
 data class AuthResponse(
     val userId: String,
     val displayName: String,
-    val token: String
+    val token: String,
+    // Added when roles landed; nullable so an older server still parses.
+    val role: String? = null,
+    val lawyerVerificationStatus: String? = null
 )
 
 @JsonClass(generateAdapter = true)

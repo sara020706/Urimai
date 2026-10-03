@@ -10,6 +10,8 @@ import com.example.data.repository.AuthResult
 import com.example.data.repository.DocumentRepository
 import com.example.data.repository.ProfileRepository
 import com.example.data.repository.SavedSchemesRepository
+import com.example.data.repository.CatalogSource
+import com.example.data.repository.SchemeCatalogRepository
 import com.example.data.repository.SchemeRepository
 import com.example.engine.EligibilityEngine
 import kotlinx.coroutines.delay
@@ -37,9 +39,32 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
     private val documentRepository = DocumentRepository(application)
     private val profileRepository = ProfileRepository(application)
     private val savedSchemesRepository = SavedSchemesRepository(application)
+    private val schemeCatalogRepository = SchemeCatalogRepository(application)
+
+    init {
+        // The AI service reaches the backend through this; without it every AI
+        // call takes its deterministic path, which is a supported mode.
+        UrimaiAiService.initialize(application)
+    }
 
     private val _authState = MutableStateFlow(AuthUiState())
     val authState: StateFlow<AuthUiState> = _authState.asStateFlow()
+
+    /**
+     * Whether to offer lawyer entry points.
+     *
+     * UI gating only: the server re-checks the role and verification status
+     * on every request, so this cannot grant access, only hide a button that
+     * would be refused anyway.
+     */
+    private val _isLawyerRole = MutableStateFlow(false)
+    val isLawyerRole: StateFlow<Boolean> = _isLawyerRole.asStateFlow()
+
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin: StateFlow<Boolean> = _isAdmin.asStateFlow()
+
+    private val _isVerifiedLawyer = MutableStateFlow(false)
+    val isVerifiedLawyer: StateFlow<Boolean> = _isVerifiedLawyer.asStateFlow()
 
     private val _uploadedDocuments = MutableStateFlow<List<UploadedDocumentEntity>>(emptyList())
     val uploadedDocuments: StateFlow<List<UploadedDocumentEntity>> = _uploadedDocuments.asStateFlow()
@@ -58,7 +83,33 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Fetch the catalog from the backend, falling back to cache then to the
+     * bundled copy. Safe to call at any time; never leaves the list empty.
+     */
+    fun refreshSchemeCatalog() {
+        viewModelScope.launch {
+            val result = schemeCatalogRepository.loadSchemes()
+            _schemes.value = result.schemes
+            _catalogSource.value = result.source
+        }
+    }
+
+    private fun refreshRoleFlag() {
+        viewModelScope.launch {
+            val session = com.example.data.remote.SessionManager(getApplication())
+            val role = session.currentRole()
+            _isAdmin.value = role == "ADMIN"
+            _isVerifiedLawyer.value =
+                role == "LAWYER" && session.currentLawyerStatus() == "VERIFIED"
+            // A lawyer who is not yet approved still needs the
+            // verification screen, so surface that separately.
+            _isLawyerRole.value = role == "LAWYER"
+        }
+    }
+
     private fun loadRemoteData() {
+        refreshRoleFlag()
         viewModelScope.launch {
             profileRepository.getProfile()?.let { _userProfile.value = it }
         }
@@ -191,10 +242,33 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
     private val _showHowItWorks = MutableStateFlow(false)
     val showHowItWorks: StateFlow<Boolean> = _showHowItWorks.asStateFlow()
 
-    // Computed: Scheme Evaluation Results recalculated automatically whenever profile changes!
-    val allEvaluationResults: StateFlow<List<SchemeMatchResult>> = _userProfile.map { profile ->
-        EligibilityEngine.evaluateAll(profile, SchemeRepository.allSchemes)
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, EligibilityEngine.evaluateAll(UserProfile(), SchemeRepository.allSchemes))
+    // The scheme catalog. Starts as the catalog bundled in the APK so the app is
+    // usable immediately and offline, then swaps to the backend copy once it
+    // loads. Because results derive from this flow, that swap re-evaluates
+    // everything automatically — there is no cache to invalidate.
+    private val _schemes = MutableStateFlow(SchemeRepository.allSchemes)
+    val schemes: StateFlow<List<Scheme>> = _schemes.asStateFlow()
+
+    private val _catalogSource = MutableStateFlow(CatalogSource.BUNDLED)
+    val catalogSource: StateFlow<CatalogSource> = _catalogSource.asStateFlow()
+
+    // Declared after _schemes/_catalogSource on purpose: Kotlin runs property
+    // initializers and init blocks in declaration order, so refreshing any
+    // earlier would write to a not-yet-initialized flow.
+    init {
+        refreshSchemeCatalog()
+    }
+
+    // Computed: Scheme Evaluation Results recalculated automatically whenever
+    // the profile OR the catalog changes.
+    val allEvaluationResults: StateFlow<List<SchemeMatchResult>> =
+        combine(_userProfile, _schemes) { profile, schemes ->
+            EligibilityEngine.evaluateAll(profile, schemes)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            EligibilityEngine.evaluateAll(UserProfile(), SchemeRepository.allSchemes)
+        )
 
     // Filtered matches for the dashboard
     val filteredMatches: StateFlow<List<SchemeMatchResult>> = combine(
@@ -308,7 +382,7 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun initChatForScheme(schemeId: String) {
-        val scheme = SchemeRepository.allSchemes.firstOrNull { it.id == schemeId } ?: return
+        val scheme = _schemes.value.firstOrNull { it.id == schemeId } ?: return
         _chatMessages.value = listOf(
             ChatMessage(
                 sender = "urimai",
