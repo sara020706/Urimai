@@ -1,7 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const pool = require('../db/pool');
-const { requireAuth } = require('../middleware/auth');
+const { authed } = require('../middleware/auth');
+const { wrap } = require('../lib/async');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
@@ -16,16 +17,16 @@ function toApiDocument(row) {
   };
 }
 
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', ...authed, wrap(async (req, res) => {
   const result = await pool.query(
     `SELECT id, document_name, file_name, mime_type, uploaded_at
      FROM uploaded_documents WHERE user_id = $1 ORDER BY uploaded_at DESC`,
     [req.userId]
   );
   res.json(result.rows.map(toApiDocument));
-});
+}));
 
-router.post('/', requireAuth, upload.single('file'), async (req, res) => {
+router.post('/', ...authed, upload.single('file'), wrap(async (req, res) => {
   const { documentName } = req.body || {};
   if (!documentName || !req.file) {
     return res.status(400).json({ error: 'documentName and file are required.' });
@@ -38,9 +39,9 @@ router.post('/', requireAuth, upload.single('file'), async (req, res) => {
     [req.userId, documentName, req.file.originalname, req.file.mimetype, req.file.buffer]
   );
   res.status(201).json(toApiDocument(result.rows[0]));
-});
+}));
 
-router.get('/:id/file', requireAuth, async (req, res) => {
+router.get('/:id/file', ...authed, wrap(async (req, res) => {
   const result = await pool.query(
     `SELECT file_name, mime_type, file_data FROM uploaded_documents WHERE id = $1 AND user_id = $2`,
     [req.params.id, req.userId]
@@ -52,9 +53,9 @@ router.get('/:id/file', requireAuth, async (req, res) => {
   res.setHeader('Content-Type', doc.mime_type || 'application/octet-stream');
   res.setHeader('Content-Disposition', `inline; filename="${doc.file_name}"`);
   res.send(doc.file_data);
-});
+}));
 
-router.delete('/:id', requireAuth, async (req, res) => {
+router.delete('/:id', ...authed, wrap(async (req, res) => {
   const result = await pool.query(
     'DELETE FROM uploaded_documents WHERE id = $1 AND user_id = $2 RETURNING id',
     [req.params.id, req.userId]
@@ -63,6 +64,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
     return res.status(404).json({ error: 'Document not found.' });
   }
   res.status(204).send();
-});
+}));
 
 module.exports = router;

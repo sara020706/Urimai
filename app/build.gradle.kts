@@ -69,6 +69,10 @@ secrets {
   propertiesFileName = ".env"
   defaultPropertiesFileName = ".env.example"
   ignoreList.add("FIREBASE_APPCHECK_DEBUG_TOKEN")
+  // GEMINI_API_KEY must never be injected into BuildConfig: an APK is
+  // decompilable, so a bundled key is a published key. All model calls go
+  // through the backend, which holds the key in server environment.
+  ignoreList.add("GEMINI_API_KEY")
 }
 
 googleServices { missingGoogleServicesStrategy = MissingGoogleServicesStrategy.WARN }

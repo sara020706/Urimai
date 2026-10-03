@@ -1,0 +1,2365 @@
+[
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Up to ₹50,000/year fee subsidy + maintenance grant",
+    "category": "EDUCATION",
+    "criteria": [
+      {
+        "conditionType": "STUDENT_STATUS",
+        "explanationNote": "Applicants must be pursuing an accredited college degree or diploma.",
+        "id": "vl_student",
+        "requirementDisplay": "Must be currently enrolled as an active student",
+        "targetValue": true,
+        "title": "Student Status",
+        "whyWeAskReason": "This scholarship is exclusively intended for actively enrolled students."
+      },
+      {
+        "conditionType": "EDUCATION_LEVEL_IN",
+        "explanationNote": "Scheme covers post-secondary higher education qualifications.",
+        "id": "vl_education",
+        "requirementDisplay": "Pursuing Diploma, Undergraduate, or Postgraduate degree",
+        "targetValue": [
+          "Undergraduate",
+          "Postgraduate",
+          "Diploma"
+        ],
+        "title": "Education Level",
+        "whyWeAskReason": "Helps verify enrollment in approved collegiate coursework."
+      },
+      {
+        "conditionType": "MAX_AGE",
+        "explanationNote": "Candidate must not exceed 28 years at time of application.",
+        "id": "vl_age",
+        "requirementDisplay": "Age between 17 and 28 years",
+        "targetValue": 28,
+        "title": "Age Limit",
+        "whyWeAskReason": "Age limit set for standard college degree timelines."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Aimed at supporting students from economically weaker households.",
+        "id": "vl_income",
+        "requirementDisplay": "Family income ≤ ₹2,50,000 / year",
+        "targetValue": 250000,
+        "title": "Annual Family Income",
+        "whyWeAskReason": "Government scholarships prioritize students based on economic thresholds."
+      }
+    ],
+    "department": "Department of Higher Education, Ministry of Education",
+    "description": "Provides comprehensive financial support, course fee subsidies, and interest subvention for eligible students pursuing accredited undergraduate or postgraduate courses.",
+    "detailedBenefits": [
+      "Direct fee waiver credited to educational institution",
+      "Annual maintenance allowance of ₹12,000 for course books & living expenses",
+      "Full interest subvention during moratorium period for education loans"
+    ],
+    "hindiName": "पीएम विद्या लक्ष्मी उच्च शिक्षा छात्रवृत्ति",
+    "id": "sch_vidya_lakshmi",
+    "lastVerifiedDate": "July 2026",
+    "name": "PM Vidya Lakshmi Higher Education Scholarship & Assistance",
+    "officialSourceLabel": "Official government scheme portal (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Used for biometric KYC verification"
+      },
+      {
+        "id": "doc_bonafide",
+        "isMandatoryForEligibility": true,
+        "name": "Student ID / Bonafide Certificate",
+        "stage": "Application Submission",
+        "tip": "Issued by principal or registrar of current college"
+      },
+      {
+        "id": "doc_marksheet",
+        "isMandatoryForEligibility": true,
+        "name": "10th / 12th Marksheet",
+        "stage": "Application Submission",
+        "tip": "Proof of qualifying exam completion"
+      },
+      {
+        "id": "doc_income_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Income Certificate",
+        "stage": "Document Verification",
+        "tip": "Issued by Tahsildar / Revenue Authority (valid within 1 year)"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Aadhaar-seeded bank account for Direct Benefit Transfer (DBT)"
+      }
+    ],
+    "shortName": "PM Vidya Lakshmi",
+    "sourceUrl": "https://www.vidyalakshmi.co.in",
+    "tamilName": "பிரதம மந்திரி வித்யா லக்ஷ்மி உயர்கல்வி உதவி"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "₹6,000 per year in three 4-monthly installments of ₹2,000",
+    "category": "AGRICULTURE",
+    "criteria": [
+      {
+        "conditionType": "FARMER_STATUS",
+        "explanationNote": "Valid landholding documents required in land registry records.",
+        "id": "pk_farmer",
+        "requirementDisplay": "Must be a practicing farmer with cultivable land",
+        "targetValue": true,
+        "title": "Farmer Status",
+        "whyWeAskReason": "Scheme exclusively benefits landholding farmer families."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Constitutional post-holders and institutional landholders excluded.",
+        "id": "pk_income",
+        "requirementDisplay": "Family income ≤ ₹3,50,000 / year",
+        "targetValue": 350000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures welfare reaches marginal and small agricultural households."
+      }
+    ],
+    "department": "Department of Agriculture & Farmers Welfare",
+    "description": "Provides income support to all landholding farmer families across India to supplement financial needs for agricultural inputs and domestic expenses.",
+    "detailedBenefits": [
+      "Direct Benefit Transfer (DBT) directly into bank account",
+      "Guaranteed 3 equal tranches every 4 months",
+      "Linked with Kisan Credit Card (KCC) for low-interest agri-credit"
+    ],
+    "hindiName": "पीएम-किसान सम्मान निधि योजना",
+    "id": "sch_pm_kisan",
+    "lastVerifiedDate": "August 2026",
+    "name": "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+    "officialSourceLabel": "Ministry of Agriculture & Farmers Welfare (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_patta",
+        "isMandatoryForEligibility": true,
+        "name": "Land Ownership / Patta Document",
+        "stage": "Document Verification",
+        "tip": "Chitta / Patta / 7/12 extract showing cultivable land"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Must be NPCI mapped for Aadhaar Enabled Payment System"
+      }
+    ],
+    "shortName": "PM-KISAN Samman",
+    "sourceUrl": "https://pmkisan.gov.in",
+    "tamilName": "பிரதம மந்திரி கிசான் சம்மான் நிதி"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "₹1,000 per month deposited directly into bank account until course completion",
+    "category": "EDUCATION",
+    "criteria": [
+      {
+        "conditionType": "STATE_MATCH",
+        "explanationNote": "This is a Tamil Nadu state government sponsored initiative.",
+        "id": "pp_state",
+        "requirementDisplay": "Resident of Tamil Nadu",
+        "targetValue": "Tamil Nadu",
+        "title": "State of Residence",
+        "whyWeAskReason": "State-specific budget allocation limits enrollment to TN residents."
+      },
+      {
+        "conditionType": "GENDER_MATCH",
+        "explanationNote": "Designed to boost higher education retention among young women.",
+        "id": "pp_gender",
+        "requirementDisplay": "Must identify as Female",
+        "targetValue": "Female",
+        "title": "Gender",
+        "whyWeAskReason": "Targeted girl-child and women empowerment program."
+      },
+      {
+        "conditionType": "STUDENT_STATUS",
+        "explanationNote": "Must be currently studying in a recognized higher education institute.",
+        "id": "pp_student",
+        "requirementDisplay": "Actively enrolled undergraduate or diploma student",
+        "targetValue": true,
+        "title": "Student Status",
+        "whyWeAskReason": "Stipend is tied to continuous college enrollment."
+      }
+    ],
+    "department": "Department of Social Welfare and Women Empowerment, Govt of Tamil Nadu",
+    "description": "Empowers female students from Tamil Nadu government schools pursuing higher education (degrees, engineering, medicine, diplomas) with monthly cash assistance.",
+    "detailedBenefits": [
+      "Direct cash transfer of ₹1,000 on the 10th of every month",
+      "Continues through all academic semesters without tuition cuts",
+      "Combined eligibility with state free bus pass & laptop initiatives"
+    ],
+    "hindiName": "पुधुमई पेन योजना (तमिलनाडु)",
+    "id": "sch_pudhumai_penn",
+    "lastVerifiedDate": "August 2026",
+    "name": "Moovalur Ramamirtham Ammaiyar Pudhumai Penn Scheme",
+    "officialSourceLabel": "Govt of Tamil Nadu Social Welfare (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bonafide",
+        "isMandatoryForEligibility": true,
+        "name": "Student ID / Bonafide Certificate",
+        "stage": "Application Submission",
+        "tip": "College enrollment letter with EMIS registration"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Pudhumai Penn Scheme",
+    "sourceUrl": "https://pudhumaipenn.tn.gov.in",
+    "tamilName": "புதுமைப் பெண் திட்டம் (மூவலூர் ராமாமிர்தம் அம்மையார்)"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Government subsidy of 15% to 35% on project cost up to ₹50 Lakh",
+    "category": "ENTREPRENEURSHIP",
+    "criteria": [
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Individual must be legally capable of entering business loan contracts.",
+        "id": "pmegp_age",
+        "requirementDisplay": "Age 18 years or above",
+        "targetValue": 18,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Bank lending rules mandate minimum legal age."
+      },
+      {
+        "conditionType": "EDUCATION_LEVEL_IN",
+        "explanationNote": "Basic literacy required for enterprise project proposal management.",
+        "id": "pmegp_education",
+        "requirementDisplay": "At least 10th Standard Pass (for projects above ₹10L)",
+        "targetValue": [
+          "10th Pass",
+          "12th Pass",
+          "Diploma",
+          "Undergraduate",
+          "Postgraduate",
+          "Doctorate"
+        ],
+        "title": "Minimum Education",
+        "whyWeAskReason": "Required by MSME guidelines for project underwriting."
+      },
+      {
+        "conditionType": "BUSINESS_OWNER_STATUS",
+        "explanationNote": "New business projects only; existing units cannot re-apply under PMEGP.",
+        "id": "pmegp_biz",
+        "requirementDisplay": "Aspiring entrepreneur or micro-business owner",
+        "targetValue": true,
+        "title": "Business Aspirant / Ownership",
+        "whyWeAskReason": "Program targets startup micro-enterprises."
+      }
+    ],
+    "department": "Ministry of Micro, Small and Medium Enterprises (MSME)",
+    "description": "Credit-linked subsidy program to generate employment opportunities through establishment of micro-enterprises in non-farm sector.",
+    "detailedBenefits": [
+      "Up to ₹50 Lakh loan for manufacturing units and ₹20 Lakh for service units",
+      "Subsidy back-ended directly by KVIC through bank loans",
+      "Mandatory EDP (Entrepreneurship Development Programme) skill training provided"
+    ],
+    "hindiName": "प्रधानमंत्री रोजगार सृजन कार्यक्रम (PMEGP)",
+    "id": "sch_pmegp",
+    "lastVerifiedDate": "July 2026",
+    "name": "Prime Minister's Employment Generation Programme (PMEGP)",
+    "officialSourceLabel": "KVIC / MSME Portal (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_pan",
+        "isMandatoryForEligibility": true,
+        "name": "PAN Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_marksheet",
+        "isMandatoryForEligibility": true,
+        "name": "10th / 12th Marksheet",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_project_report",
+        "isMandatoryForEligibility": true,
+        "name": "Detailed Project Report (DPR)",
+        "stage": "Document Verification",
+        "tip": "Cost breakdown and estimated income statement of the venture"
+      }
+    ],
+    "shortName": "PMEGP Micro-Enterprise",
+    "sourceUrl": "https://www.kviconline.gov.in/pmegpeportal",
+    "tamilName": "பிரதம மந்திரி வேலைவாய்ப்பு உருவாக்கும் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "100% Free NSQF accredited training + ₹8,000 stipend & placement support",
+    "category": "SKILL_DEVELOPMENT",
+    "criteria": [
+      {
+        "conditionType": "MAX_AGE",
+        "explanationNote": "Focuses on young job seekers and skill upskilling.",
+        "id": "pkvy_age",
+        "requirementDisplay": "Age between 15 and 35 years",
+        "targetValue": 35,
+        "title": "Age Range",
+        "whyWeAskReason": "Scheme targets working-age youth entry into formal economy."
+      },
+      {
+        "conditionType": "EMPLOYED_STATUS",
+        "explanationNote": "Priority given to school dropouts and unemployed youth seeking placements.",
+        "id": "pkvy_employed",
+        "requirementDisplay": "Unemployed or looking for skill transformation",
+        "targetValue": false,
+        "title": "Employment Status",
+        "whyWeAskReason": "Measures whether candidate requires primary skilling support."
+      }
+    ],
+    "department": "Ministry of Skill Development & Entrepreneurship",
+    "description": "Skill certification scheme that enables youth to take up industry-relevant skill training for modern technologies like AI, robotics, drone piloting, and healthcare.",
+    "detailedBenefits": [
+      "Government pays full course fees directly to training partners",
+      "Nationally recognized NSDC certificate accepted across industries",
+      "Accident insurance coverage for 3 years under PMSBY"
+    ],
+    "hindiName": "प्रधानमंत्री कौशल विकास योजना 4.0",
+    "id": "sch_pmkvy",
+    "lastVerifiedDate": "August 2026",
+    "name": "PMKVY 4.0 (Pradhan Mantri Kaushal Vikas Yojana)",
+    "officialSourceLabel": "National Skill Development Corporation (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_marksheet",
+        "isMandatoryForEligibility": false,
+        "name": "10th / 12th Marksheet",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "PMKVY Skill India",
+    "sourceUrl": "https://www.pmkvyofficial.org",
+    "tamilName": "பிரதம மந்திரி திறன் மேம்பாட்டு திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Direct grant of ₹1.5 Lakh to ₹2.67 Lakh subsidy on housing",
+    "category": "HOUSING",
+    "criteria": [
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Applicant family must not own any existing pucca house in India.",
+        "id": "pmay_income",
+        "requirementDisplay": "Family income ≤ ₹3,00,000 / year (EWS/LIG category)",
+        "targetValue": 300000,
+        "title": "Annual Household Income",
+        "whyWeAskReason": "Welfare housing is restricted to low-income and homeless households."
+      },
+      {
+        "conditionType": "FAMILY_SIZE_MIN",
+        "explanationNote": "Housing benefits target multi-member family units.",
+        "id": "pmay_family",
+        "requirementDisplay": "Household family size ≥ 2 members",
+        "targetValue": 2,
+        "title": "Family Size",
+        "whyWeAskReason": "Verifies family household composition."
+      }
+    ],
+    "department": "Ministry of Housing and Urban Affairs / Ministry of Rural Development",
+    "description": "Provides direct financial assistance to eligible families with no pucca house to construct standard earthquake-resistant homes with toilet and clean cooking gas connections.",
+    "detailedBenefits": [
+      "Direct installment credit aligned with geo-tagged construction stages",
+      "Additional 90 days of unskilled labor wages under MGNREGS",
+      "Mandatory ₹12,000 assistance for toilet construction via Swachh Bharat"
+    ],
+    "hindiName": "प्रधानमंत्री आवास योजना (PMAY)",
+    "id": "sch_pmay_housing",
+    "lastVerifiedDate": "July 2026",
+    "name": "Pradhan Mantri Awas Yojana (PMAY-Gramin / Urban Housing for All)",
+    "officialSourceLabel": "Ministry of Housing & Urban Affairs (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_income_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Income Certificate",
+        "stage": "Document Verification",
+        "tip": "Issued by revenue department"
+      },
+      {
+        "id": "doc_land_noc",
+        "isMandatoryForEligibility": true,
+        "name": "Land Ownership / NOC Document",
+        "stage": "Document Verification",
+        "tip": "Proof of land holding or allottee site"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "PMAY Pucca House Aid",
+    "sourceUrl": "https://pmaymis.gov.in",
+    "tamilName": "பிரதம மந்திரி அனைவருக்கும் வீடு திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Composite term loan & working capital between ₹10 Lakh and ₹1 Crore",
+    "category": "ENTREPRENEURSHIP",
+    "criteria": [
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Required for commercial banking agreements.",
+        "id": "su_age",
+        "requirementDisplay": "Age 18 years or above",
+        "targetValue": 18,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Statutory age for commercial credit facilities."
+      },
+      {
+        "conditionType": "SOCIAL_CATEGORY_IN",
+        "explanationNote": "Specially mandated to promote financial inclusion in greenfield enterprises.",
+        "id": "su_social_gender",
+        "requirementDisplay": "Must be a Woman entrepreneur OR belonging to SC/ST category",
+        "targetValue": [
+          "SC",
+          "ST"
+        ],
+        "title": "Target Demographic",
+        "whyWeAskReason": "Parliamentary statutory guidelines reserve these loans for women and SC/ST founders."
+      },
+      {
+        "conditionType": "BUSINESS_OWNER_STATUS",
+        "explanationNote": "Borrower must hold at least 51% shareholding in the enterprise.",
+        "id": "su_biz",
+        "requirementDisplay": "Setting up a first-time greenfield business venture",
+        "targetValue": true,
+        "title": "Greenfield Enterprise",
+        "whyWeAskReason": "Commercial bank requirement for enterprise disbursement."
+      }
+    ],
+    "department": "Department of Financial Services, Ministry of Finance",
+    "description": "Facilitates bank loans between ₹10 Lakh and ₹1 Crore to at least one SC or ST borrower and at least one woman borrower per bank branch for setting up greenfield enterprises.",
+    "detailedBenefits": [
+      "Low margin money requirement (up to 15% with state convergence)",
+      "Handholding support from SIDBI and National Credit Guarantee Trustee Company",
+      "Repayment period of up to 7 years with a 18-month moratorium"
+    ],
+    "hindiName": "स्टैंड-अप इंडिया योजना",
+    "id": "sch_standup_india",
+    "lastVerifiedDate": "August 2026",
+    "name": "Stand-Up India Scheme for Women & SC/ST Entrepreneurs",
+    "officialSourceLabel": "Stand-Up India / SIDBI (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_pan",
+        "isMandatoryForEligibility": true,
+        "name": "PAN Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_community_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Community / Caste Certificate",
+        "stage": "Document Verification",
+        "tip": "Required if applying under SC/ST quota category"
+      },
+      {
+        "id": "doc_project_report",
+        "isMandatoryForEligibility": true,
+        "name": "Detailed Project Report (DPR)",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Stand-Up India",
+    "sourceUrl": "https://www.standupmitra.in",
+    "tamilName": "ஸ்டாண்ட்-அப் இந்தியா தொழில் கடன் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "₹65,000 per month stipend + ₹10,000 monthly travel & housing allowance",
+    "category": "EMPLOYMENT",
+    "criteria": [
+      {
+        "conditionType": "STATE_MATCH",
+        "explanationNote": "Field assignments are stationed across Tamil Nadu districts.",
+        "id": "tnf_state",
+        "requirementDisplay": "Resident of Tamil Nadu / Fluent in Tamil & English",
+        "targetValue": "Tamil Nadu",
+        "title": "State Connection / Tamil Proficiency",
+        "whyWeAskReason": "District policy implementation requires working knowledge of Tamil."
+      },
+      {
+        "conditionType": "EDUCATION_LEVEL_IN",
+        "explanationNote": "Demands high analytical rigor for public policy research.",
+        "id": "tnf_education",
+        "requirementDisplay": "Postgraduate Degree or 4-year Professional Degree with first class",
+        "targetValue": [
+          "Postgraduate",
+          "Doctorate"
+        ],
+        "title": "Education Qualification",
+        "whyWeAskReason": "Minimum requirement set by academic selection board."
+      },
+      {
+        "conditionType": "MAX_AGE",
+        "explanationNote": "Young professional fellowship limit.",
+        "id": "tnf_age",
+        "requirementDisplay": "Age between 21 and 30 years",
+        "targetValue": 30,
+        "title": "Age Limit",
+        "whyWeAskReason": "Fellowship designed as early-to-mid career accelerator."
+      }
+    ],
+    "department": "Special Programme Implementation Department, Govt of Tamil Nadu",
+    "description": "Prestigious 2-year public policy fellowship placing skilled young professionals with district administrators and state government departments.",
+    "detailedBenefits": [
+      "Direct mentorship under District Collectors and Principal Secretaries",
+      "Academic certification from leading partner university (BIM Trichy)",
+      "Full exposure to policy implementation and civic technology rollout"
+    ],
+    "hindiName": "तमिलनाडु मुख्यमंत्री फेलोशिप कार्यक्रम",
+    "id": "sch_tn_fellowship",
+    "lastVerifiedDate": "July 2026",
+    "name": "Tamil Nadu Chief Minister's Fellowship Programme (TNCMFP)",
+    "officialSourceLabel": "Govt of Tamil Nadu SPI Portal (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_pg_degree",
+        "isMandatoryForEligibility": true,
+        "name": "Postgraduate / Professional Degree Certificate",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_resume",
+        "isMandatoryForEligibility": true,
+        "name": "Statement of Purpose & Resume",
+        "stage": "Application Submission",
+        "tip": "Essay detailing public service motivation"
+      }
+    ],
+    "shortName": "TN CM Fellowship",
+    "sourceUrl": "https://tncmfp.tn.gov.in",
+    "tamilName": "தமிழ்நாடு முதலமைச்சரின் ஆய்வு உதவித்தொகைத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Up to ₹50,000 motorized aid subsidy + monthly pension allowance",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "DISABILITY_STATUS",
+        "explanationNote": "Valid UDID card or medical certificate required.",
+        "id": "div_disability",
+        "requirementDisplay": "Benchmark disability (40% or above)",
+        "targetValue": "Yes",
+        "title": "Disability Status",
+        "whyWeAskReason": "Statutory benefit specifically allocated for disabled citizens."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Targeted towards vulnerable and low-income beneficiaries.",
+        "id": "div_income",
+        "requirementDisplay": "Annual income ≤ ₹3,00,000",
+        "targetValue": 300000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures priority assistance to disadvantaged households."
+      }
+    ],
+    "department": "Department of Empowerment of Persons with Disabilities, MSJE",
+    "description": "Provides concessional financial assistance, assistive motorized equipment subsidies, and skill empowerment grants for persons with disabilities.",
+    "detailedBenefits": [
+      "Free motorized tricycle / braille kits / hearing aid distribution",
+      "Concessional 4% interest loans for self-employment livelihood projects",
+      "Monthly maintenance support directly transferred via DBT"
+    ],
+    "hindiName": "दिव्यांगजन स्वावलंबन योजना",
+    "id": "sch_divyangjan_swavlamban",
+    "lastVerifiedDate": "August 2026",
+    "name": "Divyangjan Swavlamban Divyang Welfare & Mobility Support",
+    "officialSourceLabel": "National Divyangjan Finance Development Corp (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_udid",
+        "isMandatoryForEligibility": true,
+        "name": "UDID / Disability Medical Certificate",
+        "stage": "Document Verification",
+        "tip": "Unique Disability ID card or certificate with 40%+ rating"
+      },
+      {
+        "id": "doc_income_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Income Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Divyang Welfare Support",
+    "sourceUrl": "https://www.nhfdc.nic.in",
+    "tamilName": "மாற்றுத்திறனாளிகள் வாழ்வாதார உதவித் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "₹5 Lakh per family per year cashless health cover",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Targeted at economically vulnerable households per SECC-2011 deprivation criteria.",
+        "id": "ab_income",
+        "requirementDisplay": "Family income ≤ ₹2,50,000 / year",
+        "targetValue": 250000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Determines inclusion under the deprivation-based beneficiary list."
+      }
+    ],
+    "department": "National Health Authority, Ministry of Health & Family Welfare",
+    "description": "Provides free cashless health insurance coverage for secondary and tertiary hospitalization to economically vulnerable families.",
+    "detailedBenefits": [
+      "Cashless treatment at empanelled public and private hospitals",
+      "Covers pre-existing conditions from day one",
+      "No cap on family size or age"
+    ],
+    "hindiName": "आयुष्मान भारत प्रधानमंत्री जन आरोग्य योजना",
+    "id": "sch_ayushman_bharat",
+    "lastVerifiedDate": "August 2026",
+    "name": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)",
+    "officialSourceLabel": "National Health Authority (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_ration_card",
+        "isMandatoryForEligibility": true,
+        "name": "Ration Card",
+        "stage": "Document Verification",
+        "tip": "Used to verify household deprivation category"
+      }
+    ],
+    "shortName": "Ayushman Bharat PM-JAY",
+    "sourceUrl": "https://pmjay.gov.in",
+    "tamilName": "ஆயுஷ்மான் பாரத் பிரதம மந்திரி ஜன் ஆரோக்ய திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Free LPG connection with first refill & stove support",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "GENDER_MATCH",
+        "explanationNote": "Connections are issued in the name of the adult woman of the household.",
+        "id": "puy_gender",
+        "requirementDisplay": "Applicant must be a woman aged 18 or above",
+        "targetValue": "Female",
+        "title": "Gender",
+        "whyWeAskReason": "Scheme is designed to empower women as primary beneficiaries."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Restricted to households below the poverty line as per state records.",
+        "id": "puy_income",
+        "requirementDisplay": "Family income ≤ ₹2,00,000 / year (BPL households)",
+        "targetValue": 200000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures the subsidy reaches genuinely low-income households."
+      }
+    ],
+    "department": "Ministry of Petroleum and Natural Gas",
+    "description": "Provides free LPG gas connections to women from below-poverty-line households to promote clean cooking fuel access.",
+    "detailedBenefits": [
+      "Zero-cost security deposit for new LPG connection",
+      "Financial assistance for first cylinder refill and hotplate",
+      "Reduces indoor air pollution from traditional cooking fuels"
+    ],
+    "hindiName": "प्रधानमंत्री उज्ज्वला योजना",
+    "id": "sch_ujjwala_yojana",
+    "lastVerifiedDate": "July 2026",
+    "name": "Pradhan Mantri Ujjwala Yojana (PMUY) LPG Connection Scheme",
+    "officialSourceLabel": "Ministry of Petroleum and Natural Gas (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_ration_card",
+        "isMandatoryForEligibility": true,
+        "name": "Ration Card",
+        "stage": "Application Submission",
+        "tip": "BPL ration card confirms income category"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "PM Ujjwala Yojana",
+    "sourceUrl": "https://pmuy.gov.in",
+    "tamilName": "பிரதம மந்திரி உஜ்ஜ்வலா திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "High government-fixed interest rate on deposits until maturity",
+    "category": "FINANCIAL_ASSISTANCE",
+    "criteria": [
+      {
+        "conditionType": "GENDER_MATCH",
+        "explanationNote": "Account must be opened by a parent/guardian for a female child under 10.",
+        "id": "ssy_gender",
+        "requirementDisplay": "Girl child below 10 years of age",
+        "targetValue": "Female",
+        "title": "Gender & Age",
+        "whyWeAskReason": "Scheme is exclusively for the welfare of the girl child."
+      }
+    ],
+    "department": "Department of Economic Affairs, Ministry of Finance",
+    "description": "A small savings scheme for the girl child, offering high fixed interest returns to support future education and marriage expenses.",
+    "detailedBenefits": [
+      "Deposits qualify for tax deduction under Section 80C",
+      "Partial withdrawal allowed for higher education after age 18",
+      "Account matures 21 years from opening or on marriage after 18"
+    ],
+    "hindiName": "सुकन्या समृद्धि योजना",
+    "id": "sch_sukanya_samriddhi",
+    "lastVerifiedDate": "July 2026",
+    "name": "Sukanya Samriddhi Yojana (SSY) Girl Child Savings Scheme",
+    "officialSourceLabel": "India Post / Authorized Banks (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_birth_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Birth Certificate",
+        "stage": "Application Submission",
+        "tip": "Proof of girl child's date of birth"
+      },
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_guardian_id",
+        "isMandatoryForEligibility": true,
+        "name": "Guardian ID Proof",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Sukanya Samriddhi Yojana",
+    "sourceUrl": "https://www.indiapost.gov.in",
+    "tamilName": "சுகன்யா சம்ரிதி திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "₹12,000 per year until Class 12",
+    "category": "EDUCATION",
+    "criteria": [
+      {
+        "conditionType": "STUDENT_STATUS",
+        "explanationNote": "Applicant must be a regular student in a state government or aided school.",
+        "id": "nmmss_student",
+        "requirementDisplay": "Enrolled in Class 9 to 12 in a government school",
+        "targetValue": true,
+        "title": "Student Status",
+        "whyWeAskReason": "Scholarship targets continuation of secondary schooling."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Restricted to economically weaker section households.",
+        "id": "nmmss_income",
+        "requirementDisplay": "Parental income ≤ ₹1,50,000 / year",
+        "targetValue": 150000,
+        "title": "Annual Family Income",
+        "whyWeAskReason": "Ensures scholarship funds prioritize low-income meritorious students."
+      }
+    ],
+    "department": "Department of School Education & Literacy, Ministry of Education",
+    "description": "Provides scholarships to meritorious students from economically weaker sections to reduce dropout rates at the secondary school stage.",
+    "detailedBenefits": [
+      "Direct annual scholarship credited to student bank account",
+      "Awarded based on a qualifying state-level merit examination",
+      "Renewable each year subject to minimum attendance and marks"
+    ],
+    "hindiName": "राष्ट्रीय साधन सह मेधा छात्रवृत्ति",
+    "id": "sch_nsp_central_scholarship",
+    "lastVerifiedDate": "August 2026",
+    "name": "National Means-cum-Merit Scholarship (NMMSS)",
+    "officialSourceLabel": "National Scholarship Portal (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bonafide",
+        "isMandatoryForEligibility": true,
+        "name": "Student ID / Bonafide Certificate",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_income_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Income Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "NMMSS Merit Scholarship",
+    "sourceUrl": "https://scholarships.gov.in",
+    "tamilName": "தேசிய தகுதி அடிப்படை உதவித்தொகை"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Collateral-free loans up to ₹20 Lakh (Shishu / Kishor / Tarun / Tarun Plus)",
+    "category": "ENTREPRENEURSHIP",
+    "criteria": [
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Standard legal age requirement for loan agreements.",
+        "id": "mudra_age",
+        "requirementDisplay": "Age 18 years or above",
+        "targetValue": 18,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Statutory requirement for entering credit contracts."
+      },
+      {
+        "conditionType": "BUSINESS_OWNER_STATUS",
+        "explanationNote": "Covers manufacturing, trading, and service sector micro-units.",
+        "id": "mudra_biz",
+        "requirementDisplay": "Owns or plans to start a non-farm micro/small enterprise",
+        "targetValue": true,
+        "title": "Non-Farm Micro Enterprise",
+        "whyWeAskReason": "Scheme is designed specifically for small non-farm businesses."
+      }
+    ],
+    "department": "Department of Financial Services, Ministry of Finance",
+    "description": "Provides collateral-free micro-loans up to ₹20 Lakh to non-corporate, non-farm small and micro enterprises.",
+    "detailedBenefits": [
+      "No collateral or third-party guarantee required",
+      "Loans categorized by business growth stage for flexible ticket sizes",
+      "Available through banks, NBFCs, and microfinance institutions"
+    ],
+    "hindiName": "प्रधानमंत्री मुद्रा योजना",
+    "id": "sch_mudra_loan",
+    "lastVerifiedDate": "August 2026",
+    "name": "Pradhan Mantri MUDRA Yojana (PMMY) Micro-Credit Scheme",
+    "officialSourceLabel": "MUDRA / Department of Financial Services (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_pan",
+        "isMandatoryForEligibility": true,
+        "name": "PAN Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_project_report",
+        "isMandatoryForEligibility": true,
+        "name": "Detailed Project Report (DPR)",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "PM MUDRA Yojana",
+    "sourceUrl": "https://www.mudra.org.in",
+    "tamilName": "பிரதம மந்திரி முத்ரா திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Guaranteed monthly pension of ₹1,000 to ₹5,000 after age 60",
+    "category": "FINANCIAL_ASSISTANCE",
+    "criteria": [
+      {
+        "conditionType": "MAX_AGE",
+        "explanationNote": "Enrollment window ensures at least 20 years of contribution before pension starts.",
+        "id": "apy_age",
+        "requirementDisplay": "Age between 18 and 40 years",
+        "targetValue": 40,
+        "title": "Age Range",
+        "whyWeAskReason": "Pension payout structure is based on years of contribution."
+      },
+      {
+        "conditionType": "EMPLOYED_STATUS",
+        "explanationNote": "Targeted at workers without formal employer-provided pension coverage.",
+        "id": "apy_employed",
+        "requirementDisplay": "Not covered under any statutory social security scheme",
+        "targetValue": false,
+        "title": "Unorganized Sector Worker",
+        "whyWeAskReason": "Scheme complements the unorganized sector's lack of pension access."
+      }
+    ],
+    "department": "Pension Fund Regulatory and Development Authority (PFRDA)",
+    "description": "A voluntary, government-backed pension scheme aimed at unorganized sector workers, guaranteeing a fixed monthly pension after age 60.",
+    "detailedBenefits": [
+      "Fixed monthly contribution based on age of joining and chosen pension slab",
+      "Government co-contribution for eligible early subscribers",
+      "Spouse continuation and nominee corpus payout benefits"
+    ],
+    "hindiName": "अटल पेंशन योजना",
+    "id": "sch_atal_pension",
+    "lastVerifiedDate": "July 2026",
+    "name": "Atal Pension Yojana (APY)",
+    "officialSourceLabel": "PFRDA (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Contributions are auto-debited monthly"
+      }
+    ],
+    "shortName": "Atal Pension Yojana",
+    "sourceUrl": "https://npscra.nsdl.co.in/nsdl/scheme-details.php",
+    "tamilName": "அடல் ஓய்வூதியத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Cash assistance of ₹700 to ₹1,400 for institutional delivery",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "GENDER_MATCH",
+        "explanationNote": "Benefit is tied to maternal health during pregnancy and delivery.",
+        "id": "jsy_gender",
+        "requirementDisplay": "Pregnant woman opting for institutional delivery",
+        "targetValue": "Female",
+        "title": "Gender",
+        "whyWeAskReason": "Scheme is exclusively for maternal welfare."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Priority given to BPL and low-income households in high-focus states.",
+        "id": "jsy_income",
+        "requirementDisplay": "Family income ≤ ₹3,00,000 / year (higher priority in low-performing states)",
+        "targetValue": 300000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures maternal health support reaches vulnerable households first."
+      }
+    ],
+    "department": "National Health Mission, Ministry of Health & Family Welfare",
+    "description": "Provides cash assistance to pregnant women to promote institutional delivery and reduce maternal and infant mortality.",
+    "detailedBenefits": [
+      "Direct cash benefit linked to delivery at a government health facility",
+      "Free antenatal and postnatal check-ups at empanelled centers",
+      "Additional transport assistance for rural beneficiaries"
+    ],
+    "hindiName": "जननी सुरक्षा योजना",
+    "id": "sch_janani_suraksha",
+    "lastVerifiedDate": "July 2026",
+    "name": "Janani Suraksha Yojana (JSY) Maternal Health Scheme",
+    "officialSourceLabel": "National Health Mission (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_jsy_card",
+        "isMandatoryForEligibility": true,
+        "name": "Mother and Child Protection (MCP) Card",
+        "stage": "Document Verification",
+        "tip": "Issued at first antenatal registration"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Janani Suraksha Yojana",
+    "sourceUrl": "https://nhm.gov.in",
+    "tamilName": "ஜனனி சுரக்ஷா திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Monthly pension of ₹200 to ₹500 (state top-ups may apply)",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Pension eligibility begins strictly from age 60 onward.",
+        "id": "ignoaps_age",
+        "requirementDisplay": "Age 60 years or above",
+        "targetValue": 60,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Scheme targets senior citizens in old age."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Restricted to households below the poverty line.",
+        "id": "ignoaps_income",
+        "requirementDisplay": "Family income ≤ ₹1,00,000 / year (BPL households)",
+        "targetValue": 100000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures pension support prioritizes the poorest elderly citizens."
+      }
+    ],
+    "department": "Ministry of Rural Development",
+    "description": "Provides a monthly pension to elderly citizens living below the poverty line to ensure basic financial security in old age.",
+    "detailedBenefits": [
+      "Direct monthly pension transfer via bank/post office account",
+      "Combined with state government pension top-up schemes",
+      "No repayment or contribution required"
+    ],
+    "hindiName": "इंदिरा गांधी राष्ट्रीय वृद्धावस्था पेंशन योजना",
+    "id": "sch_nsap_old_age",
+    "lastVerifiedDate": "August 2026",
+    "name": "National Social Assistance Programme - Old Age Pension (IGNOAPS)",
+    "officialSourceLabel": "Ministry of Rural Development (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_age_proof",
+        "isMandatoryForEligibility": true,
+        "name": "Age Proof Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_ration_card",
+        "isMandatoryForEligibility": true,
+        "name": "Ration Card",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "IGNOAPS Old Age Pension",
+    "sourceUrl": "https://nsap.nic.in",
+    "tamilName": "இந்திரா காந்தி முதுமை ஓய்வூதியத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Low uniform premium (1.5%-5% of sum insured) with full claim coverage",
+    "category": "AGRICULTURE",
+    "criteria": [
+      {
+        "conditionType": "FARMER_STATUS",
+        "explanationNote": "Both loanee and non-loanee farmers cultivating notified crops are eligible.",
+        "id": "pmfby_farmer",
+        "requirementDisplay": "Must be a farmer growing notified crops (owner or tenant)",
+        "targetValue": true,
+        "title": "Farmer Status",
+        "whyWeAskReason": "Insurance coverage is tied to active crop cultivation."
+      }
+    ],
+    "department": "Department of Agriculture & Farmers Welfare",
+    "description": "Provides comprehensive crop insurance coverage against yield losses due to natural calamities, pests, and diseases at a low farmer premium.",
+    "detailedBenefits": [
+      "Covers pre-sowing to post-harvest losses due to natural risks",
+      "Use of technology (drones, satellite imaging) for quick claim assessment",
+      "Direct claim settlement into farmer's bank account"
+    ],
+    "hindiName": "प्रधानमंत्री फसल बीमा योजना",
+    "id": "sch_pmfby_crop_insurance",
+    "lastVerifiedDate": "August 2026",
+    "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY) Crop Insurance",
+    "officialSourceLabel": "Department of Agriculture & Farmers Welfare (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_patta",
+        "isMandatoryForEligibility": true,
+        "name": "Land Ownership / Patta Document",
+        "stage": "Document Verification",
+        "tip": "Or tenant farmer agreement where applicable"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_sowing_cert",
+        "isMandatoryForEligibility": false,
+        "name": "Sowing Declaration Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "PM Fasal Bima Yojana",
+    "sourceUrl": "https://pmfby.gov.in",
+    "tamilName": "பிரதம மந்திரி பயிர் காப்பீட்டு திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Concessional credit up to ₹3 Lakh at 4% effective interest (with prompt repayment)",
+    "category": "AGRICULTURE",
+    "criteria": [
+      {
+        "conditionType": "FARMER_STATUS",
+        "explanationNote": "Covers a wide range of cultivating farmer categories.",
+        "id": "kcc_farmer",
+        "requirementDisplay": "Individual or joint farmer, tenant farmer, or sharecropper",
+        "targetValue": true,
+        "title": "Farmer Status",
+        "whyWeAskReason": "Credit facility is designed exclusively for active cultivators."
+      },
+      {
+        "conditionType": "MAX_AGE",
+        "explanationNote": "Applicants above 60 may require a co-applicant legal heir.",
+        "id": "kcc_age",
+        "requirementDisplay": "Age between 18 and 75 years",
+        "targetValue": 75,
+        "title": "Age Range",
+        "whyWeAskReason": "Bank credit risk policy requires an age ceiling with co-applicant support."
+      }
+    ],
+    "department": "Department of Agriculture & Farmers Welfare / NABARD",
+    "description": "Provides farmers with timely access to short-term credit for cultivation expenses, farm equipment, and allied agricultural activities at concessional interest rates.",
+    "detailedBenefits": [
+      "Flexible withdrawal and repayment tied to crop cycles",
+      "Interest subvention of 3% for timely repayment",
+      "Also covers post-harvest expenses and allied activities like dairy/fisheries"
+    ],
+    "hindiName": "किसान क्रेडिट कार्ड योजना",
+    "id": "sch_kcc_credit_card",
+    "lastVerifiedDate": "July 2026",
+    "name": "Kisan Credit Card (KCC) Scheme",
+    "officialSourceLabel": "NABARD / Participating Banks (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_patta",
+        "isMandatoryForEligibility": true,
+        "name": "Land Ownership / Patta Document",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Kisan Credit Card",
+    "sourceUrl": "https://www.nabard.org",
+    "tamilName": "விவசாயிகள் கடன் அட்டைத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Guaranteed 100 days/year of wage employment at notified rural wage rate",
+    "category": "EMPLOYMENT",
+    "criteria": [
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Only adult household members can register for job cards.",
+        "id": "mgnrega_age",
+        "requirementDisplay": "Age 18 years or above",
+        "targetValue": 18,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Statutory minimum working age for manual labor employment."
+      },
+      {
+        "conditionType": "EMPLOYED_STATUS",
+        "explanationNote": "Scheme applies to households seeking casual manual labor employment.",
+        "id": "mgnrega_employed",
+        "requirementDisplay": "Rural household member seeking unskilled manual work",
+        "targetValue": false,
+        "title": "Willing to Undertake Unskilled Manual Work",
+        "whyWeAskReason": "Distinguishes applicants seeking guaranteed rural employment."
+      }
+    ],
+    "department": "Ministry of Rural Development",
+    "description": "Guarantees 100 days of wage employment per financial year to every rural household whose adult members volunteer for unskilled manual work.",
+    "detailedBenefits": [
+      "Wages credited directly to bank/post office account within 15 days",
+      "Unemployment allowance if work not provided within 15 days of demand",
+      "Work sites include water conservation, rural roads, and afforestation projects"
+    ],
+    "hindiName": "महात्मा गांधी राष्ट्रीय ग्रामीण रोजगार गारंटी योजना",
+    "id": "sch_mgnrega",
+    "lastVerifiedDate": "August 2026",
+    "name": "Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA)",
+    "officialSourceLabel": "Ministry of Rural Development (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_job_card_photo",
+        "isMandatoryForEligibility": true,
+        "name": "Passport Size Photograph",
+        "stage": "Application Submission",
+        "tip": "For issuance of the MGNREGA Job Card"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "MGNREGA Rural Employment",
+    "sourceUrl": "https://nrega.nic.in",
+    "tamilName": "மகாத்மா காந்தி தேசிய ஊரக வேலைவாய்ப்பு உறுதித் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Free job matching, resume building, and career counselling services",
+    "category": "EMPLOYMENT",
+    "criteria": [
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Open to all job seekers above minimum working age.",
+        "id": "ncs_age",
+        "requirementDisplay": "Age 15 years or above",
+        "targetValue": 15,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Aligns with minimum legal working age guidelines."
+      },
+      {
+        "conditionType": "EMPLOYED_STATUS",
+        "explanationNote": "Platform is intended for individuals actively looking for work.",
+        "id": "ncs_employed",
+        "requirementDisplay": "Actively seeking employment or career change",
+        "targetValue": false,
+        "title": "Job Seeker Status",
+        "whyWeAskReason": "Helps prioritize active job seekers on the portal."
+      }
+    ],
+    "department": "Ministry of Labour & Employment",
+    "description": "A free online job-matching and career counselling platform connecting job seekers with employers, along with regular offline recruitment drives (Rozgar Melas).",
+    "detailedBenefits": [
+      "Access to verified job listings from private and government employers",
+      "Free vocational guidance and career counselling sessions",
+      "Priority access to district-level Rozgar Mela recruitment drives"
+    ],
+    "hindiName": "राष्ट्रीय करियर सेवा पोर्टल",
+    "id": "sch_ncs_rozgar_mela",
+    "lastVerifiedDate": "July 2026",
+    "name": "National Career Service (NCS) Employment Portal & Rozgar Mela",
+    "officialSourceLabel": "Ministry of Labour & Employment (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_resume",
+        "isMandatoryForEligibility": true,
+        "name": "Statement of Purpose & Resume",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "NCS Employment Portal",
+    "sourceUrl": "https://www.ncs.gov.in",
+    "tamilName": "தேசிய தொழில் சேவை போர்ட்டல்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Seed funding up to ₹20 Lakh (grant) and ₹50 Lakh (debt/convertible)",
+    "category": "ENTREPRENEURSHIP",
+    "criteria": [
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Founders must be legal adults to register a company/LLP.",
+        "id": "startup_age",
+        "requirementDisplay": "Age 18 years or above",
+        "targetValue": 18,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Statutory requirement for business incorporation."
+      },
+      {
+        "conditionType": "BUSINESS_OWNER_STATUS",
+        "explanationNote": "Entity must not be formed by splitting up an existing business.",
+        "id": "startup_biz",
+        "requirementDisplay": "Incorporated less than 2 years ago with innovative product/service",
+        "targetValue": true,
+        "title": "Early-Stage Startup Founder",
+        "whyWeAskReason": "Scheme is reserved for genuinely early-stage innovative startups."
+      }
+    ],
+    "department": "Department for Promotion of Industry and Internal Trade (DPIIT)",
+    "description": "Provides financial assistance and DPIIT recognition to early-stage startups for proof-of-concept, prototype development, and market entry.",
+    "detailedBenefits": [
+      "Tax exemptions for 3 consecutive years upon DPIIT recognition",
+      "Fast-track patent examination with 80% fee rebate",
+      "Access to government tenders without prior turnover/experience criteria"
+    ],
+    "hindiName": "स्टार्टअप इंडिया सीड फंड योजना",
+    "id": "sch_startup_india",
+    "lastVerifiedDate": "August 2026",
+    "name": "Startup India Seed Fund & Recognition Scheme",
+    "officialSourceLabel": "Startup India / DPIIT (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_pan",
+        "isMandatoryForEligibility": true,
+        "name": "PAN Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_incorporation_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Certificate of Incorporation",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_project_report",
+        "isMandatoryForEligibility": true,
+        "name": "Detailed Project Report (DPR)",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Startup India Seed Fund",
+    "sourceUrl": "https://www.startupindia.gov.in",
+    "tamilName": "தொடக்க இந்தியா நிதி உதவித் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Collateral-free loans starting at ₹10,000, scaling up to ₹50,000",
+    "category": "ENTREPRENEURSHIP",
+    "criteria": [
+      {
+        "conditionType": "BUSINESS_OWNER_STATUS",
+        "explanationNote": "Applicant must possess a Certificate of Vending or a Letter of Recommendation from the Urban Local Body.",
+        "id": "svanidhi_biz",
+        "requirementDisplay": "Vending in urban areas as of or before March 2020",
+        "targetValue": true,
+        "title": "Street Vendor Status",
+        "whyWeAskReason": "Scheme exclusively targets registered urban street vendors."
+      },
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Legal age requirement to avail micro-credit facility.",
+        "id": "svanidhi_age",
+        "requirementDisplay": "Age 18 years or above",
+        "targetValue": 18,
+        "title": "Minimum Age",
+        "whyWeAskReason": "Statutory requirement for loan agreements."
+      }
+    ],
+    "department": "Ministry of Housing and Urban Affairs",
+    "description": "Provides affordable working capital loans to urban street vendors to resume and grow their livelihoods.",
+    "detailedBenefits": [
+      "No collateral required for the loan amount",
+      "7% annual interest subsidy on timely/early repayment",
+      "Cashback incentive for adopting digital payment transactions"
+    ],
+    "hindiName": "प्रधानमंत्री स्वनिधि योजना",
+    "id": "sch_pmuy_svanidhi",
+    "lastVerifiedDate": "July 2026",
+    "name": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+    "officialSourceLabel": "Ministry of Housing and Urban Affairs (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_vending_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Certificate of Vending / Vendor ID",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "PM SVANidhi",
+    "sourceUrl": "https://pmsvanidhi.mohua.gov.in",
+    "tamilName": "பிரதம மந்திரி தெருக் கடைவர் நிதி உதவித் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Free skill training + subsidized micro-enterprise loans for urban poor",
+    "category": "SKILL_DEVELOPMENT",
+    "criteria": [
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Targeted at economically weaker urban households.",
+        "id": "nulm_income",
+        "requirementDisplay": "Family income ≤ ₹2,00,000 / year (urban poor households)",
+        "targetValue": 200000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures livelihood support reaches genuinely disadvantaged urban residents."
+      },
+      {
+        "conditionType": "EMPLOYED_STATUS",
+        "explanationNote": "Priority given to those without stable formal employment.",
+        "id": "nulm_employed",
+        "requirementDisplay": "Currently unemployed or in low-income informal work",
+        "targetValue": false,
+        "title": "Unemployed or Underemployed",
+        "whyWeAskReason": "Measures need for skilling and livelihood support."
+      }
+    ],
+    "department": "Ministry of Housing and Urban Affairs",
+    "description": "Provides skill training, self-employment support, and shelter facilities for urban poor and homeless populations to build sustainable livelihoods.",
+    "detailedBenefits": [
+      "Market-relevant skill training with certification and placement linkage",
+      "Interest subsidy on individual and group micro-enterprise loans",
+      "Access to shelters and support services for urban homeless"
+    ],
+    "hindiName": "दीनदयाल अंत्योदय योजना - राष्ट्रीय शहरी आजीविका मिशन",
+    "id": "sch_deendayal_antyodaya",
+    "lastVerifiedDate": "July 2026",
+    "name": "Deendayal Antyodaya Yojana - National Urban Livelihoods Mission (DAY-NULM)",
+    "officialSourceLabel": "Ministry of Housing and Urban Affairs (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_income_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Income Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "DAY-NULM Urban Livelihoods",
+    "sourceUrl": "https://nulm.gov.in",
+    "tamilName": "தீன்தயாள் அந்த்யோதயா தேசிய நகர்ப்புற வாழ்வாதாரத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "One-time cash assistance of ₹25,000 to ₹50,000 depending on category",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "STATE_MATCH",
+        "explanationNote": "State government welfare scheme restricted to Tamil Nadu domiciles.",
+        "id": "tnma_state",
+        "requirementDisplay": "Resident of Tamil Nadu",
+        "targetValue": "Tamil Nadu",
+        "title": "State of Residence",
+        "whyWeAskReason": "Budget allocation is limited to Tamil Nadu residents."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Restricted to families below the state-defined poverty threshold.",
+        "id": "tnma_income",
+        "requirementDisplay": "Family income ≤ ₹72,000 / year",
+        "targetValue": 72000,
+        "title": "Annual Family Income",
+        "whyWeAskReason": "Ensures assistance is prioritized for the poorest families."
+      }
+    ],
+    "department": "Department of Social Welfare and Women Empowerment, Govt of Tamil Nadu",
+    "description": "Provides one-time financial assistance for the marriage of daughters from poor families, orphan girls, and widow remarriages in Tamil Nadu.",
+    "detailedBenefits": [
+      "Higher assistance for orphan brides and widow remarriage cases",
+      "Direct bank transfer disbursed before or after the marriage registration",
+      "Additional gold coin incentive under certain state variants"
+    ],
+    "hindiName": "तमिलनाडु विवाह सहायता योजना",
+    "id": "sch_tn_marriage_assistance",
+    "lastVerifiedDate": "July 2026",
+    "name": "Tamil Nadu Moovalur Ramamirtham Ammaiyar Marriage Assistance Scheme",
+    "officialSourceLabel": "Govt of Tamil Nadu Social Welfare (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_marriage_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Marriage Registration Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_income_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Income Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "TN Marriage Assistance",
+    "sourceUrl": "https://tnsocialwelfare.tn.gov.in",
+    "tamilName": "மூவலூர் ராமாமிர்தம் அம்மையார் திருமண உதவித் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "100% free travel on government ordinary bus services",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "GENDER_MATCH",
+        "explanationNote": "Scheme benefit is provided exclusively to women commuters.",
+        "id": "tnbus_gender",
+        "requirementDisplay": "Must identify as Female",
+        "targetValue": "Female",
+        "title": "Gender",
+        "whyWeAskReason": "State welfare initiative targeted at women's mobility and safety."
+      },
+      {
+        "conditionType": "STATE_MATCH",
+        "explanationNote": "Applicable only within Tamil Nadu state transport corporation routes.",
+        "id": "tnbus_state",
+        "requirementDisplay": "Resident of Tamil Nadu",
+        "targetValue": "Tamil Nadu",
+        "title": "State of Residence",
+        "whyWeAskReason": "State-funded scheme limited to Tamil Nadu residents and routes."
+      }
+    ],
+    "department": "Transport Department, Govt of Tamil Nadu",
+    "description": "Provides free travel for women in ordinary/town bus services operated by state transport corporations across Tamil Nadu.",
+    "detailedBenefits": [
+      "Applicable across all districts on ordinary and town bus routes",
+      "No separate pass application required; verified via Aadhaar-linked ID",
+      "Significant monthly commuting cost savings for working women and students"
+    ],
+    "hindiName": "तमिलनाडु महिला मुफ्त बस यात्रा योजना",
+    "id": "sch_tn_free_bus_pass",
+    "lastVerifiedDate": "August 2026",
+    "name": "Tamil Nadu Free Bus Travel Scheme for Women",
+    "officialSourceLabel": "Govt of Tamil Nadu Transport Department (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Used for identity verification while boarding"
+      }
+    ],
+    "shortName": "TN Free Bus Travel (Women)",
+    "sourceUrl": "https://www.tn.gov.in/department/transport",
+    "tamilName": "தமிழ்நாடு பெண்களுக்கான இலவச பேருந்து பயணத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Free daily nutritious breakfast for eligible government school students",
+    "category": "EDUCATION",
+    "criteria": [
+      {
+        "conditionType": "STUDENT_STATUS",
+        "explanationNote": "Applicable to children studying Classes 1 to 5 in government schools.",
+        "id": "tnbreakfast_student",
+        "requirementDisplay": "Enrolled in a Tamil Nadu government primary school",
+        "targetValue": true,
+        "title": "Student Status",
+        "whyWeAskReason": "Scheme is designed for primary school children's nutrition support."
+      },
+      {
+        "conditionType": "STATE_MATCH",
+        "explanationNote": "Restricted to Tamil Nadu government school students.",
+        "id": "tnbreakfast_state",
+        "requirementDisplay": "Resident of Tamil Nadu",
+        "targetValue": "Tamil Nadu",
+        "title": "State of Residence",
+        "whyWeAskReason": "State-funded scheme limited to Tamil Nadu government schools."
+      }
+    ],
+    "department": "School Education Department, Govt of Tamil Nadu",
+    "description": "Provides free nutritious breakfast to children studying in Tamil Nadu government primary schools to improve nutrition and school attendance.",
+    "detailedBenefits": [
+      "Served daily before the start of school hours",
+      "Menu curated by nutrition experts to reduce classroom hunger and dropout",
+      "Complements the existing midday meal scheme"
+    ],
+    "hindiName": "तमिलनाडु मुख्यमंत्री नाश्ता योजना",
+    "id": "sch_tn_breakfast_scheme",
+    "lastVerifiedDate": "July 2026",
+    "name": "Tamil Nadu Chief Minister's Breakfast Scheme",
+    "officialSourceLabel": "Govt of Tamil Nadu School Education Dept (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_bonafide",
+        "isMandatoryForEligibility": true,
+        "name": "Student ID / Bonafide Certificate",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "TN CM Breakfast Scheme",
+    "sourceUrl": "https://www.tnschools.gov.in",
+    "tamilName": "தமிழ்நாடு முதலமைச்சரின் காலை உணவுத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Free laptop for eligible transitioning students",
+    "category": "EDUCATION",
+    "criteria": [
+      {
+        "conditionType": "STUDENT_STATUS",
+        "explanationNote": "Priority given to top-performing students in government/aided schools.",
+        "id": "laptop_student",
+        "requirementDisplay": "Completed Class 12 in a Tamil Nadu government school and enrolled in higher education",
+        "targetValue": true,
+        "title": "Student Status",
+        "whyWeAskReason": "Scheme rewards academic merit at the school-to-college transition."
+      },
+      {
+        "conditionType": "STATE_MATCH",
+        "explanationNote": "State-funded scheme restricted to Tamil Nadu students.",
+        "id": "laptop_state",
+        "requirementDisplay": "Resident of Tamil Nadu",
+        "targetValue": "Tamil Nadu",
+        "title": "State of Residence",
+        "whyWeAskReason": "Budget allocation is limited to Tamil Nadu residents."
+      }
+    ],
+    "department": "School Education Department, Govt of Tamil Nadu",
+    "description": "Provides free laptops to meritorious students transitioning from Class 12 to undergraduate studies to bridge the digital learning divide.",
+    "detailedBenefits": [
+      "Distributed at government-organized district ceremonies",
+      "Preloaded with e-learning content and educational software",
+      "Improves access to online courses and digital exam preparation"
+    ],
+    "hindiName": "तमिलनाडु मुफ्त लैपटॉप योजना",
+    "id": "sch_one_student_one_laptop",
+    "lastVerifiedDate": "July 2026",
+    "name": "Tamil Nadu Free Laptop Scheme for Higher Secondary & College Students",
+    "officialSourceLabel": "Govt of Tamil Nadu School Education Dept (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_marksheet",
+        "isMandatoryForEligibility": true,
+        "name": "10th / 12th Marksheet",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bonafide",
+        "isMandatoryForEligibility": true,
+        "name": "Student ID / Bonafide Certificate",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "TN Free Laptop Scheme",
+    "sourceUrl": "https://www.tnschools.gov.in",
+    "tamilName": "தமிழ்நாடு இலவச மடிக்கணினி வழங்கும் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Monthly pension of ₹300 to ₹500 (state top-ups may apply)",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "DISABILITY_STATUS",
+        "explanationNote": "Requires valid UDID card or medical board certificate confirming severity.",
+        "id": "igndps_disability",
+        "requirementDisplay": "Severe or multiple disability (80% or above)",
+        "targetValue": "Yes",
+        "title": "Disability Status",
+        "whyWeAskReason": "Statutory pension reserved for persons with severe disabilities."
+      },
+      {
+        "conditionType": "MIN_AGE",
+        "explanationNote": "Beneficiaries above 80 are shifted to the old-age pension scheme.",
+        "id": "igndps_age",
+        "requirementDisplay": "Age 18 to 79 years",
+        "targetValue": 18,
+        "title": "Age Range",
+        "whyWeAskReason": "Determines which national pension scheme category applies."
+      }
+    ],
+    "department": "Ministry of Rural Development",
+    "description": "Provides a monthly pension to persons with severe or multiple disabilities living below the poverty line.",
+    "detailedBenefits": [
+      "Direct monthly pension credited to bank/post office account",
+      "Combined eligibility with state disability welfare top-up schemes",
+      "No contribution required from the beneficiary"
+    ],
+    "hindiName": "इंदिरा गांधी राष्ट्रीय विकलांगता पेंशन योजना",
+    "id": "sch_disability_pension",
+    "lastVerifiedDate": "August 2026",
+    "name": "National Social Assistance Programme - Disability Pension (IGNDPS)",
+    "officialSourceLabel": "Ministry of Rural Development (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_udid",
+        "isMandatoryForEligibility": true,
+        "name": "UDID / Disability Medical Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_ration_card",
+        "isMandatoryForEligibility": true,
+        "name": "Ration Card",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "IGNDPS Disability Pension",
+    "sourceUrl": "https://nsap.nic.in",
+    "tamilName": "இந்திரா காந்தி ஊனமுற்றோர் ஓய்வூதியத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Monthly pension of ₹300 to ₹500 (state top-ups may apply)",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "GENDER_MATCH",
+        "explanationNote": "Applicant must be a widow within the specified age bracket for this scheme.",
+        "id": "ignwps_gender",
+        "requirementDisplay": "Widow aged 40 to 79 years",
+        "targetValue": "Female",
+        "title": "Gender & Marital Status",
+        "whyWeAskReason": "Scheme is exclusively for widowed women in this age range."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Restricted to households below the poverty line.",
+        "id": "ignwps_income",
+        "requirementDisplay": "Family income ≤ ₹1,00,000 / year (BPL households)",
+        "targetValue": 100000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures pension support prioritizes the poorest widowed women."
+      }
+    ],
+    "department": "Ministry of Rural Development",
+    "description": "Provides a monthly pension to widows from below-poverty-line households to ensure basic financial security.",
+    "detailedBenefits": [
+      "Direct monthly pension credited to bank/post office account",
+      "Combined with state widow welfare top-up schemes",
+      "No repayment or contribution required"
+    ],
+    "hindiName": "इंदिरा गांधी राष्ट्रीय विधवा पेंशन योजना",
+    "id": "sch_widow_pension",
+    "lastVerifiedDate": "August 2026",
+    "name": "National Social Assistance Programme - Widow Pension (IGNWPS)",
+    "officialSourceLabel": "Ministry of Rural Development (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_death_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Spouse Death Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_ration_card",
+        "isMandatoryForEligibility": true,
+        "name": "Ration Card",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "IGNWPS Widow Pension",
+    "sourceUrl": "https://nsap.nic.in",
+    "tamilName": "இந்திரா காந்தி விதவை ஓய்வூதியத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Up to ₹50,000 per year for tuition fee and incidentals",
+    "category": "EDUCATION",
+    "criteria": [
+      {
+        "conditionType": "DISABILITY_STATUS",
+        "explanationNote": "Valid UDID card or medical certificate required for verification.",
+        "id": "saksham_disability",
+        "requirementDisplay": "Benchmark disability (40% or above)",
+        "targetValue": "Yes",
+        "title": "Disability Status",
+        "whyWeAskReason": "Scholarship is reserved for differently-abled technical education students."
+      },
+      {
+        "conditionType": "STUDENT_STATUS",
+        "explanationNote": "Applicable to first-year students in technical education programs.",
+        "id": "saksham_student",
+        "requirementDisplay": "Enrolled in an AICTE-approved diploma or degree program",
+        "targetValue": true,
+        "title": "Student Status",
+        "whyWeAskReason": "Ensures funds go to actively enrolled technical education students."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Broader income ceiling to accommodate the disability-focused welfare intent.",
+        "id": "saksham_income",
+        "requirementDisplay": "Family income ≤ ₹8,00,000 / year",
+        "targetValue": 800000,
+        "title": "Annual Family Income",
+        "whyWeAskReason": "Ensures the scholarship still targets non-affluent households."
+      }
+    ],
+    "department": "All India Council for Technical Education (AICTE), Ministry of Education",
+    "description": "Provides financial assistance to differently-abled students pursuing technical degree or diploma education to reduce economic burden and dropout.",
+    "detailedBenefits": [
+      "Covers tuition and other fee components for AICTE-approved institutions",
+      "Renewable annually based on satisfactory academic progress",
+      "No repayment obligation — scholarship, not a loan"
+    ],
+    "hindiName": "एआईसीटीई सक्षम छात्रवृत्ति योजना",
+    "id": "sch_saksham_scholarship",
+    "lastVerifiedDate": "July 2026",
+    "name": "AICTE Saksham Scholarship Scheme for Differently-Abled Students",
+    "officialSourceLabel": "AICTE (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_udid",
+        "isMandatoryForEligibility": true,
+        "name": "UDID / Disability Medical Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bonafide",
+        "isMandatoryForEligibility": true,
+        "name": "Student ID / Bonafide Certificate",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_income_cert",
+        "isMandatoryForEligibility": true,
+        "name": "Income Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "AICTE Saksham Scholarship",
+    "sourceUrl": "https://www.aicte-india.org",
+    "tamilName": "AICTE சக்ஷம் மாற்றுத்திறனாளிகள் உதவித்தொகைத் திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Subsidy up to ₹78,000 for rooftop solar installation (2-3 kW systems)",
+    "category": "HOUSING",
+    "criteria": [
+      {
+        "conditionType": "FAMILY_SIZE_MIN",
+        "explanationNote": "Applicant must be the registered electricity connection holder for the residence.",
+        "id": "surya_family",
+        "requirementDisplay": "Owns a residential rooftop suitable for solar installation",
+        "targetValue": 1,
+        "title": "Owns Residential Property",
+        "whyWeAskReason": "Subsidy requires proof of residential property/connection ownership."
+      },
+      {
+        "conditionType": "MAX_INCOME",
+        "explanationNote": "Broad eligibility aimed at typical residential households.",
+        "id": "surya_income",
+        "requirementDisplay": "Family income ≤ ₹10,00,000 / year",
+        "targetValue": 1000000,
+        "title": "Income Threshold",
+        "whyWeAskReason": "Ensures subsidy targets general residential adoption, not commercial-scale projects."
+      }
+    ],
+    "department": "Ministry of New and Renewable Energy",
+    "description": "Provides subsidy for rooftop solar panel installation on residential homes to reduce electricity bills and promote clean energy adoption.",
+    "detailedBenefits": [
+      "Central financial assistance credited directly to bank account post-installation",
+      "Enables up to 300 units of free electricity per month for eligible households",
+      "Low-interest collateral-free loan option for the remaining installation cost"
+    ],
+    "hindiName": "पीएम सूर्य घर मुफ्त बिजली योजना",
+    "id": "sch_pm_surya_ghar",
+    "lastVerifiedDate": "August 2026",
+    "name": "PM Surya Ghar: Muft Bijli Yojana (Rooftop Solar Subsidy)",
+    "officialSourceLabel": "Ministry of New and Renewable Energy (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_electricity_bill",
+        "isMandatoryForEligibility": true,
+        "name": "Electricity Bill / Connection Proof",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_bank_passbook",
+        "isMandatoryForEligibility": true,
+        "name": "Bank Account Passbook",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "PM Surya Ghar Solar Scheme",
+    "sourceUrl": "https://pmsuryaghar.gov.in",
+    "tamilName": "பிரதம மந்திரி சூர்யா கர் இலவச மின்சார திட்டம்"
+  },
+  {
+    "applicationMethod": "Online via Official Portal / Common Service Center (CSC)",
+    "applicationSteps": [
+      "Register on the official government portal or visit your nearest Common Service Center (CSC).",
+      "Upload/submit mandatory identity credentials and category certificates.",
+      "Submit the application and receive your official acknowledgment receipt.",
+      "Track application status online using your reference application ID."
+    ],
+    "benefitHighlight": "Free special education, vocational training, and assistive device support via empanelled NGOs",
+    "category": "WELFARE",
+    "criteria": [
+      {
+        "conditionType": "DISABILITY_STATUS",
+        "explanationNote": "Valid UDID card or disability certificate required for enrollment at partner centers.",
+        "id": "ddrs_disability",
+        "requirementDisplay": "Any recognized benchmark disability",
+        "targetValue": "Yes",
+        "title": "Disability Status",
+        "whyWeAskReason": "Rehabilitation services are reserved for persons with disabilities."
+      }
+    ],
+    "department": "Department of Empowerment of Persons with Disabilities, MSJE",
+    "description": "Provides grants-in-aid to NGOs for rehabilitation services including special education, vocational training, and assistive devices for persons with disabilities.",
+    "detailedBenefits": [
+      "Access to special schools and early intervention centers",
+      "Vocational training linked to open and sheltered employment",
+      "Distribution of aids and appliances at no cost through partner organizations"
+    ],
+    "hindiName": "दीनदयाल विकलांग पुनर्वास योजना",
+    "id": "sch_svayam_scheme",
+    "lastVerifiedDate": "July 2026",
+    "name": "Deendayal Disabled Rehabilitation Scheme (DDRS)",
+    "officialSourceLabel": "Department of Empowerment of Persons with Disabilities (Prototype reference)",
+    "requiredDocuments": [
+      {
+        "id": "doc_aadhaar",
+        "isMandatoryForEligibility": true,
+        "name": "Aadhaar Card",
+        "stage": "Application Submission",
+        "tip": "Keep official digital or physical copy ready"
+      },
+      {
+        "id": "doc_udid",
+        "isMandatoryForEligibility": true,
+        "name": "UDID / Disability Medical Certificate",
+        "stage": "Document Verification",
+        "tip": "Keep official digital or physical copy ready"
+      }
+    ],
+    "shortName": "Deendayal Rehabilitation Scheme",
+    "sourceUrl": "https://disabilityaffairs.gov.in",
+    "tamilName": "தீன்தயாள் ஊனமுற்றோர் மீள்வாழ்வுத் திட்டம்"
+  }
+]

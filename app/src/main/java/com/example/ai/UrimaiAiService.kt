@@ -1,150 +1,79 @@
 package com.example.ai
 
+import android.content.Context
 import android.util.Log
-import com.example.BuildConfig
 import com.example.data.model.*
+import com.example.data.remote.CriterionSummary
+import com.example.data.remote.ExplainSchemeRequest
+import com.example.data.remote.SchemeChatRequest
+import com.example.data.repository.AiRepository
 import com.example.engine.EligibilityEngine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
-import org.json.JSONObject
-import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
+/**
+ * AI assistance, with a deterministic fallback behind every call.
+ *
+ * The Gemini API key is NOT in this app. It used to be injected into
+ * BuildConfig by the Secrets Gradle plugin, which shipped it inside every APK
+ * where anyone could decompile it. All model calls now go through authenticated
+ * backend endpoints that hold the key server-side.
+ *
+ * The boundary that matters is unchanged: AI never decides eligibility. It is
+ * handed an already-computed verdict and asked only to narrate it, so an
+ * outage, a hallucination or a rate limit can change the WORDING of an
+ * explanation but not who is eligible. Every function below falls back to a
+ * deterministic implementation when the backend is unreachable or has no key
+ * configured.
+ */
 object UrimaiAiService {
 
     private const val TAG = "UrimaiAiService"
-    private const val GEMINI_MODEL = "gemini-3.5-flash"
-    private const val BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build()
+    /**
+     * Set once at startup so the existing call sites keep their signatures.
+     * Without it the service has no way to reach the backend and every call
+     * takes its deterministic path — which is a supported mode, not an error.
+     */
+    @Volatile
+    private var repository: AiRepository? = null
 
-    private val jsonMediaType = "application/json; charset=utf-8".toMediaType()
-
-    private fun isKeyConfigured(): Boolean {
-        return try {
-            val key = BuildConfig.GEMINI_API_KEY
-            key.isNotBlank() && !key.equals("MY_GEMINI_API_KEY", ignoreCase = true)
-        } catch (_: Throwable) {
-            false
-        }
-    }
-
-    suspend fun extractProfileFromNaturalLanguage(userText: String): UserProfile = withContext(Dispatchers.IO) {
-        if (isKeyConfigured()) {
-            try {
-                val apiKey = BuildConfig.GEMINI_API_KEY
-                val systemPrompt = """
-                    You are Urimai AI, a civic information assistant for Indian government schemes.
-                    Analyze the user's personal description and extract structured profile attributes for Indian citizens.
-                    Return ONLY valid JSON matching this schema:
-                    {
-                      "name": "string (or Citizen if unknown)",
-                      "age": integer or null,
-                      "gender": "Male" or "Female" or "Other" or "Prefer not to say",
-                      "state": "string (e.g. Tamil Nadu, Karnataka, Maharashtra, etc.)",
-                      "district": "string (e.g. Chennai, Madurai, Bengaluru, etc.)",
-                      "occupation": "Student" or "Employed" or "Self-Employed" or "Unemployed" or "Farmer" or "Homemaker",
-                      "education": "Below 10th" or "10th Pass" or "12th Pass" or "Diploma" or "Undergraduate" or "Postgraduate" or "Doctorate",
-                      "annualIncome": integer in INR (e.g. 200000) or null,
-                      "familySize": integer,
-                      "isStudent": boolean or null,
-                      "isEmployed": boolean or null,
-                      "isFarmer": boolean or null,
-                      "isBusinessOwner": boolean or null,
-                      "socialCategory": "General" or "OBC" or "SC" or "ST" or "EWS" or null,
-                      "disabilityStatus": "No" or "Yes"
-                    }
-                """.trimIndent()
-
-                val requestJson = JSONObject().apply {
-                    val contents = JSONArray().apply {
-                        put(JSONObject().apply {
-                            put("role", "user")
-                            put("parts", JSONArray().apply {
-                                put(JSONObject().put("text", "Extract citizen profile from this text:\n\"$userText\""))
-                            })
-                        })
-                    }
-                    put("contents", contents)
-                    put("systemInstruction", JSONObject().apply {
-                        put("parts", JSONArray().apply {
-                            put(JSONObject().put("text", systemPrompt))
-                        })
-                    })
-                    put("generationConfig", JSONObject().apply {
-                        put("temperature", 0.1)
-                        put("responseMimeType", "application/json")
-                    })
+    fun initialize(context: Context) {
+        if (repository == null) {
+            synchronized(this) {
+                if (repository == null) {
+                    repository = AiRepository(context.applicationContext)
                 }
-
-                val url = "$BASE_URL/$GEMINI_MODEL:generateContent?key=$apiKey"
-                val request = Request.Builder()
-                    .url(url)
-                    .post(requestJson.toString().toRequestBody(jsonMediaType))
-                    .build()
-
-                val response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    val responseBody = response.body?.string() ?: ""
-                    val root = JSONObject(responseBody)
-                    val candidates = root.optJSONArray("candidates")
-                    val firstCandidate = candidates?.optJSONObject(0)
-                    val content = firstCandidate?.optJSONObject("content")
-                    val parts = content?.optJSONArray("parts")
-                    val text = parts?.optJSONObject(0)?.optString("text") ?: ""
-
-                    val parsed = parseProfileJson(text)
-                    if (parsed != null) {
-                        return@withContext parsed
-                    }
-                } else {
-                    Log.w(TAG, "Gemini API error: ${response.code} ${response.message}")
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error in natural language extraction via Gemini: ${e.message}")
             }
         }
-
-        // High quality intelligent heuristic fallback
-        return@withContext fallbackNaturalLanguageExtraction(userText)
     }
 
-    private fun parseProfileJson(rawJson: String): UserProfile? {
-        return try {
-            val clean = rawJson.trim().removePrefix("```json").removePrefix("```").removeSuffix("```").trim()
-            val obj = JSONObject(clean)
-
-            UserProfile(
-                name = obj.optString("name", "Citizen").ifBlank { "Citizen" },
-                age = if (obj.has("age") && !obj.isNull("age")) obj.getInt("age") else null,
-                gender = obj.optString("gender", "Male").ifBlank { "Male" },
-                state = obj.optString("state", "Tamil Nadu").ifBlank { "Tamil Nadu" },
-                district = obj.optString("district", "Chennai").ifBlank { "Chennai" },
-                occupation = obj.optString("occupation", "Student").ifBlank { "Student" },
-                education = obj.optString("education", "Undergraduate").ifBlank { "Undergraduate" },
-                annualIncome = if (obj.has("annualIncome") && !obj.isNull("annualIncome")) obj.getLong("annualIncome") else 200000L,
-                familySize = if (obj.has("familySize") && !obj.isNull("familySize")) obj.getInt("familySize") else 4,
-                isStudent = if (obj.has("isStudent") && !obj.isNull("isStudent")) obj.getBoolean("isStudent") else true,
-                isEmployed = if (obj.has("isEmployed") && !obj.isNull("isEmployed")) obj.getBoolean("isEmployed") else false,
-                isFarmer = if (obj.has("isFarmer") && !obj.isNull("isFarmer")) obj.getBoolean("isFarmer") else false,
-                isBusinessOwner = if (obj.has("isBusinessOwner") && !obj.isNull("isBusinessOwner")) obj.getBoolean("isBusinessOwner") else false,
-                socialCategory = if (obj.has("socialCategory") && !obj.isNull("socialCategory")) obj.getString("socialCategory") else "General / OBC",
-                disabilityStatus = if (obj.has("disabilityStatus") && !obj.isNull("disabilityStatus")) obj.getString("disabilityStatus") else "No"
+    private fun summarize(items: List<CriterionEvaluation>, withReason: Boolean): List<CriterionSummary> =
+        items.map { evaluation ->
+            CriterionSummary(
+                title = evaluation.criterion.title,
+                detail = if (withReason) {
+                    evaluation.failureReason ?: evaluation.userValueDisplay
+                } else {
+                    evaluation.userValueDisplay
+                }
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed parsing JSON: ${e.message}", e)
-            null
         }
-    }
+
+    /**
+     * Parse free text such as "I'm a 22-year-old student from Chennai, family
+     * income 2 lakh" into a profile.
+     *
+     * Uses the regex parser only. The model path was removed with the API key:
+     * this function has no callers today, and routing it through the backend
+     * would add an endpoint nothing uses. The parser handles Indian numeric
+     * conventions (lakh/crore, rupee prefixes) well enough to stand alone.
+     */
+    suspend fun extractProfileFromNaturalLanguage(userText: String): UserProfile =
+        withContext(Dispatchers.IO) {
+            fallbackNaturalLanguageExtraction(userText)
+        }
 
     private fun fallbackNaturalLanguageExtraction(text: String): UserProfile {
         val lower = text.lowercase()
@@ -249,83 +178,42 @@ object UrimaiAiService {
         )
     }
 
+    /**
+     * Explain an already-computed verdict in plain language.
+     *
+     * The verdict and its per-criterion breakdown are computed locally by
+     * [EligibilityEngine] and sent to the backend purely as material to narrate.
+     * Falls back to [buildDeterministicExplanation] whenever the backend is
+     * unreachable or has no key configured.
+     */
     suspend fun generateSchemeExplanation(
         matchResult: SchemeMatchResult,
         profile: UserProfile,
         language: AppLanguage = AppLanguage.ENGLISH
     ): String = withContext(Dispatchers.IO) {
         val scheme = matchResult.scheme
-        val criteriaPass = matchResult.criteriaResults.filter { it.status == CriterionStatus.PASSED }
-        val criteriaFail = matchResult.criteriaResults.filter { it.status == CriterionStatus.FAILED }
-        val criteriaMissing = matchResult.criteriaResults.filter { it.status == CriterionStatus.MISSING_INFO }
+        val repo = repository
 
-        if (isKeyConfigured()) {
-            try {
-                val prompt = """
-                    You are Urimai AI, a trustworthy, responsible civic technology explanation engine.
-                    Explain the citizen's eligibility status for "${scheme.name}" in simple, accessible, empathetic language.
-                    
-                    STRICT RULES:
-                    1. Rely ONLY on the verified criteria and citizen profile provided below.
-                    2. NEVER invent eligibility conditions, document names, deadlines, legal acts, or government promises.
-                    3. Do NOT say "You are officially approved" or "Government guarantees this". Say "Likely eligible based on available criteria".
-                    4. Target Language: ${language.label} (${language.nativeLabel}).
-                    
-                    Citizen Profile:
-                    - Age: ${profile.age ?: "Not specified"}
-                    - Gender: ${profile.gender}
-                    - State: ${profile.state}
-                    - Occupation: ${profile.occupation}
-                    - Education: ${profile.education}
-                    - Annual Family Income: ${profile.annualIncome?.let { EligibilityEngine.formatInr(it) } ?: "Not specified"}
-                    - Student: ${profile.isStudent} | Farmer: ${profile.isFarmer} | Business: ${profile.isBusinessOwner}
-                    
-                    Evaluation Result: ${matchResult.status.label}
-                    - Passed Conditions (${criteriaPass.size}): ${criteriaPass.joinToString { "${it.criterion.title} (${it.userValueDisplay})" }}
-                    - Failed Conditions (${criteriaFail.size}): ${criteriaFail.joinToString { "${it.criterion.title}: ${it.failureReason}" }}
-                    - Missing Info (${criteriaMissing.size}): ${criteriaMissing.joinToString { it.criterion.title }}
-                    - Required Documents: ${scheme.requiredDocuments.joinToString { it.name }}
-                    - Missing Documents for user: ${matchResult.missingDocuments.joinToString { it.name }}
-                    
-                    Provide a concise 2-3 paragraph plain-language summary with transparent bullet points.
-                """.trimIndent()
-
-                val requestJson = JSONObject().apply {
-                    put("contents", JSONArray().apply {
-                        put(JSONObject().apply {
-                            put("role", "user")
-                            put("parts", JSONArray().apply {
-                                put(JSONObject().put("text", prompt))
-                            })
-                        })
-                    })
-                    put("generationConfig", JSONObject().apply {
-                        put("temperature", 0.2)
-                    })
-                }
-
-                val url = "$BASE_URL/$GEMINI_MODEL:generateContent?key=${BuildConfig.GEMINI_API_KEY}"
-                val request = Request.Builder()
-                    .url(url)
-                    .post(requestJson.toString().toRequestBody(jsonMediaType))
-                    .build()
-
-                val response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    val root = JSONObject(response.body?.string() ?: "")
-                    val text = root.optJSONArray("candidates")?.optJSONObject(0)
-                        ?.optJSONObject("content")?.optJSONArray("parts")?.optJSONObject(0)?.optString("text")
-                    if (!text.isNullOrBlank()) {
-                        return@withContext text
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Gemini explanation failed: ${e.message}")
-            }
+        if (repo != null) {
+            val request = ExplainSchemeRequest(
+                schemeName = scheme.name,
+                status = matchResult.status.label,
+                department = scheme.department,
+                benefitHighlight = scheme.benefitHighlight,
+                passed = summarize(
+                    matchResult.criteriaResults.filter { it.status == CriterionStatus.PASSED },
+                    withReason = false
+                ),
+                failed = summarize(matchResult.failedCriteria, withReason = true),
+                missing = summarize(matchResult.missingCriteria, withReason = false),
+                language = language.code
+            )
+            val explanation = repo.explainScheme(request)
+            if (explanation != null) return@withContext explanation
+            Log.i(TAG, "AI explanation unavailable; using deterministic text.")
         }
 
-        // Deterministic High Quality Explanation Fallback
-        return@withContext buildDeterministicExplanation(matchResult, profile, language)
+        buildDeterministicExplanation(matchResult, profile, language)
     }
 
     private fun buildDeterministicExplanation(
@@ -407,6 +295,12 @@ object UrimaiAiService {
         }
     }
 
+    /**
+     * Answer a follow-up question, scoped to one scheme.
+     *
+     * Falls back to the keyword-routed responder when the backend is
+     * unreachable or has no key configured.
+     */
     suspend fun answerCitizenQuestion(
         question: String,
         matchResult: SchemeMatchResult,
@@ -414,69 +308,28 @@ object UrimaiAiService {
         language: AppLanguage = AppLanguage.ENGLISH
     ): String = withContext(Dispatchers.IO) {
         val scheme = matchResult.scheme
+        val repo = repository
 
-        if (isKeyConfigured()) {
-            try {
-                val prompt = """
-                    You are Urimai AI Assistant. Answer this citizen's specific question about "${scheme.name}".
-                    Question: "$question"
-                    
-                    STRICT CIVIC TECH RULES:
-                    1. Use ONLY the verified data below. Never hallucinate facts, phone numbers, unauthorized promises, or extra rules.
-                    2. If the user asks something not in the scheme data, reply: "I don't have enough verified government information to determine that."
-                    3. Target Language: ${language.label} (${language.nativeLabel}).
-                    
-                    Scheme Data:
-                    - Department: ${scheme.department}
-                    - Benefits: ${scheme.detailedBenefits.joinToString("; ")}
-                    - Criteria: ${scheme.criteria.joinToString("; ") { "${it.title}: ${it.requirementDisplay}" }}
-                    - Required Documents: ${scheme.requiredDocuments.joinToString("; ") { "${it.name} (${it.stage})" }}
-                    - Source: ${scheme.officialSourceLabel} (${scheme.sourceUrl})
-                    
-                    Citizen Evaluation:
-                    - Status: ${matchResult.status.label}
-                    - Passed: ${matchResult.criteriaResults.filter { it.status == CriterionStatus.PASSED }.joinToString { it.criterion.title }}
-                    - Failed: ${matchResult.criteriaResults.filter { it.status == CriterionStatus.FAILED }.joinToString { "${it.criterion.title} (${it.failureReason})" }}
-                    - Missing info: ${matchResult.criteriaResults.filter { it.status == CriterionStatus.MISSING_INFO }.joinToString { it.criterion.title }}
-                    - Missing documents: ${matchResult.missingDocuments.joinToString { it.name }}
-                """.trimIndent()
-
-                val requestJson = JSONObject().apply {
-                    put("contents", JSONArray().apply {
-                        put(JSONObject().apply {
-                            put("role", "user")
-                            put("parts", JSONArray().apply {
-                                put(JSONObject().put("text", prompt))
-                            })
-                        })
-                    })
-                    put("generationConfig", JSONObject().apply {
-                        put("temperature", 0.2)
-                    })
-                }
-
-                val url = "$BASE_URL/$GEMINI_MODEL:generateContent?key=${BuildConfig.GEMINI_API_KEY}"
-                val request = Request.Builder()
-                    .url(url)
-                    .post(requestJson.toString().toRequestBody(jsonMediaType))
-                    .build()
-
-                val response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    val root = JSONObject(response.body?.string() ?: "")
-                    val answer = root.optJSONArray("candidates")?.optJSONObject(0)
-                        ?.optJSONObject("content")?.optJSONArray("parts")?.optJSONObject(0)?.optString("text")
-                    if (!answer.isNullOrBlank()) {
-                        return@withContext answer
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Gemini Q&A call error: ${e.message}")
-            }
+        if (repo != null) {
+            val request = SchemeChatRequest(
+                question = question,
+                schemeName = scheme.name,
+                status = matchResult.status.label,
+                department = scheme.department,
+                passed = summarize(
+                    matchResult.criteriaResults.filter { it.status == CriterionStatus.PASSED },
+                    withReason = false
+                ),
+                failed = summarize(matchResult.failedCriteria, withReason = true),
+                documents = scheme.requiredDocuments.map { it.name },
+                language = language.code
+            )
+            val answer = repo.schemeChat(request)
+            if (answer != null) return@withContext answer
+            Log.i(TAG, "AI chat unavailable; using deterministic answer.")
         }
 
-        // Fast high quality deterministic answering fallback
-        return@withContext fallbackAnswerQuestion(question, matchResult, profile, language)
+        fallbackAnswerQuestion(question, matchResult, profile, language)
     }
 
     private fun fallbackAnswerQuestion(

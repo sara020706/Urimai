@@ -65,7 +65,10 @@ class AuthRepository(context: Context) {
         val body = response.body()
         if (response.isSuccessful && body != null) {
             val userId = body.userId.toLong()
-            sessionManager.saveSession(body.token, userId, body.displayName)
+            sessionManager.saveSession(
+                    body.token, userId, body.displayName,
+                    body.role, body.lawyerVerificationStatus
+                )
             return AuthResult.Success(userId, body.displayName)
         }
         val message = response.errorBody()?.string()?.let {

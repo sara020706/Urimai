@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db/pool');
-const { requireAuth } = require('../middleware/auth');
+const { authed } = require('../middleware/auth');
+const { wrap } = require('../lib/async');
 
 const router = express.Router();
 
@@ -26,15 +27,15 @@ function toApiProfile(row) {
   };
 }
 
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', ...authed, wrap(async (req, res) => {
   const result = await pool.query('SELECT * FROM user_profiles WHERE user_id = $1', [req.userId]);
   if (result.rowCount === 0) {
     return res.status(404).json({ error: 'Profile not found.' });
   }
   res.json(toApiProfile(result.rows[0]));
-});
+}));
 
-router.put('/', requireAuth, async (req, res) => {
+router.put('/', ...authed, wrap(async (req, res) => {
   const p = req.body || {};
   const result = await pool.query(
     `UPDATE user_profiles SET
@@ -70,6 +71,6 @@ router.put('/', requireAuth, async (req, res) => {
     return res.status(404).json({ error: 'Profile not found.' });
   }
   res.json(toApiProfile(result.rows[0]));
-});
+}));
 
 module.exports = router;

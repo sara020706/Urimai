@@ -12,6 +12,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.CheckCircle
+import com.example.ui.theme.EmeraldText
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +52,16 @@ fun MatchesDashboardScreen(
     onViewSavedSchemes: () -> Unit,
     onExploreHowItWorks: () -> Unit,
     onCheckEligibility: () -> Unit,
+    onAskLegalQuestion: () -> Unit,
+    onFindLawyer: () -> Unit,
+    isVerifiedLawyer: Boolean = false,
+    isLawyerRole: Boolean = false,
+    isAdmin: Boolean = false,
+    unreadNotificationCount: Int = 0,
+    onOpenNotifications: () -> Unit = {},
+    onOpenVerification: () -> Unit = {},
+    onOpenAdmin: () -> Unit = {},
+    onOpenLawyerWorkspace: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -366,6 +382,15 @@ fun MatchesDashboardScreen(
             }
 
             // Schemes List Header
+item {
+    LegalHelpSection(
+        onAskQuestion = onAskLegalQuestion,
+        onFindLawyer = onFindLawyer,
+        isVerifiedLawyer = isVerifiedLawyer,
+        onOpenLawyerWorkspace = onOpenLawyerWorkspace
+    )
+}
+
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -491,6 +516,198 @@ private fun MetricSummaryCard(
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
             )
+        }
+    }
+}
+
+
+/**
+ * Entry points into legal help.
+ *
+ * Placed on the dashboard because a citizen who has just been told they do not
+ * match a scheme is exactly the person who needs a lawyer, and making them hunt
+ * through a menu at that moment would be poor service.
+ */
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+private fun LegalHelpSection(
+    onAskQuestion: () -> Unit,
+    onFindLawyer: () -> Unit,
+    isVerifiedLawyer: Boolean,
+    onOpenLawyerWorkspace: () -> Unit,
+    isLawyerRole: Boolean = false,
+    onOpenVerification: () -> Unit = {},
+    isAdmin: Boolean = false,
+    onOpenAdmin: () -> Unit = {}
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Text(
+            "Need legal help?",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = CivicNavy800
+        )
+
+        androidx.compose.material3.Card(
+            onClick = onAskQuestion,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = null,
+                    tint = CivicNavy800
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        "Ask a question anonymously",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        "Verified lawyers reply. Your name is never shown.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        androidx.compose.material3.Card(
+            onClick = onFindLawyer,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    tint = CivicNavy800
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        "Find a verified lawyer",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        "Search by area of practice, language and location.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        // Shown to any lawyer, approved or not: an unapproved one most needs
+        // to see where their application stands.
+        if (isLawyerRole) {
+            androidx.compose.material3.Card(
+                onClick = onOpenVerification,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Description,
+                        contentDescription = null,
+                        tint = CivicNavy800
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            "Professional verification",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            if (isVerifiedLawyer) {
+                                "Your details and documents."
+                            } else {
+                                "Complete your details to start answering questions."
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        if (isAdmin) {
+            androidx.compose.material3.Card(
+                onClick = onOpenAdmin,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = null,
+                        tint = CivicNavy800
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            "Administration",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            "Lawyer applications, users, reports and the audit log.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+
+        if (isVerifiedLawyer) {
+            androidx.compose.material3.Card(
+                onClick = onOpenLawyerWorkspace,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = null,
+                        tint = EmeraldText
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            "Citizen questions",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            "Answer questions from citizens who need help.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
         }
     }
 }
