@@ -8,9 +8,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-// Prototype-only base URL. Point this at your deployed backend, or
-// 10.0.2.2 (emulator loopback alias for the host machine) while running locally.
-const val BASE_URL = "http://10.0.2.2:4000/"
+// Deployed backend on Vercel. Switch to http://10.0.2.2:4000/ (emulator loopback
+// alias for the host machine) if you need to point at a locally running backend instead.
+const val BASE_URL = "https://backend-delta-red-60.vercel.app/"
 
 object ApiClient {
 
