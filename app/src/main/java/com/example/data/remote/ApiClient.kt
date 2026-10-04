@@ -9,9 +9,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-// Set per build type in app/build.gradle.kts, not here. Debug defaults to the
-// emulator's host alias and can be overridden with URIMAI_DEV_API_BASE_URL;
-// release requires URIMAI_API_BASE_URL and rejects anything but https://.
+// Set per build type in app/build.gradle.kts, not here.
+//
+// The deployed backend is https://backend-delta-red-60.vercel.app/ and is the
+// default for both build types. Override with URIMAI_DEV_API_BASE_URL (debug,
+// e.g. the emulator alias http://10.0.2.2:4000/ or a LAN address) or
+// URIMAI_API_BASE_URL (release, which rejects anything but https://).
 val BASE_URL: String = BuildConfig.API_BASE_URL.ifEmpty {
     // An unconfigured release build would otherwise fail later as a confusing
     // "connection refused" against the empty string. Say what is actually wrong.

@@ -9,6 +9,10 @@ plugins {
   alias(libs.plugins.google.services)
 }
 
+// The deployed backend. Both build types default to it; override per build
+// with -PURIMAI_DEV_API_BASE_URL (debug) or -PURIMAI_API_BASE_URL (release).
+val DEPLOYED_API_BASE_URL = "https://backend-delta-red-60.vercel.app/"
+
 android {
   namespace = "com.example"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
@@ -60,7 +64,7 @@ android {
       // rather than shipping an APK that silently talks to nothing.
       val releaseApi = providers.gradleProperty("URIMAI_API_BASE_URL")
         .orElse(providers.environmentVariable("URIMAI_API_BASE_URL"))
-        .getOrElse("")
+        .getOrElse(DEPLOYED_API_BASE_URL)
       check(releaseApi.isEmpty() || releaseApi.startsWith("https://")) {
         "URIMAI_API_BASE_URL must be an https:// URL for release builds (got: $releaseApi)"
       }
@@ -75,7 +79,7 @@ android {
       // to http://<your-LAN-IP>:4000/ (the emulator alias is not routable there).
       val devApi = providers.gradleProperty("URIMAI_DEV_API_BASE_URL")
         .orElse(providers.environmentVariable("URIMAI_DEV_API_BASE_URL"))
-        .getOrElse("http://10.0.2.2:4000/")
+        .getOrElse(DEPLOYED_API_BASE_URL)
       buildConfigField("String", "API_BASE_URL", "\"$devApi\"")
       buildConfigField("boolean", "HTTP_LOGGING", "true")
     }
