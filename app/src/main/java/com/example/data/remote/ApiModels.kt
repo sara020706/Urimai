@@ -20,6 +20,20 @@ data class LogInRequest(
 )
 
 @JsonClass(generateAdapter = true)
+data class GoogleSignInRequest(
+    // The ID token Google issued. The server verifies its signature against
+    // Google's public keys; nothing here is trusted on the client's word.
+    val idToken: String,
+    val role: String? = null
+)
+
+@JsonClass(generateAdapter = true)
+data class AuthMethodsResponse(
+    val password: Boolean = true,
+    val google: Boolean = false
+)
+
+@JsonClass(generateAdapter = true)
 data class AuthResponse(
     val userId: String,
     val displayName: String,

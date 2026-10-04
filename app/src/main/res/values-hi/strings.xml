@@ -90,4 +90,23 @@
 
     <!-- Offline notice -->
     <string name="catalog_stale_notice">सहेजी गई योजना जानकारी दिखाई जा रही है। ऑनलाइन लौटने तक यह पुरानी हो सकती है।</string>
+
+    <!-- Legal assistant (AI chat) -->
+    <string name="title_legal_assistant">कानूनी सहायक</string>
+    <string name="action_new_chat">नई बातचीत</string>
+    <string name="action_send">भेजें</string>
+    <string name="legal_chat_hint">कोई कानूनी प्रश्न पूछें</string>
+    <string name="legal_chat_thinking">सोच रहा है…</string>
+    <string name="legal_chat_disclaimer">AI सहायक से सामान्य कानूनी जानकारी। यह आपके अपने मामले पर सलाह नहीं है और न ही यह वकील है।</string>
+    <string name="legal_chat_intro_title">किसी भी कानून या कानूनी प्रक्रिया के बारे में पूछें</string>
+    <string name="legal_chat_intro_body">यह सहायक भारतीय कानून, आपके अधिकारों और सरकारी प्रक्रियाओं को सरल भाषा में समझाता है। यह सामान्य जानकारी के आधार पर उत्तर देता है, इसलिए यह आपके मामले के विवरण पर सलाह नहीं दे सकता और गलत भी हो सकता है। जो कुछ सीधे आप पर असर डालता है, उसके लिए सत्यापित वकील से पूछें।</string>
+    <string name="legal_chat_try_asking">यह पूछकर देखें</string>
+    <string name="legal_chat_ask_lawyer">इसके बजाय सत्यापित वकील से पूछें</string>
+    <string name="legal_chat_suggestion_1">किराया अनुबंध के लिए मुझे कौन से दस्तावेज़ चाहिए?</string>
+    <string name="legal_chat_suggestion_2">उपभोक्ता शिकायत की प्रक्रिया कैसे काम करती है?</string>
+    <string name="legal_chat_suggestion_3">अगर मेरे नियोक्ता ने वेतन नहीं दिया तो मेरे क्या अधिकार हैं?</string>
+    <string name="legal_help_chat_title">कानूनी सहायक से पूछें</string>
+    <string name="legal_help_chat_subtitle">कानून और कानूनी प्रक्रियाओं पर तुरंत उत्तर। सामान्य जानकारी, सलाह नहीं।</string>
+    <string name="auth_continue_with_google">Google से जारी रखें</string>
+    <string name="auth_or">या</string>
 </resources>

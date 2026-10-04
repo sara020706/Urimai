@@ -6,6 +6,8 @@ import android.util.Log
 import com.example.data.remote.ApiClient
 import com.example.data.remote.ExplainSchemeRequest
 import com.example.data.remote.ExtractProfileResponse
+import com.example.data.remote.LegalChatRequest
+import com.example.data.remote.LegalChatTurn
 import com.example.data.remote.SchemeChatRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,6 +25,21 @@ import java.io.File
  * simply being offline — all three are ordinary states for this app, not errors
  * worth surfacing to the citizen.
  */
+/**
+ * Outcome of a legal chat turn.
+ *
+ * Typed rather than nullable: in a conversation the difference between "the
+ * service is down", "you have asked too many times" and "you are offline"
+ * changes what the person should do next, and a bare null cannot say which.
+ */
+sealed class LegalChatOutcome {
+    data class Success(val answer: String) : LegalChatOutcome()
+    data object Unavailable : LegalChatOutcome()
+    data object RateLimited : LegalChatOutcome()
+    data object Offline : LegalChatOutcome()
+    data class Rejected(val message: String) : LegalChatOutcome()
+}
+
 class AiRepository(private val context: Context) {
 
     suspend fun explainScheme(request: ExplainSchemeRequest): String? = withContext(Dispatchers.IO) {
@@ -38,6 +55,40 @@ class AiRepository(private val context: Context) {
         } catch (e: Exception) {
             Log.i(TAG, "explainScheme failed: ${e.message}")
             null
+        }
+    }
+
+    /**
+     * Ask a general legal question, with prior turns for context.
+     *
+     * History is sent each time so the server holds no conversation state. The
+     * server clamps how much of it is used, so a long chat forgets its oldest
+     * turns rather than failing.
+     */
+    suspend fun legalChat(
+        question: String,
+        history: List<LegalChatTurn>,
+        language: String
+    ): LegalChatOutcome = withContext(Dispatchers.IO) {
+        try {
+            val response = ApiClient.getService(context)
+                .legalChat(LegalChatRequest(question, history, language))
+            val body = response.body()
+            when {
+                response.isSuccessful && body != null && body.answer.isNotBlank() ->
+                    LegalChatOutcome.Success(body.answer)
+                response.code() == 429 -> LegalChatOutcome.RateLimited
+                response.code() == 400 -> LegalChatOutcome.Rejected(
+                    "That question could not be sent. Try rewording it."
+                )
+                else -> {
+                    Log.i(TAG, "legalChat unavailable: HTTP ${response.code()}")
+                    LegalChatOutcome.Unavailable
+                }
+            }
+        } catch (e: Exception) {
+            Log.i(TAG, "legalChat failed: ${e.message}")
+            LegalChatOutcome.Offline
         }
     }
 

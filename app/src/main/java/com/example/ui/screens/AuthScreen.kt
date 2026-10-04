@@ -28,6 +28,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.ui.unit.dp
 import com.example.ui.theme.*
 
@@ -41,6 +43,10 @@ fun AuthScreen(
     isLoading: Boolean,
     onLogin: (username: String, password: String) -> Unit,
     onSignUp: (username: String, password: String, displayName: String, role: String) -> Unit,
+    // Hidden entirely when the server or the build has no Google client id:
+    // a button that cannot work is worse than no button.
+    showGoogleSignIn: Boolean,
+    onGoogleSignIn: (role: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var username by remember { mutableStateOf("") }
@@ -234,6 +240,42 @@ fun AuthScreen(
                             text = if (mode == AuthMode.LOGIN) "Log In" else "Create Account",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                if (showGoogleSignIn) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        HorizontalDivider(modifier = Modifier.weight(1f))
+                        Text(
+                            text = stringResource(R.string.auth_or),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                        HorizontalDivider(modifier = Modifier.weight(1f))
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            // Carries the same role choice as the form, so
+                            // signing up as a lawyer works with Google too.
+                            onGoogleSignIn(if (signUpAsLawyer) "LAWYER" else "USER")
+                        },
+                        enabled = !isLoading,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .testTag("auth_google_button"),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.auth_continue_with_google),
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                 }

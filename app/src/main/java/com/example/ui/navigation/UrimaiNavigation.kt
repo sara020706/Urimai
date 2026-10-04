@@ -63,6 +63,7 @@ object UrimaiDestinations {
     const val ADMIN_DOCUMENT_VIEWER = "admin_document_viewer"
     const val EXTRACT_REVIEW = "extract_review"
     const val MY_DOCUMENT_VIEWER = "my_document_viewer"
+    const val LEGAL_CHAT = "legal_chat"
 }
 
 @Composable
@@ -222,6 +223,16 @@ fun UrimaiApp(
     // QnaViewModel and AdminViewModel were written and never read, so a failed
     // post or a refused action looked like nothing happening at all.
     val snackbarHostState = remember { SnackbarHostState() }
+    val localContextForAuth = androidx.compose.ui.platform.LocalContext.current
+    val googleSignInAvailable by viewModel.googleSignInAvailable.collectAsState()
+    // Unwraps ContextWrapper layers: LocalContext is not always the Activity.
+    val authActivity = remember(localContextForAuth) {
+        generateSequence(localContextForAuth) { (it as? android.content.ContextWrapper)?.baseContext }
+            .filterIsInstance<android.app.Activity>()
+            .firstOrNull()
+    }
+    val legalChat by viewModel.legalChat.collectAsState()
+    val isLegalChatReplying by viewModel.isLegalChatReplying.collectAsState()
     val myOpenDocument by viewModel.openDocument.collectAsState()
     val isDownloadingMyDocument by viewModel.isDownloadingDocument.collectAsState()
     val lawyerAccessDenied by qnaViewModel.lawyerAccessDenied.collectAsState()
@@ -320,6 +331,15 @@ fun UrimaiApp(
                 onLogin = { username, password -> viewModel.logIn(username, password) },
                 onSignUp = { username, password, displayName, role ->
                     viewModel.signUp(username, password, displayName, role)
+                },
+                showGoogleSignIn = googleSignInAvailable,
+                onGoogleSignIn = { role ->
+                    // Credential Manager needs an Activity to show its sheet;
+                    // an application context throws at runtime.
+                    val activity = authActivity
+                    if (activity != null) {
+                        viewModel.signInWithGoogle(activity, role)
+                    }
                 }
             )
         }
@@ -364,6 +384,9 @@ fun UrimaiApp(
                 },
                 onFindLawyer = {
                     navController.navigate(UrimaiDestinations.FIND_LAWYER)
+                },
+                onAskAssistant = {
+                    navController.navigate(UrimaiDestinations.LEGAL_CHAT)
                 },
                 isVerifiedLawyer = isVerifiedLawyer,
                 onOpenLawyerWorkspace = {
@@ -777,6 +800,22 @@ fun UrimaiApp(
                     adminViewModel.closeDocument()
                     navController.popBackStack()
                 }
+            )
+        }
+
+        composable(UrimaiDestinations.LEGAL_CHAT) {
+            LegalChatScreen(
+                messages = legalChat,
+                isReplying = isLegalChatReplying,
+                onSend = { viewModel.sendLegalChatMessage(it) },
+                onRetry = { viewModel.retryLastLegalChatMessage() },
+                onClear = { viewModel.clearLegalChat() },
+                // The assistant answers from general knowledge, so the route to
+                // a lawyer who can be accountable stays one tap away.
+                onAskLawyer = {
+                    navController.navigate(UrimaiDestinations.ASK_QUESTION)
+                },
+                onBack = { navController.popBackStack() }
             )
         }
 

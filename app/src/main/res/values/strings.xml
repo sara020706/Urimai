@@ -101,4 +101,23 @@
 
     <!-- Offline notice -->
     <string name="catalog_stale_notice">Showing saved scheme information. It may be out of date until you are back online.</string>
+
+    <!-- Legal assistant (AI chat) -->
+    <string name="title_legal_assistant">Legal assistant</string>
+    <string name="action_new_chat">New chat</string>
+    <string name="action_send">Send</string>
+    <string name="legal_chat_hint">Ask a legal question</string>
+    <string name="legal_chat_thinking">Thinking…</string>
+    <string name="legal_chat_disclaimer">General legal information from an AI assistant. Not advice on your own case, and not a lawyer.</string>
+    <string name="legal_chat_intro_title">Ask about any law or legal process</string>
+    <string name="legal_chat_intro_body">This assistant explains Indian law, your rights, and how official processes work, in plain language. It answers from general knowledge, so it cannot advise on the details of your own case and can be wrong. For anything that affects you directly, ask a verified lawyer.</string>
+    <string name="legal_chat_try_asking">Try asking</string>
+    <string name="legal_chat_ask_lawyer">Ask a verified lawyer instead</string>
+    <string name="legal_chat_suggestion_1">What documents do I need for a rental agreement?</string>
+    <string name="legal_chat_suggestion_2">How does the consumer complaint process work?</string>
+    <string name="legal_chat_suggestion_3">What are my rights if my employer has not paid me?</string>
+    <string name="legal_help_chat_title">Ask the legal assistant</string>
+    <string name="legal_help_chat_subtitle">Instant answers about law and legal processes. General information, not advice.</string>
+    <string name="auth_continue_with_google">Continue with Google</string>
+    <string name="auth_or">or</string>
 </resources>

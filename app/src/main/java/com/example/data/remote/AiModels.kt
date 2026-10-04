@@ -91,3 +91,28 @@ enum class ExtractionConfidence {
             entries.firstOrNull { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
     }
 }
+
+// --- General legal chat -----------------------------------------------------
+
+/**
+ * One turn in the legal chat.
+ *
+ * `role` is "user" or "assistant". The server clamps both the number of turns
+ * and the size of each, so a long conversation degrades by forgetting its
+ * oldest turns rather than by failing.
+ */
+@JsonClass(generateAdapter = true)
+data class LegalChatTurn(
+    val role: String,
+    val text: String
+)
+
+@JsonClass(generateAdapter = true)
+data class LegalChatRequest(
+    val question: String,
+    val history: List<LegalChatTurn> = emptyList(),
+    val language: String = "en"
+)
+
+@JsonClass(generateAdapter = true)
+data class LegalChatResponse(val answer: String)

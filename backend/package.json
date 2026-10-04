@@ -1,7 +1,7 @@
 {
   "name": "urimai-backend",
   "version": "1.0.0",
-  "description": "Prototype backend API for the Urimai app — auth, profile, and document storage backed by Postgres (Neon).",
+  "description": "Prototype backend API for the Urimai app \u2014 auth, profile, and document storage backed by Postgres (Neon).",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
@@ -10,11 +10,12 @@
     "migrate": "node src/db/migrate.js",
     "test:surface": "node test/answerSurface.test.js",
     "test:isolation": "node test/isolation.test.js",
-    "test": "npm run test:surface",
+    "test": "npm run test:surface && npm run test:google",
     "test:directory": "node test/directory.test.js",
-    "test:all": "npm run test:surface && npm run test:token && npm run test:isolation && npm run test:directory",
+    "test:all": "npm run test:surface && npm run test:google && npm run test:token && npm run test:isolation && npm run test:directory",
     "dev:test": "node -e \"process.env.RATE_LIMIT_DISABLED='true';require('./src/server.js')\"",
-    "test:token": "node test/tokenFreshness.test.js"
+    "test:token": "node test/tokenFreshness.test.js",
+    "test:google": "node test/googleAuth.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

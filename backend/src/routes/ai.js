@@ -174,6 +174,107 @@ point them to the official portal rather than guessing. Never promise approval.`
   }
 }));
 
+/**
+ * General legal question answering, as a conversation.
+ *
+ * Distinct from /scheme-chat, which is pinned to one scheme the citizen is
+ * already looking at. This one takes any legal question.
+ *
+ * Deliberately NOT a replacement for asking a verified lawyer. The system
+ * instruction below forbids case-specific advice and the client labels every
+ * reply as general information, because a citizen acting on a model's
+ * confident-sounding answer about their own matter is the real harm here.
+ */
+const legalChatLimiter = perUser(40, 60 * 60 * 1000);
+
+const MAX_HISTORY_TURNS = 10;
+
+const LEGAL_CHAT_SYSTEM = `You are Urimai's legal information assistant for Indian citizens.
+
+WHAT YOU DO
+- Explain Indian law, legal processes, rights and government procedures in plain language.
+- Describe the general steps someone in a situation like theirs usually takes.
+- Name the documents, offices, portals or authorities normally involved.
+- Explain legal terms simply.
+
+WHAT YOU MUST NOT DO
+- Do not give advice specific to the user's own case, and do not tell them what
+  they personally should do in a dispute.
+- Do not predict how a court will rule, or what a case is worth.
+- Do not draft legal notices, petitions, affidavits or contracts for filing.
+- Do not state an eligibility decision for any government scheme. Urimai decides
+  eligibility with its own rules; you must never contradict or pre-empt it.
+- Do not invent statutes, section numbers, case names or deadlines. If you are
+  not confident a specific provision exists, describe the concept instead and
+  say the exact provision should be confirmed.
+
+HOW TO ANSWER
+- Answer in the language requested.
+- Be direct and concrete. Under 250 words unless the question genuinely needs more.
+- Use short paragraphs or a few bullets. No headings.
+- When something turns on facts you do not have, say what it depends on.
+- When a matter is time-sensitive, involves a court deadline, a criminal
+  allegation, or someone's safety, say plainly that they should speak to a
+  lawyer promptly, and mention that Urimai can put their question to verified
+  lawyers anonymously.
+
+If asked something outside law or government services, say that is outside what
+you can help with, and steer back.`;
+
+router.post('/legal-chat', ...authed, legalChatLimiter, wrap(async (req, res) => {
+  const b = req.body || {};
+  const question = String(b.question || '').trim();
+
+  if (!question) {
+    return res.status(400).json({
+      error: 'question is required.',
+      code: 'VALIDATION_FAILED'
+    });
+  }
+  if (question.length > 2000) {
+    return res.status(400).json({
+      error: 'That question is too long. Please shorten it.',
+      code: 'VALIDATION_FAILED'
+    });
+  }
+
+  // History arrives from the client so the server stays stateless, but it is
+  // untrusted input: clamp the count and the size of every turn so a caller
+  // cannot push an unbounded prompt (a cost and latency attack) through it.
+  const rawHistory = Array.isArray(b.history) ? b.history : [];
+  const history = rawHistory
+    .slice(-MAX_HISTORY_TURNS * 2)
+    .filter((m) => m && typeof m.text === 'string' && m.text.trim())
+    .map((m) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      text: String(m.text).slice(0, 2000)
+    }));
+
+  // Rendered as a transcript rather than sent as multi-turn contents, because
+  // generateContent() takes a single parts array. The role labels keep the
+  // model's own prior answers distinguishable from what the citizen said.
+  const transcript = history.length
+    ? history
+        .map((m) => `${m.role === 'model' ? 'Assistant' : 'Citizen'}: ${m.text}`)
+        .join('\n\n') + '\n\n'
+    : '';
+
+  const prompt = `${transcript}Citizen: ${question}
+
+Answer in ${languageName(b.language)}.`;
+
+  try {
+    const text = await gemini.generateContent([{ text: prompt }], {
+      temperature: 0.4,
+      maxOutputTokens: 1024,
+      systemInstruction: LEGAL_CHAT_SYSTEM
+    });
+    res.json({ answer: text.trim() });
+  } catch (err) {
+    return handleGeminiError(err, res);
+  }
+}));
+
 /** Fields the extractor may return. Anything else is discarded. */
 const PROFILE_FIELDS = [
   'name', 'age', 'gender', 'state', 'district', 'occupation', 'education',

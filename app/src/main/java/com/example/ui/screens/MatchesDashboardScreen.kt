@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.*
@@ -60,6 +63,7 @@ fun MatchesDashboardScreen(
     onCheckEligibility: () -> Unit,
     onAskLegalQuestion: () -> Unit,
     onFindLawyer: () -> Unit,
+    onAskAssistant: () -> Unit,
     isVerifiedLawyer: Boolean = false,
     isLawyerRole: Boolean = false,
     isAdmin: Boolean = false,
@@ -519,7 +523,8 @@ item {
             item {
                 LegalHelpSection(
                     onAskQuestion = onAskLegalQuestion,
-                    onFindLawyer = onFindLawyer
+                    onFindLawyer = onFindLawyer,
+                    onAskAssistant = onAskAssistant
                 )
             }
 
@@ -596,7 +601,8 @@ private fun MetricSummaryCard(
 @Composable
 private fun LegalHelpSection(
     onAskQuestion: () -> Unit,
-    onFindLawyer: () -> Unit
+    onFindLawyer: () -> Unit,
+    onAskAssistant: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -609,6 +615,15 @@ private fun LegalHelpSection(
             color = CivicNavy800
         )
 
+        // The assistant is first because it is the fastest answer and costs a
+        // lawyer nothing. The two human paths stay directly beneath it, so
+        // nothing about asking a real lawyer becomes harder to find.
+        ActionTile(
+            icon = Icons.AutoMirrored.Filled.Chat,
+            title = stringResource(R.string.legal_help_chat_title),
+            subtitle = stringResource(R.string.legal_help_chat_subtitle),
+            onClick = onAskAssistant
+        )
         ActionTile(
             icon = Icons.Default.Lock,
             title = "Ask a question anonymously",

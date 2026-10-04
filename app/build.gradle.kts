@@ -21,6 +21,15 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    // The Google WEB client id (not the Android one): Credential Manager
+    // returns a token audienced to the web client, and the backend checks that
+    // audience. Empty is a supported state -- the app simply hides the Google
+    // button rather than showing one that cannot work.
+    val googleClientId = providers.gradleProperty("URIMAI_GOOGLE_CLIENT_ID")
+      .orElse(providers.environmentVariable("URIMAI_GOOGLE_CLIENT_ID"))
+      .getOrElse("")
+    buildConfigField("String", "GOOGLE_CLIENT_ID", "\"$googleClientId\"")
   }
 
   signingConfigs {
@@ -132,9 +141,11 @@ dependencies {
   // Uncomment ALL FOUR of the following dependencies together to use Firebase Auth and Google
   // Sign-In via Credential Manager:
   // implementation(libs.firebase.auth)
-  // implementation(libs.androidx.credentials)
-  // implementation(libs.androidx.credentials.play.services)
-  // implementation(libs.googleid)
+  // Credential Manager is the current Google Sign-In path; the old
+  // GoogleSignInClient API is deprecated.
+  implementation(libs.androidx.credentials)
+  implementation(libs.androidx.credentials.play.services)
+  implementation(libs.googleid)
   implementation(libs.firebase.appcheck.recaptcha)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)

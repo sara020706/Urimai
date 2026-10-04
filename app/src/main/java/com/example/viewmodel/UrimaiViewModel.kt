@@ -25,6 +25,20 @@ data class ChatMessage(
     val timestamp: Long = System.currentTimeMillis()
 )
 
+/**
+ * One message in the general legal chat.
+ *
+ * Kept separate from ChatMessage, which the per-scheme chat uses: this one
+ * carries an error code so a failed turn can be retried in place instead of
+ * leaving a dead end in the transcript.
+ */
+data class LegalChatMessage(
+    val text: String,
+    val isFromUser: Boolean,
+    val error: String? = null,
+    val id: String = java.util.UUID.randomUUID().toString()
+)
+
 data class AuthUiState(
     val isLoggedIn: Boolean = false,
     val userId: Long? = null,
@@ -141,6 +155,46 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    // --- Google sign-in ---------------------------------------------------
+
+    private val _googleSignInAvailable = MutableStateFlow(false)
+    val googleSignInAvailable: StateFlow<Boolean> = _googleSignInAvailable.asStateFlow()
+
+    init {
+        // Asked once at startup so the login screen can decide whether to show
+        // the button. Defaults to false, so a failure here hides it.
+        viewModelScope.launch {
+            _googleSignInAvailable.value = authRepository.googleSignInAvailable()
+        }
+    }
+
+    /**
+     * @param activityContext must be an Activity context -- Credential Manager
+     *        needs one to present its sheet.
+     */
+    fun signInWithGoogle(activityContext: android.content.Context, role: String) {
+        viewModelScope.launch {
+            _authState.value = _authState.value.copy(isLoading = true, errorMessage = null)
+            when (val result = authRepository.signInWithGoogle(activityContext, role)) {
+                // Null means the person dismissed the sheet. Clear the spinner
+                // and say nothing: they know what they did.
+                null -> _authState.value = _authState.value.copy(isLoading = false)
+                is AuthResult.Success -> {
+                    _authState.value = AuthUiState(
+                        isLoggedIn = true,
+                        userId = result.userId,
+                        displayName = result.displayName
+                    )
+                    loadRemoteData()
+                }
+                is AuthResult.Failure -> _authState.value = _authState.value.copy(
+                    isLoading = false,
+                    errorMessage = result.message
+                )
+            }
+        }
+    }
+
     fun signUp(
         username: String,
         password: String,
@@ -210,6 +264,89 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
     fun clearExtraction() {
         _extraction.value = null
         _extractionError.value = null
+    }
+
+    // --- General legal chat -----------------------------------------------
+    //
+    // Separate from asking a verified lawyer, which still goes through
+    // POST /questions and the answer-isolation path. This is general legal
+    // information from the model, and the screen says so.
+
+    private val _legalChat = MutableStateFlow<List<LegalChatMessage>>(emptyList())
+    val legalChat: StateFlow<List<LegalChatMessage>> = _legalChat.asStateFlow()
+
+    private val _isLegalChatReplying = MutableStateFlow(false)
+    val isLegalChatReplying: StateFlow<Boolean> = _isLegalChatReplying.asStateFlow()
+
+    fun sendLegalChatMessage(text: String) {
+        val question = text.trim()
+        if (question.isBlank() || _isLegalChatReplying.value) return
+
+        // History is what preceded this question, so it is captured before the
+        // new message is appended.
+        val history = _legalChat.value
+            .filter { it.error == null }
+            .map {
+                com.example.data.remote.LegalChatTurn(
+                    role = if (it.isFromUser) "user" else "assistant",
+                    text = it.text
+                )
+            }
+
+        _legalChat.value = _legalChat.value + LegalChatMessage(question, isFromUser = true)
+        _isLegalChatReplying.value = true
+
+        viewModelScope.launch {
+            val outcome = aiRepository.legalChat(
+                question = question,
+                history = history,
+                language = _selectedLanguage.value.code
+            )
+            val reply = when (outcome) {
+                is com.example.data.repository.LegalChatOutcome.Success ->
+                    LegalChatMessage(outcome.answer, isFromUser = false)
+                com.example.data.repository.LegalChatOutcome.RateLimited ->
+                    LegalChatMessage(
+                        "You have asked a lot of questions in a short time. " +
+                            "Please wait a little and try again.",
+                        isFromUser = false,
+                        error = "RATE_LIMITED"
+                    )
+                com.example.data.repository.LegalChatOutcome.Offline ->
+                    LegalChatMessage(
+                        "We could not reach the assistant. Check your connection " +
+                            "and try again.",
+                        isFromUser = false,
+                        error = "OFFLINE"
+                    )
+                is com.example.data.repository.LegalChatOutcome.Rejected ->
+                    LegalChatMessage(outcome.message, isFromUser = false, error = "REJECTED")
+                com.example.data.repository.LegalChatOutcome.Unavailable ->
+                    LegalChatMessage(
+                        "The legal assistant is unavailable right now. You can " +
+                            "still ask verified lawyers your question anonymously.",
+                        isFromUser = false,
+                        error = "UNAVAILABLE"
+                    )
+            }
+            _legalChat.value = _legalChat.value + reply
+            _isLegalChatReplying.value = false
+        }
+    }
+
+    /** Drop the last failed exchange and ask again. */
+    fun retryLastLegalChatMessage() {
+        val messages = _legalChat.value
+        val lastUser = messages.lastOrNull { it.isFromUser } ?: return
+        // Remove the failed reply and the question, so resending does not
+        // duplicate the question in the transcript.
+        val trimmed = messages.dropLastWhile { !it.isFromUser }.dropLast(1)
+        _legalChat.value = trimmed
+        sendLegalChatMessage(lastUser.text)
+    }
+
+    fun clearLegalChat() {
+        _legalChat.value = emptyList()
     }
 
     // --- Viewing an uploaded document -------------------------------------

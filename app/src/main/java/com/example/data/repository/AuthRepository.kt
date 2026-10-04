@@ -5,6 +5,8 @@ import com.example.data.remote.ApiClient
 import com.example.data.remote.ApiErrorBody
 import com.example.data.remote.LogInRequest
 import com.example.data.remote.SessionManager
+import com.example.data.remote.GoogleSignInClient
+import com.example.data.remote.GoogleSignInRequest
 import com.example.data.remote.SignUpRequest
 import com.squareup.moshi.Moshi
 import retrofit2.Response
@@ -54,6 +56,53 @@ class AuthRepository(context: Context) {
             handleAuthResponse(response)
         } catch (e: Exception) {
             AuthResult.Failure("Could not reach the server. Check your connection and try again.")
+        }
+    }
+
+    /**
+     * Sign in with Google.
+     *
+     * Two steps: get an ID token from Credential Manager, then exchange it at
+     * the backend, which verifies Google's signature before issuing our own
+     * session. A cancelled sheet returns null so the caller can stay silent
+     * rather than reporting an error the person caused deliberately.
+     *
+     * @param activityContext must be an Activity context.
+     */
+    suspend fun signInWithGoogle(
+        activityContext: Context,
+        role: String? = null
+    ): AuthResult? {
+        return when (val outcome = GoogleSignInClient.getIdToken(activityContext)) {
+            is GoogleSignInClient.Outcome.Cancelled -> null
+            is GoogleSignInClient.Outcome.NoAccount ->
+                AuthResult.Failure(
+                    "No Google account was found on this device. Add one in " +
+                        "Settings, or sign in with a username and password."
+                )
+            is GoogleSignInClient.Outcome.Failure -> AuthResult.Failure(outcome.message)
+            is GoogleSignInClient.Outcome.Success -> try {
+                handleAuthResponse(api.googleSignIn(GoogleSignInRequest(outcome.idToken, role)))
+            } catch (e: Exception) {
+                AuthResult.Failure(
+                    "Could not reach the server. Check your connection and try again."
+                )
+            }
+        }
+    }
+
+    /**
+     * Whether this server offers Google sign-in.
+     *
+     * Defaults to false on any failure: hiding a working button is a smaller
+     * harm than showing one that always fails.
+     */
+    suspend fun googleSignInAvailable(): Boolean {
+        if (!GoogleSignInClient.isConfigured()) return false
+        return try {
+            api.authMethods().body()?.google == true
+        } catch (e: Exception) {
+            false
         }
     }
 

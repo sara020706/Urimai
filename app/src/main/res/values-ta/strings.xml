@@ -93,4 +93,23 @@
 
     <!-- Offline notice -->
     <string name="catalog_stale_notice">சேமிக்கப்பட்ட திட்டத் தகவல் காட்டப்படுகிறது. நீங்கள் மீண்டும் இணையத்தில் இணையும் வரை இது காலாவதியானதாக இருக்கலாம்.</string>
+
+    <!-- Legal assistant (AI chat) -->
+    <string name="title_legal_assistant">சட்ட உதவியாளர்</string>
+    <string name="action_new_chat">புதிய உரையாடல்</string>
+    <string name="action_send">அனுப்பு</string>
+    <string name="legal_chat_hint">ஒரு சட்டக் கேள்வியைக் கேளுங்கள்</string>
+    <string name="legal_chat_thinking">யோசிக்கிறது…</string>
+    <string name="legal_chat_disclaimer">AI உதவியாளரிடமிருந்து பொதுவான சட்டத் தகவல். உங்கள் சொந்த வழக்குக்கான ஆலோசனை அல்ல; இது வழக்கறிஞர் அல்ல.</string>
+    <string name="legal_chat_intro_title">எந்த சட்டம் அல்லது சட்ட நடைமுறை குறித்தும் கேளுங்கள்</string>
+    <string name="legal_chat_intro_body">இந்திய சட்டம், உங்கள் உரிமைகள், அரசு நடைமுறைகள் எவ்வாறு செயல்படுகின்றன என்பதை இந்த உதவியாளர் எளிய மொழியில் விளக்குகிறது. இது பொதுவான அறிவிலிருந்து பதிலளிக்கிறது, எனவே உங்கள் வழக்கின் விவரங்கள் குறித்து ஆலோசனை வழங்க முடியாது, தவறாகவும் இருக்கலாம். உங்களை நேரடியாகப் பாதிக்கும் எதற்கும் சரிபார்க்கப்பட்ட வழக்கறிஞரிடம் கேளுங்கள்.</string>
+    <string name="legal_chat_try_asking">இதைக் கேட்டுப் பாருங்கள்</string>
+    <string name="legal_chat_ask_lawyer">மாறாக சரிபார்க்கப்பட்ட வழக்கறிஞரிடம் கேளுங்கள்</string>
+    <string name="legal_chat_suggestion_1">வாடகை ஒப்பந்தத்திற்கு எனக்கு என்ன ஆவணங்கள் தேவை?</string>
+    <string name="legal_chat_suggestion_2">நுகர்வோர் புகார் நடைமுறை எவ்வாறு செயல்படுகிறது?</string>
+    <string name="legal_chat_suggestion_3">என் முதலாளி எனக்குச் சம்பளம் தரவில்லை என்றால் என் உரிமைகள் என்ன?</string>
+    <string name="legal_help_chat_title">சட்ட உதவியாளரிடம் கேளுங்கள்</string>
+    <string name="legal_help_chat_subtitle">சட்டம் மற்றும் சட்ட நடைமுறைகள் குறித்த உடனடி பதில்கள். பொதுவான தகவல், ஆலோசனை அல்ல.</string>
+    <string name="auth_continue_with_google">Google மூலம் தொடரவும்</string>
+    <string name="auth_or">அல்லது</string>
 </resources>

@@ -275,6 +275,32 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS status_changed_at TIMESTAMPTZ;
 -- floors iat to the second while this column has millisecond precision.
 ALTER TABLE users ADD COLUMN IF NOT EXISTS token_valid_from TIMESTAMPTZ;
 
+-- Google Sign-In identity.
+--
+-- google_sub is Google's stable subject id. It is the join key, NOT the email:
+-- a Google account can change its email address, and matching on email alone
+-- would let an attacker who registers a recycled address inherit the account.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS auth_provider TEXT NOT NULL DEFAULT 'PASSWORD';
+
+-- A Google-only account has no password to hash. Relaxing this is required
+-- before any such row can be inserted.
+DO $$ BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+     WHERE table_name = 'users' AND column_name = 'password_hash'
+       AND is_nullable = 'NO'
+  ) THEN
+    ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL;
+  END IF;
+END $$;
+
+-- One account per Google identity. Partial, so the many password-only rows
+-- (google_sub IS NULL) do not collide with each other.
+CREATE UNIQUE INDEX IF NOT EXISTS uq_users_google_sub
+  ON users (google_sub) WHERE google_sub IS NOT NULL;
+
 -- Clear the historical defaults. Those rows were never deliberately revoked;
 -- the value was just the row's creation time.
 DO $$ BEGIN
@@ -309,6 +335,19 @@ EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN
   ALTER TABLE users ADD CONSTRAINT users_account_status_chk
     CHECK (account_status IN ('ACTIVE','SUSPENDED','BLOCKED'));
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+DO $$ BEGIN
+  ALTER TABLE users ADD CONSTRAINT users_auth_provider_chk
+    CHECK (auth_provider IN ('PASSWORD','GOOGLE','BOTH'));
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+-- An account with neither a password nor a Google identity could never be
+-- signed into again. Making that unrepresentable is cheaper than auditing
+-- every future write path that touches these columns.
+DO $$ BEGIN
+  ALTER TABLE users ADD CONSTRAINT users_has_a_credential_chk
+    CHECK (password_hash IS NOT NULL OR google_sub IS NOT NULL);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN

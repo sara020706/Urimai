@@ -26,6 +26,16 @@ interface UrimaiApiService {
     @POST("auth/login")
     suspend fun logIn(@Body request: LogInRequest): Response<AuthResponse>
 
+    @POST("auth/google")
+    suspend fun googleSignIn(@Body request: GoogleSignInRequest): Response<AuthResponse>
+
+    /** Unauthenticated: the login screen needs it before any token exists. */
+    @GET("auth/methods")
+    suspend fun authMethods(): Response<AuthMethodsResponse>
+
+    @POST("ai/legal-chat")
+    suspend fun legalChat(@Body request: LegalChatRequest): Response<LegalChatResponse>
+
     @GET("profile")
     suspend fun getProfile(): Response<ProfileResponse>
 
