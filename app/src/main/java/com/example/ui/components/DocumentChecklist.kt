@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,8 +42,8 @@ fun DocumentChecklist(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -67,7 +68,7 @@ fun DocumentChecklist(
                         text = "Document Readiness",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -116,7 +117,7 @@ fun DocumentChecklist(
             Text(
                 text = "Documents are uploaded once in your profile and checked here automatically:",
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryLight
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             // Document items list (read-only status; uploads happen in the profile's document vault)
@@ -154,7 +155,7 @@ fun DocumentChecklist(
                                     text = doc.name,
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = if (isOwned) FontWeight.SemiBold else FontWeight.Medium,
-                                    color = CivicNavy900
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Box(
                                     modifier = Modifier
@@ -174,7 +175,7 @@ fun DocumentChecklist(
                                 text = "Stage: ${doc.stage} • ${doc.tip}",
                                 style = MaterialTheme.typography.bodySmall,
                                 fontSize = 11.sp,
-                                color = TextTertiaryLight
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             if (existingUpload != null) {
                                 Text(

@@ -7,7 +7,10 @@ import com.squareup.moshi.JsonClass
 data class SignUpRequest(
     val username: String,
     val password: String,
-    val displayName: String
+    val displayName: String,
+    // The server accepts USER or LAWYER and silently downgrades anything else.
+    // Asserting LAWYER grants nothing until an admin verifies the account.
+    val role: String? = null
 )
 
 @JsonClass(generateAdapter = true)

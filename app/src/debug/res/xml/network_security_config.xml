@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DEBUG BUILDS ONLY.
+
+  This file lives in src/debug, so it is merged into debug builds and is absent
+  from release. Testing against a backend on your laptop means plain http:// to
+  a LAN address, which Android blocks by default from API 28 onward: the calls
+  fail silently, which looks like a broken app rather than a blocked protocol.
+
+  Release builds keep the platform default of HTTPS only.
+
+  Note: a <domain> entry matches hostnames, not CIDR ranges. Listing 10.0.0.0
+  would only ever match a host literally named 10.0.0.0, so a debug build
+  permits cleartext broadly instead. That is acceptable precisely because this
+  configuration cannot reach a release APK.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <!-- Lets a debug build sit behind a local HTTPS proxy when
+                 inspecting traffic. Debug only, so it widens nothing shipped. -->
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

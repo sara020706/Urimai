@@ -74,13 +74,23 @@ async function signup(username, role) {
 
 /** Promote to VERIFIED directly; the admin approval path is covered elsewhere. */
 async function makeVerifiedLawyer(username, userId) {
-  await pool.query(
+  // The bar number must be unique per (state, number) among live applications.
+  // Deriving it from the username guarantees uniqueness within and across runs;
+  // an earlier version used a timestamp, and two lawyers created in the same
+  // millisecond collided, leaving one without a profile and failing later
+  // assertions with a confusing 401.
+  const result = await pool.query(
     `INSERT INTO lawyer_profiles
        (user_id, full_name, bar_council_reg_number, bar_council_state, verification_status)
      VALUES ($1, $2, $3, 'Tamil Nadu', 'VERIFIED')
-     ON CONFLICT (user_id) DO UPDATE SET verification_status = 'VERIFIED'`,
-    [userId, username, `${STAMP}/${userId}`]
+     ON CONFLICT (user_id) DO UPDATE SET verification_status = 'VERIFIED'
+     RETURNING user_id`,
+    [userId, username, `BAR/${username}`]
   );
+  // Fail loudly: a swallowed insert previously surfaced as an unrelated 401.
+  if (result.rowCount !== 1) {
+    throw new Error(`could not create lawyer profile for ${username}`);
+  }
 }
 
 async function cleanup(usernames) {
@@ -92,7 +102,28 @@ async function cleanup(usernames) {
   }
 }
 
+/**
+ * Refuse to run against a server that still has rate limiting on.
+ *
+ * These suites create 4-5 accounts per run. Against a normal server the signup
+ * window (20 per 15 minutes) is exhausted after a couple of runs, and the
+ * failures that follow look like product bugs: lawyers never get profiles, so
+ * later assertions report 401 and 500 on unrelated routes.
+ */
+async function assertTestMode() {
+  const probe = await request('POST', '/auth/login', {
+    body: { username: '__ratelimit_probe__', password: 'x' }
+  });
+  if (probe.status === 429) {
+    throw new Error(
+      'The server on this port is rate limiting. Start it with ' +
+      '`npm run dev:test` (or RATE_LIMIT_DISABLED=true) before running this suite.'
+    );
+  }
+}
+
 async function main() {
+  await assertTestMode();
   const names = [`${STAMP}citizen`, `${STAMP}other`, `${STAMP}lawa`, `${STAMP}lawb`];
 
   console.log(`\nAnswer isolation test (port ${PORT})\n`);

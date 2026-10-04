@@ -12,12 +12,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.CheckCircle
 import com.example.ui.theme.EmeraldText
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.CloudOff
+import com.example.ui.theme.AmberContainer
+import com.example.ui.theme.AmberText
+import com.example.ui.components.ActionTile
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,18 +67,19 @@ fun MatchesDashboardScreen(
     onOpenNotifications: () -> Unit = {},
     onOpenVerification: () -> Unit = {},
     onOpenAdmin: () -> Unit = {},
+    isCatalogStale: Boolean = false,
     onOpenLawyerWorkspace: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Top App Bar
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = SurfaceLight,
+            color = MaterialTheme.colorScheme.surface,
             shadowElevation = 2.dp
         ) {
             Column(
@@ -107,12 +114,12 @@ fun MatchesDashboardScreen(
                                 text = "Urimai",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = CivicNavy900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "Eligible Scheme Matches",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TextSecondaryLight,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 10.sp
                             )
                         }
@@ -122,6 +129,24 @@ fun MatchesDashboardScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
+                        IconButton(onClick = onOpenNotifications) {
+                            BadgedBox(
+                                badge = {
+                                    if (unreadNotificationCount > 0) {
+                                        Badge(containerColor = SaffronPrimary) {
+                                            Text("$unreadNotificationCount")
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Notifications,
+                                    contentDescription = "Notifications",
+                                    tint = CivicNavy800
+                                )
+                            }
+                        }
+
                         IconButton(
                             onClick = onViewSavedSchemes,
                             modifier = Modifier.size(36.dp).testTag("saved_schemes_nav")
@@ -187,7 +212,7 @@ fun MatchesDashboardScreen(
                             text = "${profile.name} • ${profile.age ?: "?"} yrs • ${profile.state} • ${profile.annualIncome?.let { EligibilityEngine.formatInr(it) } ?: "Income not set"}",
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Medium,
-                            color = CivicNavy900,
+                            color = MaterialTheme.colorScheme.onSurface,
                             maxLines = 1
                         )
                     }
@@ -248,21 +273,21 @@ fun MatchesDashboardScreen(
                         .testTag("scheme_search_input"),
                     placeholder = { Text("Search by scheme name, ministry, keyword...", fontSize = 13.sp) },
                     leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = "Search", tint = TextTertiaryLight)
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     },
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { onSearchQueryChange("") }) {
-                                Icon(Icons.Default.Close, contentDescription = "Clear", tint = TextTertiaryLight)
+                                Icon(Icons.Default.Close, contentDescription = "Clear", tint = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     },
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = SurfaceLight,
-                        unfocusedContainerColor = SurfaceLight,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = CivicNavy700,
-                        unfocusedBorderColor = BorderLight
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
                     ),
                     singleLine = true
                 )
@@ -311,7 +336,10 @@ fun MatchesDashboardScreen(
                         textColor = CivicNavy900,
                         icon = Icons.Default.Description,
                         isSelected = false,
-                        onClick = {},
+                        // Read-only: there is no "missing documents" filter, and
+                        // a tile that looks tappable but is not is worse than
+                        // one that plainly is not.
+                        onClick = null,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -334,8 +362,8 @@ fun MatchesDashboardScreen(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(20.dp))
-                                    .background(if (isSelected) CivicNavy800 else SurfaceLight)
-                                    .border(1.dp, if (isSelected) CivicNavy800 else BorderLight, RoundedCornerShape(20.dp))
+                                    .background(if (isSelected) CivicNavy800 else MaterialTheme.colorScheme.surface)
+                                    .border(1.dp, if (isSelected) CivicNavy800 else MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
                                     .clickable { onCategorySelect(cat) }
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                                     .testTag("cat_${cat.name}")
@@ -368,7 +396,7 @@ fun MatchesDashboardScreen(
                             text = "Filtered by: ${selectedStatusFilter.label}",
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.SemiBold,
-                            color = CivicNavy900
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = "Clear filter",
@@ -383,12 +411,35 @@ fun MatchesDashboardScreen(
 
             // Schemes List Header
 item {
-    LegalHelpSection(
-        onAskQuestion = onAskLegalQuestion,
-        onFindLawyer = onFindLawyer,
-        isVerifiedLawyer = isVerifiedLawyer,
-        onOpenLawyerWorkspace = onOpenLawyerWorkspace
-    )
+    if (isCatalogStale) {
+        // Scheme rules change. A citizen reading cached data deserves to know
+        // the verdicts may be out of date rather than discovering it later.
+        androidx.compose.material3.Card(
+            colors = androidx.compose.material3.CardDefaults.cardColors(
+                containerColor = AmberContainer
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(14.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CloudOff,
+                    contentDescription = null,
+                    tint = AmberText
+                )
+                Text(
+                    "Showing saved scheme information. It may be out of date until " +
+                        "you are back online.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = AmberText
+                )
+            }
+        }
+    }
 }
 
             item {
@@ -401,7 +452,7 @@ item {
                         text = "Matching Schemes (${matches.size})",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     Text(
@@ -420,7 +471,7 @@ item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = SurfaceLight)
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                     ) {
                         Column(
                             modifier = Modifier
@@ -432,19 +483,19 @@ item {
                             Icon(
                                 imageVector = Icons.Default.SearchOff,
                                 contentDescription = null,
-                                tint = TextTertiaryLight,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(36.dp)
                             )
                             Text(
                                 text = "No matching schemes found",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = CivicNavy900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "Try clearing filters or updating your profile criteria.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondaryLight
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -459,6 +510,17 @@ item {
                         language = currentLanguage
                     )
                 }
+            }
+
+            // Legal help sits BELOW the schemes, not above them. The screen
+            // promises scheme matches; a citizen should reach those first and
+            // find legal help as the natural next step when a scheme does not
+            // work out.
+            item {
+                LegalHelpSection(
+                    onAskQuestion = onAskLegalQuestion,
+                    onFindLawyer = onFindLawyer
+                )
             }
 
             // Disclaimer Banner at Bottom
@@ -477,12 +539,13 @@ private fun MetricSummaryCard(
     textColor: Color,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isSelected: Boolean,
-    onClick: () -> Unit,
+    /** Null for a read-only tile: no ripple, and not announced as a button. */
+    onClick: (() -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
-            .clickable { onClick() }
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
             .testTag("metric_${label.lowercase().replace(" ", "_")}"),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = bgColor),
@@ -522,28 +585,21 @@ private fun MetricSummaryCard(
 
 
 /**
- * Entry points into legal help.
+ * Legal help, for citizens.
  *
- * Placed on the dashboard because a citizen who has just been told they do not
- * match a scheme is exactly the person who needs a lawyer, and making them hunt
- * through a menu at that moment would be poor service.
+ * Lawyer and admin entries used to render here too, which meant a citizen
+ * dashboard carried three other products' entry points. Those roles now land on
+ * their own workspaces with their own navigation, so the branches were dead
+ * code that still cost a reader's attention.
  */
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 private fun LegalHelpSection(
     onAskQuestion: () -> Unit,
-    onFindLawyer: () -> Unit,
-    isVerifiedLawyer: Boolean,
-    onOpenLawyerWorkspace: () -> Unit,
-    isLawyerRole: Boolean = false,
-    onOpenVerification: () -> Unit = {},
-    isAdmin: Boolean = false,
-    onOpenAdmin: () -> Unit = {}
+    onFindLawyer: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
@@ -553,161 +609,17 @@ private fun LegalHelpSection(
             color = CivicNavy800
         )
 
-        androidx.compose.material3.Card(
-            onClick = onAskQuestion,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = null,
-                    tint = CivicNavy800
-                )
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        "Ask a question anonymously",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        "Verified lawyers reply. Your name is never shown.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-
-        androidx.compose.material3.Card(
-            onClick = onFindLawyer,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null,
-                    tint = CivicNavy800
-                )
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        "Find a verified lawyer",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        "Search by area of practice, language and location.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-
-        // Shown to any lawyer, approved or not: an unapproved one most needs
-        // to see where their application stands.
-        if (isLawyerRole) {
-            androidx.compose.material3.Card(
-                onClick = onOpenVerification,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Description,
-                        contentDescription = null,
-                        tint = CivicNavy800
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            "Professional verification",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            if (isVerifiedLawyer) {
-                                "Your details and documents."
-                            } else {
-                                "Complete your details to start answering questions."
-                            },
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-        }
-
-        if (isAdmin) {
-            androidx.compose.material3.Card(
-                onClick = onOpenAdmin,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = null,
-                        tint = CivicNavy800
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            "Administration",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            "Lawyer applications, users, reports and the audit log.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-        }
-
-        if (isVerifiedLawyer) {
-            androidx.compose.material3.Card(
-                onClick = onOpenLawyerWorkspace,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = EmeraldText
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            "Citizen questions",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            "Answer questions from citizens who need help.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-        }
+        ActionTile(
+            icon = Icons.Default.Lock,
+            title = "Ask a question anonymously",
+            subtitle = "Verified lawyers reply. Your name is never shown.",
+            onClick = onAskQuestion
+        )
+        ActionTile(
+            icon = Icons.Default.Search,
+            title = "Find a verified lawyer",
+            subtitle = "Search by area of practice, language and location.",
+            onClick = onFindLawyer
+        )
     }
 }

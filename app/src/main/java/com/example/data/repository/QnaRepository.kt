@@ -203,6 +203,25 @@ class QnaRepository(private val context: Context) {
     suspend fun contactInbox(): List<InboxRequestResponse> =
         listOrEmpty { ApiClient.getService(context).contactInbox() }
 
+    /** Master switch for whether citizens may send this lawyer contact requests. */
+    suspend fun setAvailability(accepting: Boolean): QnaResult<Boolean> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = ApiClient.getService(context).setAvailability(
+                    com.example.data.remote.AvailabilityRequest(accepting)
+                )
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    QnaResult.Success(body.acceptingQuestions)
+                } else {
+                    failure(response, "Could not change your availability.")
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "setAvailability failed: ${e.message}")
+                QnaResult.Failure("Could not reach the server.")
+            }
+        }
+
     suspend fun respondToContact(requestId: String, action: String): QnaResult<Unit> =
         callUnit("Could not respond to the request.") {
             ApiClient.getService(context).respondToContact(

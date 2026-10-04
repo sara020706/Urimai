@@ -19,7 +19,12 @@ class AuthRepository(context: Context) {
     private val sessionManager = SessionManager(context)
     private val errorAdapter = Moshi.Builder().build().adapter(ApiErrorBody::class.java)
 
-    suspend fun signUp(username: String, password: String, displayName: String): AuthResult {
+    suspend fun signUp(
+        username: String,
+        password: String,
+        displayName: String,
+        role: String? = null
+    ): AuthResult {
         val normalizedUsername = username.trim().lowercase()
         if (normalizedUsername.isBlank() || password.isBlank()) {
             return AuthResult.Failure("Username and password are required.")
@@ -29,7 +34,9 @@ class AuthRepository(context: Context) {
         }
 
         return try {
-            val response = api.signUp(SignUpRequest(normalizedUsername, password, displayName.ifBlank { username }))
+            val response = api.signUp(
+                SignUpRequest(normalizedUsername, password, displayName.ifBlank { username }, role)
+            )
             handleAuthResponse(response)
         } catch (e: Exception) {
             AuthResult.Failure("Could not reach the server. Check your connection and try again.")

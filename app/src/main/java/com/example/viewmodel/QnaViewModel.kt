@@ -303,6 +303,37 @@ class QnaViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    private val _isAcceptingRequests = MutableStateFlow(true)
+    val isAcceptingRequests: StateFlow<Boolean> = _isAcceptingRequests.asStateFlow()
+
+    /** Seed the toggle from the lawyer profile so it reflects the server. */
+    fun setAcceptingRequestsLocal(value: Boolean) {
+        _isAcceptingRequests.value = value
+    }
+
+    fun setAvailability(accepting: Boolean) {
+        viewModelScope.launch {
+            // Optimistic: the switch should move under the finger. Reverted if
+            // the server refuses.
+            val previous = _isAcceptingRequests.value
+            _isAcceptingRequests.value = accepting
+            when (val result = repository.setAvailability(accepting)) {
+                is QnaResult.Success -> {
+                    _isAcceptingRequests.value = result.value
+                    _message.value = if (result.value) {
+                        "Citizens can now send you contact requests."
+                    } else {
+                        "You are hidden from new contact requests."
+                    }
+                }
+                is QnaResult.Failure -> {
+                    _isAcceptingRequests.value = previous
+                    _message.value = result.message
+                }
+            }
+        }
+    }
+
     fun respondToContact(requestId: String, action: String) {
         viewModelScope.launch {
             when (val result = repository.respondToContact(requestId, action)) {

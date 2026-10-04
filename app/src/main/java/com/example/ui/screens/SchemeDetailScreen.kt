@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,12 +69,12 @@ fun SchemeDetailScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Top App Bar
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = SurfaceLight,
+            color = MaterialTheme.colorScheme.surface,
             shadowElevation = 2.dp
         ) {
             Row(
@@ -98,14 +99,14 @@ fun SchemeDetailScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = CivicNavy900
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     Text(
                         text = "Scheme Details",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -145,8 +146,8 @@ fun SchemeDetailScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -178,7 +179,7 @@ fun SchemeDetailScreen(
                             text = scheme.name,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = CivicNavy900,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = 26.sp
                         )
 
@@ -205,20 +206,20 @@ fun SchemeDetailScreen(
                             Icon(
                                 imageVector = Icons.Default.AccountBalance,
                                 contentDescription = null,
-                                tint = TextSecondaryLight,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
                                 text = scheme.department,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondaryLight
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
 
                         Text(
                             text = scheme.description,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = CivicNavy900,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = 20.sp
                         )
                     }
@@ -286,7 +287,7 @@ fun SchemeDetailScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(SaffronPrimary.copy(alpha = 0.5f)))
                 ) {
                     Column(
@@ -320,7 +321,7 @@ fun SchemeDetailScreen(
                                     text = "Urimai AI Plain Language Summary",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = CivicNavy900
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
 
@@ -354,14 +355,14 @@ fun SchemeDetailScreen(
                                 Text(
                                     text = "Generating personalized explanation...",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = TextSecondaryLight
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         } else {
                             Text(
                                 text = aiExplanation ?: matchResult.ruleSummary,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = CivicNavy900,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 lineHeight = 20.sp
                             )
                         }
@@ -376,12 +377,12 @@ fun SchemeDetailScreen(
                         text = "Eligibility Criteria Breakdown (${matchResult.passedCount}/${matchResult.totalEvaluatedCount} Passed)",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "Each condition is strictly evaluated against government rules.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryLight
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -410,8 +411,8 @@ fun SchemeDetailScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -431,7 +432,7 @@ fun SchemeDetailScreen(
                                 text = "How to Apply",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = CivicNavy900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
 
@@ -457,7 +458,7 @@ fun SchemeDetailScreen(
                                 Text(
                                     text = step,
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = CivicNavy900,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     fontSize = 13.sp,
                                     lineHeight = 18.sp
                                 )
@@ -473,7 +474,7 @@ fun SchemeDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = CivicNavy50),
-                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -493,14 +494,14 @@ fun SchemeDetailScreen(
                                 text = "Official Government Source",
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = CivicNavy900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
 
                         Text(
                             text = "${scheme.officialSourceLabel}\nAdministered by: ${scheme.department}\nLast verified: ${scheme.lastVerifiedDate}",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryLight,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 12.sp,
                             lineHeight = 16.sp
                         )
@@ -535,8 +536,8 @@ fun SchemeDetailScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -565,12 +566,12 @@ fun SchemeDetailScreen(
                                     text = "Ask Urimai Assistant",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = CivicNavy900
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     text = "Ask questions specifically about this scheme",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = TextSecondaryLight,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 11.sp
                                 )
                             }
@@ -583,7 +584,7 @@ fun SchemeDetailScreen(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(12.dp))
                                         .background(CivicNavy50)
-                                        .border(1.dp, BorderLight, RoundedCornerShape(12.dp))
+                                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
                                         .clickable { onSendChatMessage(q) }
                                         .padding(horizontal = 10.dp, vertical = 6.dp)
                                 ) {
@@ -623,7 +624,7 @@ fun SchemeDetailScreen(
                                                     bottomEnd = if (isUser) 2.dp else 12.dp
                                                 )
                                             )
-                                            .background(if (isUser) CivicNavy800 else SurfaceLight)
+                                            .background(if (isUser) CivicNavy800 else MaterialTheme.colorScheme.surface)
                                             .padding(10.dp)
                                     ) {
                                         Text(
@@ -651,7 +652,7 @@ fun SchemeDetailScreen(
                                         text = "Urimai is checking verified rules...",
                                         style = MaterialTheme.typography.bodySmall,
                                         fontSize = 11.sp,
-                                        color = TextSecondaryLight
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -690,7 +691,7 @@ fun SchemeDetailScreen(
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.Send,
                                     contentDescription = "Send",
-                                    tint = CivicNavy900,
+                                    tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }

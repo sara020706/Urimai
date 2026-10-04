@@ -7,11 +7,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.data.repository.CatalogSource
 import com.example.ui.components.HowItWorksBottomSheet
 import com.example.ui.screens.*
 import com.example.viewmodel.AdminViewModel
@@ -40,6 +46,9 @@ object UrimaiDestinations {
     const val LAWYER_FEED = "lawyer_feed"
     const val ANSWER_QUESTION = "answer_question"
     const val LAWYER_VERIFICATION = "lawyer_verification"
+    const val LAWYER_HOME = "lawyer_home"
+    const val LAWYER_MY_ANSWERS = "lawyer_my_answers"
+    const val LAWYER_INBOX = "lawyer_inbox"
 
     // Shared
     const val NOTIFICATIONS = "notifications"
@@ -51,6 +60,9 @@ object UrimaiDestinations {
     const val ADMIN_USERS = "admin_users"
     const val ADMIN_REPORTS = "admin_reports"
     const val ADMIN_AUDIT_LOG = "admin_audit_log"
+    const val ADMIN_DOCUMENT_VIEWER = "admin_document_viewer"
+    const val EXTRACT_REVIEW = "extract_review"
+    const val MY_DOCUMENT_VIEWER = "my_document_viewer"
 }
 
 @Composable
@@ -113,6 +125,15 @@ fun UrimaiApp(
     val adminAuditLog by adminViewModel.auditLog.collectAsState()
     val adminLoading by adminViewModel.isLoading.collectAsState()
     val adminSubmitting by adminViewModel.isSubmitting.collectAsState()
+    val qnaMyAnswers by qnaViewModel.myAnswers.collectAsState()
+    val qnaContactInbox by qnaViewModel.contactInbox.collectAsState()
+    val qnaAccepting by qnaViewModel.isAcceptingRequests.collectAsState()
+    val openDocument by adminViewModel.openDocument.collectAsState()
+    val isDownloadingDocument by adminViewModel.isDownloadingDocument.collectAsState()
+    val extraction by viewModel.extraction.collectAsState()
+    val isExtracting by viewModel.isExtracting.collectAsState()
+    val extractionError by viewModel.extractionError.collectAsState()
+    val catalogSource by viewModel.catalogSource.collectAsState()
 
     // Verification-document picker.
     //
@@ -168,23 +189,123 @@ fun UrimaiApp(
         if (authState.isLoggedIn) adminViewModel.startNotificationPolling()
     }
 
-    LaunchedEffect(authState.isLoggedIn) {
-        if (authState.isLoggedIn) {
-            navController.navigate(UrimaiDestinations.ANALYZING) {
-                popUpTo(UrimaiDestinations.LOGIN) { inclusive = true }
+    // Where a session lands depends on the role.
+    //
+    // The analysis animation and scheme dashboard are the CITIZEN flow; running
+    // a lawyer or an admin through them shows work that has nothing to do with
+    // their job. Role is read from the session, which login populates, so this
+    // waits for both the login flag and the role flags to settle.
+    LaunchedEffect(authState.isLoggedIn, isAdmin, isLawyerRole) {
+        if (!authState.isLoggedIn) return@LaunchedEffect
+
+        when {
+            isAdmin -> navController.navigate(UrimaiDestinations.ADMIN_DASHBOARD) {
+                popUpTo(0)
             }
-            viewModel.startAnalysisAnimation {
-                navController.navigate(UrimaiDestinations.DASHBOARD) {
-                    popUpTo(UrimaiDestinations.ANALYZING) { inclusive = true }
+            isLawyerRole -> navController.navigate(UrimaiDestinations.LAWYER_HOME) {
+                popUpTo(0)
+            }
+            else -> {
+                navController.navigate(UrimaiDestinations.ANALYZING) {
+                    popUpTo(UrimaiDestinations.LOGIN) { inclusive = true }
+                }
+                viewModel.startAnalysisAnimation {
+                    navController.navigate(UrimaiDestinations.DASHBOARD) {
+                        popUpTo(UrimaiDestinations.ANALYZING) { inclusive = true }
+                    }
                 }
             }
         }
     }
 
+    // Messages from the ViewModels had nowhere to go: 30 assignment sites across
+    // QnaViewModel and AdminViewModel were written and never read, so a failed
+    // post or a refused action looked like nothing happening at all.
+    val snackbarHostState = remember { SnackbarHostState() }
+    val myOpenDocument by viewModel.openDocument.collectAsState()
+    val isDownloadingMyDocument by viewModel.isDownloadingDocument.collectAsState()
+    val lawyerAccessDenied by qnaViewModel.lawyerAccessDenied.collectAsState()
+    val qnaMessage by qnaViewModel.message.collectAsState()
+    val adminMessage by adminViewModel.message.collectAsState()
+
+    LaunchedEffect(qnaMessage) {
+        qnaMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            qnaViewModel.clearMessage()
+        }
+    }
+    LaunchedEffect(extractionError) {
+        extractionError?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearExtraction()
+        }
+    }
+    LaunchedEffect(adminMessage) {
+        adminMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            adminViewModel.clearMessage()
+        }
+    }
+
+    // The bottom bar is the main thing that makes the three roles feel like
+    // different apps rather than one app with hidden rooms. Which set of tabs
+    // appears is presentation only; the server still decides what each role may
+    // actually do.
+    val tabs = when {
+        isAdmin -> adminTabs(
+            pendingLawyers = adminLawyerQueue.count { it.verificationStatus == "PENDING" },
+            openReports = adminReports.count { it.status == "OPEN" },
+            unread = unreadCount
+        )
+        isLawyerRole -> lawyerTabs(
+            pendingQuestions = lawyerFeed.count { !it.iHaveAnswered },
+            pendingContacts = qnaContactInbox.count { it.status == "PENDING" },
+            unread = unreadCount
+        )
+        else -> citizenTabs(unread = unreadCount)
+    }
+
+    Box(modifier = modifier) {
+    androidx.compose.material3.Scaffold(
+        bottomBar = {
+            if (authState.isLoggedIn) {
+                UrimaiBottomBar(tabs = tabs, navController = navController)
+            }
+        }
+    ) { scaffoldPadding ->
     NavHost(
+        modifier = Modifier.padding(scaffoldPadding),
+        // A short slide + fade. Snapping between screens made the app feel
+        // like a set of unrelated pages; 220ms is fast enough not to be felt
+        // as waiting.
+        enterTransition = {
+            androidx.compose.animation.slideInHorizontally(
+                animationSpec = androidx.compose.animation.core.tween(220),
+                initialOffsetX = { it / 8 }
+            ) + androidx.compose.animation.fadeIn(
+                animationSpec = androidx.compose.animation.core.tween(220)
+            )
+        },
+        exitTransition = {
+            androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(160)
+            )
+        },
+        popEnterTransition = {
+            androidx.compose.animation.fadeIn(
+                animationSpec = androidx.compose.animation.core.tween(180)
+            )
+        },
+        popExitTransition = {
+            androidx.compose.animation.slideOutHorizontally(
+                animationSpec = androidx.compose.animation.core.tween(200),
+                targetOffsetX = { it / 8 }
+            ) + androidx.compose.animation.fadeOut(
+                animationSpec = androidx.compose.animation.core.tween(200)
+            )
+        },
         navController = navController,
-        startDestination = if (authState.isLoggedIn) UrimaiDestinations.ANALYZING else UrimaiDestinations.LOGIN,
-        modifier = modifier
+        startDestination = if (authState.isLoggedIn) UrimaiDestinations.ANALYZING else UrimaiDestinations.LOGIN
     ) {
         composable(UrimaiDestinations.LOGIN) {
             var mode by remember { mutableStateOf(AuthMode.LOGIN) }
@@ -197,7 +318,9 @@ fun UrimaiApp(
                 errorMessage = authState.errorMessage,
                 isLoading = authState.isLoading,
                 onLogin = { username, password -> viewModel.logIn(username, password) },
-                onSignUp = { username, password, displayName -> viewModel.signUp(username, password, displayName) }
+                onSignUp = { username, password, displayName, role ->
+                    viewModel.signUp(username, password, displayName, role)
+                }
             )
         }
 
@@ -237,7 +360,7 @@ fun UrimaiApp(
                     navController.navigate(UrimaiDestinations.PROFILE_VIEW_EDIT)
                 },
                 onAskLegalQuestion = {
-                    navController.navigate(UrimaiDestinations.MY_QUESTIONS)
+                    navController.navigate(UrimaiDestinations.ASK_QUESTION)
                 },
                 onFindLawyer = {
                     navController.navigate(UrimaiDestinations.FIND_LAWYER)
@@ -257,7 +380,8 @@ fun UrimaiApp(
                 },
                 onOpenAdmin = {
                     navController.navigate(UrimaiDestinations.ADMIN_DASHBOARD)
-                }
+                },
+                isCatalogStale = catalogSource != CatalogSource.NETWORK
             )
         }
 
@@ -335,8 +459,8 @@ fun UrimaiApp(
                 detail = selectedQuestion,
                 isLoading = qnaLoading,
                 onClose = { qnaViewModel.closeQuestion(it) },
-                onReportAnswer = { answerId, reason ->
-                    qnaViewModel.report("ANSWER", answerId, reason)
+                onReport = { targetType, targetId, reason ->
+                    qnaViewModel.report(targetType, targetId, reason)
                 },
                 onContactLawyer = { lawyerId ->
                     qnaViewModel.openLawyer(lawyerId)
@@ -384,6 +508,7 @@ fun UrimaiApp(
             LaunchedEffect(Unit) { qnaViewModel.loadMyContactRequests() }
             MyContactRequestsScreen(
                 requests = myContactRequests,
+                isLoading = qnaLoading,
                 onBack = { navController.popBackStack() }
             )
         }
@@ -393,12 +518,20 @@ fun UrimaiApp(
             LawyerQuestionFeedScreen(
                 questions = lawyerFeed,
                 isLoading = qnaLoading,
+                onRefresh = { qnaViewModel.loadLawyerFeed() },
                 onOpenQuestion = { id ->
                     qnaViewModel.openLawyerQuestion(id)
                     navController.navigate(UrimaiDestinations.ANSWER_QUESTION)
                 },
-                onViewMyAnswers = { qnaViewModel.loadMyAnswers() },
-                onBack = { navController.popBackStack() }
+                onViewMyAnswers = {
+                    qnaViewModel.loadMyAnswers()
+                    navController.navigate(UrimaiDestinations.LAWYER_MY_ANSWERS)
+                },
+                onBack = { navController.popBackStack() },
+                accessDenied = lawyerAccessDenied,
+                onOpenVerification = {
+                    navController.navigate(UrimaiDestinations.LAWYER_VERIFICATION)
+                }
             )
         }
 
@@ -466,6 +599,8 @@ fun UrimaiApp(
             AdminDashboardScreen(
                 pendingLawyerCount = adminLawyerQueue.size,
                 openReportCount = adminReports.size,
+                unreadNotificationCount = unreadCount,
+                isLoading = adminLoading,
                 onOpenLawyerQueue = {
                     adminViewModel.loadLawyerQueue()
                     navController.navigate(UrimaiDestinations.ADMIN_LAWYER_QUEUE)
@@ -482,7 +617,15 @@ fun UrimaiApp(
                     adminViewModel.loadAuditLog()
                     navController.navigate(UrimaiDestinations.ADMIN_AUDIT_LOG)
                 },
-                onBack = { navController.popBackStack() }
+                onOpenNotifications = {
+                    navController.navigate(UrimaiDestinations.NOTIFICATIONS)
+                },
+                onLogOut = {
+                    viewModel.logOut()
+                    navController.navigate(UrimaiDestinations.LOGIN) { popUpTo(0) }
+                },
+                currentLanguage = selectedLanguage,
+                onLanguageChange = { viewModel.setLanguage(it) }
             )
         }
 
@@ -510,7 +653,12 @@ fun UrimaiApp(
                         }
                     }
                 },
-                onViewDocument = { /* Streaming a document to a viewer is not built yet. */ },
+                onViewDocument = { docId ->
+                    adminSelectedLawyerDocs.firstOrNull { it.id == docId }?.let { doc ->
+                        adminViewModel.openVerificationDocument(doc)
+                        navController.navigate(UrimaiDestinations.ADMIN_DOCUMENT_VIEWER)
+                    }
+                },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -534,6 +682,7 @@ fun UrimaiApp(
                 reports = adminReports,
                 selectedContent = adminReportContent,
                 isLoading = adminLoading,
+                onRefresh = { adminViewModel.loadReports() },
                 onOpenReport = { adminViewModel.openReport(it) },
                 onResolve = { id, action, note ->
                     adminViewModel.resolveReport(id, action, note)
@@ -547,6 +696,115 @@ fun UrimaiApp(
                 entries = adminAuditLog,
                 isLoading = adminLoading,
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(UrimaiDestinations.LAWYER_HOME) {
+            LaunchedEffect(Unit) {
+                adminViewModel.loadMyLawyerProfile()
+                qnaViewModel.loadLawyerFeed()
+                qnaViewModel.loadMyAnswers()
+                qnaViewModel.loadContactInbox()
+            }
+            // Seed the availability switch from the server's copy.
+            LaunchedEffect(myLawyerProfile?.userId) {
+                myLawyerProfile?.let {
+                    qnaViewModel.setAcceptingRequestsLocal(it.acceptingQuestions)
+                }
+            }
+            LawyerHomeScreen(
+                profile = myLawyerProfile,
+                pendingQuestionCount = lawyerFeed.count { !it.iHaveAnswered },
+                answeredCount = qnaMyAnswers.size,
+                pendingContactCount = qnaContactInbox.count { it.status == "PENDING" },
+                unreadNotificationCount = unreadCount,
+                isAcceptingRequests = qnaAccepting,
+                isLoading = qnaLoading || adminLoading,
+                currentLanguage = selectedLanguage,
+                onLanguageChange = { viewModel.setLanguage(it) },
+                onOpenQuestionFeed = {
+                    navController.navigate(UrimaiDestinations.LAWYER_FEED)
+                },
+                onOpenMyAnswers = {
+                    qnaViewModel.loadMyAnswers()
+                    navController.navigate(UrimaiDestinations.LAWYER_MY_ANSWERS)
+                },
+                onOpenInbox = {
+                    qnaViewModel.loadContactInbox()
+                    navController.navigate(UrimaiDestinations.LAWYER_INBOX)
+                },
+                onOpenVerification = {
+                    navController.navigate(UrimaiDestinations.LAWYER_VERIFICATION)
+                },
+                onOpenNotifications = {
+                    navController.navigate(UrimaiDestinations.NOTIFICATIONS)
+                },
+                onToggleAvailability = { qnaViewModel.setAvailability(it) },
+                onLogOut = {
+                    viewModel.logOut()
+                    navController.navigate(UrimaiDestinations.LOGIN) { popUpTo(0) }
+                }
+            )
+        }
+
+        composable(UrimaiDestinations.LAWYER_MY_ANSWERS) {
+            MyAnswersScreen(
+                answers = qnaMyAnswers,
+                isLoading = qnaLoading,
+                onOpenQuestion = { questionId ->
+                    qnaViewModel.openLawyerQuestion(questionId)
+                    navController.navigate(UrimaiDestinations.ANSWER_QUESTION)
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(UrimaiDestinations.LAWYER_INBOX) {
+            LaunchedEffect(Unit) { qnaViewModel.loadContactInbox() }
+            ContactInboxScreen(
+                requests = qnaContactInbox,
+                isLoading = qnaLoading,
+                onRespond = { id, action -> qnaViewModel.respondToContact(id, action) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(UrimaiDestinations.ADMIN_DOCUMENT_VIEWER) {
+            DocumentViewerScreen(
+                document = openDocument,
+                isLoading = isDownloadingDocument,
+                onBack = {
+                    adminViewModel.closeDocument()
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(UrimaiDestinations.MY_DOCUMENT_VIEWER) {
+            DocumentViewerScreen(
+                document = myOpenDocument,
+                isLoading = isDownloadingMyDocument,
+                onBack = {
+                    viewModel.closeOwnDocument()
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(UrimaiDestinations.EXTRACT_REVIEW) {
+            ExtractedInfoReviewScreen(
+                extraction = extraction,
+                currentProfile = userProfile,
+                isLoading = isExtracting,
+                onApply = { updated ->
+                    viewModel.updateProfile(updated)
+                    viewModel.clearExtraction()
+                    navController.popBackStack()
+                },
+                onBack = {
+                    viewModel.clearExtraction()
+                    navController.popBackStack()
+                }
             )
         }
 
@@ -573,9 +831,24 @@ fun UrimaiApp(
                 onUploadDocument = { documentName, fileUri, fileName, mimeType ->
                     viewModel.uploadDocument(documentName, fileUri, fileName, mimeType)
                 },
-                onRemoveUpload = { viewModel.removeUploadedDocument(it) }
+                onRemoveUpload = { viewModel.removeUploadedDocument(it) },
+                onReadDocument = { document ->
+                    viewModel.extractFromDocument(document.id)
+                    navController.navigate(UrimaiDestinations.EXTRACT_REVIEW)
+                },
+                onViewDocument = { document ->
+                    viewModel.viewOwnDocument(document)
+                    navController.navigate(UrimaiDestinations.MY_DOCUMENT_VIEWER)
+                }
             )
         }
+    }
+
+    }
+    SnackbarHost(
+        hostState = snackbarHostState,
+        modifier = Modifier.align(Alignment.BottomCenter)
+    )
     }
 
     if (showHowItWorks) {

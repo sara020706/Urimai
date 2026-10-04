@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Hindi (hi).
+
+  Anything absent here falls back to the English in values/strings.xml, so a
+  partial translation degrades rather than breaks.
+-->
+<resources>
+    <!-- Bottom navigation -->
+    <string name="nav_schemes">योजनाएँ</string>
+    <string name="nav_legal_help">कानूनी मदद</string>
+    <string name="nav_lawyers">वकील</string>
+    <string name="nav_profile">प्रोफ़ाइल</string>
+    <string name="nav_home">होम</string>
+    <string name="nav_questions">प्रश्न</string>
+    <string name="nav_my_answers">मेरे उत्तर</string>
+    <string name="nav_requests">अनुरोध</string>
+    <string name="nav_overview">अवलोकन</string>
+    <string name="nav_reports">शिकायतें</string>
+    <string name="nav_users">उपयोगकर्ता</string>
+
+    <!-- Screen titles -->
+    <string name="title_ask_anonymously">गुमनाम रूप से पूछें</string>
+    <string name="title_my_questions">मेरे प्रश्न</string>
+    <string name="title_your_question">आपका प्रश्न</string>
+    <string name="title_find_lawyer">वकील खोजें</string>
+    <string name="title_lawyer_profile">वकील प्रोफ़ाइल</string>
+    <string name="title_my_requests">मेरे अनुरोध</string>
+    <string name="title_notifications">सूचनाएँ</string>
+    <string name="title_legal_specialist">कानूनी विशेषज्ञ</string>
+    <string name="title_citizen_questions">नागरिकों के प्रश्न</string>
+    <string name="title_answer_question">प्रश्न का उत्तर दें</string>
+    <string name="title_your_answer">आपका उत्तर</string>
+    <string name="title_contact_requests">संपर्क अनुरोध</string>
+    <string name="title_professional_verification">व्यावसायिक सत्यापन</string>
+    <string name="title_administration">प्रशासन</string>
+    <string name="title_lawyer_applications">वकील आवेदन</string>
+    <string name="title_review_application">आवेदन की समीक्षा करें</string>
+    <string name="title_reported_content">रिपोर्ट की गई सामग्री</string>
+    <string name="title_audit_log">ऑडिट लॉग</string>
+    <string name="title_document">दस्तावेज़</string>
+    <string name="title_check_details">विवरण जाँचें</string>
+
+    <!-- Common actions -->
+    <string name="action_back">वापस जाएँ</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_confirm">पुष्टि करें</string>
+    <string name="action_save">सहेजें</string>
+    <string name="action_close">बंद करें</string>
+    <string name="action_report">रिपोर्ट करें</string>
+    <string name="action_search">खोजें</string>
+    <string name="action_retry">फिर कोशिश करें</string>
+    <string name="action_log_out">साइन आउट</string>
+    <string name="action_mark_all_read">सभी को पढ़ा हुआ चिह्नित करें</string>
+    <string name="action_open">खोलें</string>
+    <string name="action_approve">स्वीकृत करें</string>
+    <string name="action_reject">अस्वीकार करें</string>
+    <string name="action_accept">स्वीकार करें</string>
+    <string name="action_decline">मना करें</string>
+    <string name="action_block">अवरुद्ध करें</string>
+    <string name="action_suspend">निलंबित करें</string>
+    <string name="action_reactivate">पुनः सक्रिय करें</string>
+    <string name="action_ask">पूछें</string>
+
+    <!-- Shared states -->
+    <string name="state_something_went_wrong">कुछ गलत हो गया</string>
+    <string name="state_checking">जाँच हो रही है…</string>
+
+    <!-- Accessibility -->
+    <string name="cd_notifications">सूचनाएँ</string>
+    <string name="cd_notifications_unread">सूचनाएँ, %1$d अपठित</string>
+    <string name="cd_verified_lawyer">सत्यापित वकील</string>
+    <string name="cd_report_question">इस प्रश्न की रिपोर्ट करें</string>
+
+    <!-- Promises made to the user -->
+    <string name="promise_anonymity_title">आपका नाम कभी नहीं दिखाया जाता</string>
+    <string name="promise_anonymity_body">वकील केवल आपका प्रश्न देखते हैं। वे यह नहीं देख सकते कि आप कौन हैं, और अन्य नागरिक यह प्रश्न बिल्कुल नहीं देख सकते।\n\nएक बात ध्यान रखें: जो विवरण आप स्वयं लिखते हैं उन्हें हम हटा नहीं सकते, इसलिए नीचे अपना नाम, फ़ोन नंबर या पता न लिखें।</string>
+    <string name="promise_contact_title">संपर्क कैसे काम करता है</string>
+    <string name="promise_contact_body">हम वकीलों के फ़ोन नंबर या ईमेल पते प्रकाशित नहीं करते। अनुरोध भेजें, और यदि वे स्वीकार करते हैं तो उनके विवरण \"मेरे अनुरोध\" में दिखाई देंगे।</string>
+    <string name="promise_answers_independent">वकील स्वतंत्र रूप से उत्तर देते हैं और एक-दूसरे के उत्तर नहीं देख सकते, इसलिए अलग-अलग राय सामान्य है। ये सामान्य कानूनी जानकारी हैं, आपके मामले पर औपचारिक सलाह नहीं।</string>
+    <string name="promise_extraction_advisory">जब तक आप चुनते नहीं, कुछ भी सहेजा नहीं जाता। जो गलत है उसे ठीक करें — ये विवरण तय करते हैं कि आपको कौन सी योजनाएँ दिखाई जाएँगी।</string>
+    <string name="promise_audit_recorded">इस दस्तावेज़ को खोलना ऑडिट लॉग में दर्ज कर लिया गया है।</string>
+
+    <!-- Legal help entry points -->
+    <string name="legal_help_heading">कानूनी मदद चाहिए?</string>
+    <string name="legal_help_ask_title">गुमनाम रूप से प्रश्न पूछें</string>
+    <string name="legal_help_ask_subtitle">सत्यापित वकील उत्तर देते हैं। आपका नाम कभी नहीं दिखाया जाता।</string>
+    <string name="legal_help_find_title">सत्यापित वकील खोजें</string>
+    <string name="legal_help_find_subtitle">कार्यक्षेत्र, भाषा और स्थान के अनुसार खोजें।</string>
+
+    <!-- Offline notice -->
+    <string name="catalog_stale_notice">सहेजी गई योजना जानकारी दिखाई जा रही है। ऑनलाइन लौटने तक यह पुरानी हो सकती है।</string>
+</resources>

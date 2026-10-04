@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Tamil (ta).
+
+  Anything absent here falls back to the English in values/strings.xml, so a
+  partial translation degrades rather than breaks.
+
+  app_name is deliberately not translated: Urimai (உரிமை) is already the Tamil
+  word for "right" or "entitlement", and it is the product's name.
+-->
+<resources>
+    <!-- Bottom navigation -->
+    <string name="nav_schemes">திட்டங்கள்</string>
+    <string name="nav_legal_help">சட்ட உதவி</string>
+    <string name="nav_lawyers">வழக்கறிஞர்கள்</string>
+    <string name="nav_profile">சுயவிவரம்</string>
+    <string name="nav_home">முகப்பு</string>
+    <string name="nav_questions">கேள்விகள்</string>
+    <string name="nav_my_answers">என் பதில்கள்</string>
+    <string name="nav_requests">கோரிக்கைகள்</string>
+    <string name="nav_overview">மேலோட்டம்</string>
+    <string name="nav_reports">புகார்கள்</string>
+    <string name="nav_users">பயனர்கள்</string>
+
+    <!-- Screen titles -->
+    <string name="title_ask_anonymously">அடையாளம் இன்றி கேளுங்கள்</string>
+    <string name="title_my_questions">என் கேள்விகள்</string>
+    <string name="title_your_question">உங்கள் கேள்வி</string>
+    <string name="title_find_lawyer">வழக்கறிஞரைத் தேடுங்கள்</string>
+    <string name="title_lawyer_profile">வழக்கறிஞர் சுயவிவரம்</string>
+    <string name="title_my_requests">என் கோரிக்கைகள்</string>
+    <string name="title_notifications">அறிவிப்புகள்</string>
+    <string name="title_legal_specialist">சட்ட நிபுணர்</string>
+    <string name="title_citizen_questions">குடிமக்கள் கேள்விகள்</string>
+    <string name="title_answer_question">கேள்விக்கு பதிலளிக்கவும்</string>
+    <string name="title_your_answer">உங்கள் பதில்</string>
+    <string name="title_contact_requests">தொடர்பு கோரிக்கைகள்</string>
+    <string name="title_professional_verification">தொழில்முறை சரிபார்ப்பு</string>
+    <string name="title_administration">நிர்வாகம்</string>
+    <string name="title_lawyer_applications">வழக்கறிஞர் விண்ணப்பங்கள்</string>
+    <string name="title_review_application">விண்ணப்பத்தை பரிசீலிக்கவும்</string>
+    <string name="title_reported_content">புகாரளிக்கப்பட்ட உள்ளடக்கம்</string>
+    <string name="title_audit_log">தணிக்கை பதிவு</string>
+    <string name="title_document">ஆவணம்</string>
+    <string name="title_check_details">விவரங்களைச் சரிபார்க்கவும்</string>
+
+    <!-- Common actions -->
+    <string name="action_back">பின் செல்</string>
+    <string name="action_cancel">ரத்து செய்</string>
+    <string name="action_confirm">உறுதிப்படுத்து</string>
+    <string name="action_save">சேமி</string>
+    <string name="action_close">மூடு</string>
+    <string name="action_report">புகார் அளி</string>
+    <string name="action_search">தேடு</string>
+    <string name="action_retry">மீண்டும் முயற்சி செய்</string>
+    <string name="action_log_out">வெளியேறு</string>
+    <string name="action_mark_all_read">அனைத்தையும் படித்ததாக குறி</string>
+    <string name="action_open">திற</string>
+    <string name="action_approve">ஒப்புதல் அளி</string>
+    <string name="action_reject">நிராகரி</string>
+    <string name="action_accept">ஏற்றுக்கொள்</string>
+    <string name="action_decline">மறு</string>
+    <string name="action_block">தடை செய்</string>
+    <string name="action_suspend">இடைநிறுத்து</string>
+    <string name="action_reactivate">மீண்டும் செயல்படுத்து</string>
+    <string name="action_ask">கேள்</string>
+
+    <!-- Shared states -->
+    <string name="state_something_went_wrong">ஏதோ தவறு நடந்தது</string>
+    <string name="state_checking">சரிபார்க்கிறது…</string>
+
+    <!-- Accessibility -->
+    <string name="cd_notifications">அறிவிப்புகள்</string>
+    <string name="cd_notifications_unread">அறிவிப்புகள், %1$d படிக்கப்படாதவை</string>
+    <string name="cd_verified_lawyer">சரிபார்க்கப்பட்ட வழக்கறிஞர்</string>
+    <string name="cd_report_question">இந்தக் கேள்வி குறித்து புகார் அளி</string>
+
+    <!-- Promises made to the user -->
+    <string name="promise_anonymity_title">உங்கள் பெயர் ஒருபோதும் காட்டப்படாது</string>
+    <string name="promise_anonymity_body">வழக்கறிஞர்கள் உங்கள் கேள்வியை மட்டுமே பார்க்கிறார்கள். நீங்கள் யார் என்பதை அவர்களால் பார்க்க முடியாது, மற்ற குடிமக்களால் இந்தக் கேள்வியையே பார்க்க முடியாது.\n\nஒரு விஷயம்: நீங்களே தட்டச்சு செய்யும் விவரங்களை எங்களால் நீக்க முடியாது. எனவே கீழே உங்கள் பெயர், தொலைபேசி எண் அல்லது முகவரியைக் குறிப்பிட வேண்டாம்.</string>
+    <string name="promise_contact_title">தொடர்பு எப்படி வேலை செய்கிறது</string>
+    <string name="promise_contact_body">வழக்கறிஞர்களின் தொலைபேசி எண்களையோ மின்னஞ்சல் முகவரிகளையோ நாங்கள் வெளியிடுவதில்லை. ஒரு கோரிக்கையை அனுப்புங்கள்; அவர்கள் ஏற்றுக்கொண்டால், அவர்களின் விவரங்கள் \"என் கோரிக்கைகள்\" பகுதியில் தோன்றும்.</string>
+    <string name="promise_answers_independent">வழக்கறிஞர்கள் தனித்தனியாக பதிலளிக்கிறார்கள்; ஒருவரின் பதிலை மற்றவரால் பார்க்க முடியாது. எனவே வெவ்வேறு கருத்துகள் இயல்பானவை. இவை பொதுவான சட்டத் தகவல்கள், உங்கள் வழக்குக்கான முறையான ஆலோசனை அல்ல.</string>
+    <string name="promise_extraction_advisory">நீங்கள் தேர்வு செய்யும் வரை எதுவும் சேமிக்கப்படாது. தவறானவற்றைத் திருத்துங்கள் — இந்த விவரங்கள்தான் உங்களுக்கு எந்தத் திட்டங்கள் காட்டப்படும் என்பதைத் தீர்மானிக்கின்றன.</string>
+    <string name="promise_audit_recorded">இந்த ஆவணத்தைத் திறந்தது தணிக்கை பதிவில் பதிவு செய்யப்பட்டுள்ளது.</string>
+
+    <!-- Legal help entry points -->
+    <string name="legal_help_heading">சட்ட உதவி தேவையா?</string>
+    <string name="legal_help_ask_title">அடையாளம் இன்றி ஒரு கேள்வி கேளுங்கள்</string>
+    <string name="legal_help_ask_subtitle">சரிபார்க்கப்பட்ட வழக்கறிஞர்கள் பதிலளிப்பார்கள். உங்கள் பெயர் ஒருபோதும் காட்டப்படாது.</string>
+    <string name="legal_help_find_title">சரிபார்க்கப்பட்ட வழக்கறிஞரைத் தேடுங்கள்</string>
+    <string name="legal_help_find_subtitle">நடைமுறைத் துறை, மொழி மற்றும் இடம் வாரியாகத் தேடுங்கள்.</string>
+
+    <!-- Offline notice -->
+    <string name="catalog_stale_notice">சேமிக்கப்பட்ட திட்டத் தகவல் காட்டப்படுகிறது. நீங்கள் மீண்டும் இணையத்தில் இணையும் வரை இது காலாவதியானதாக இருக்கலாம்.</string>
+</resources>

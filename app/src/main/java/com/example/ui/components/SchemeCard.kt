@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,14 +42,14 @@ fun SchemeCard(
             .clickable { onClick() }
             .testTag("scheme_card_${scheme.id}"),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         border = CardDefaults.outlinedCardBorder().copy(
             brush = androidx.compose.ui.graphics.SolidColor(
                 when (matchResult.status) {
                     EligibilityStatus.LIKELY_ELIGIBLE -> EmeraldLight.copy(alpha = 0.6f)
                     EligibilityStatus.MORE_INFO_NEEDED -> AmberPrimary.copy(alpha = 0.5f)
-                    EligibilityStatus.NOT_ELIGIBLE -> BorderLight
+                    EligibilityStatus.NOT_ELIGIBLE -> MaterialTheme.colorScheme.outline
                 }
             )
         )
@@ -93,7 +94,7 @@ fun SchemeCard(
                         Icon(
                             imageVector = if (isSaved) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
                             contentDescription = if (isSaved) "Saved" else "Save",
-                            tint = if (isSaved) SaffronPrimary else TextTertiaryLight,
+                            tint = if (isSaved) SaffronPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -106,7 +107,7 @@ fun SchemeCard(
                     text = scheme.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = CivicNavy900,
+                    color = MaterialTheme.colorScheme.onSurface,
                     lineHeight = 22.sp
                 )
 
@@ -129,7 +130,7 @@ fun SchemeCard(
                 Text(
                     text = scheme.department,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryLight,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp,
                     maxLines = 1
                 )
@@ -157,7 +158,7 @@ fun SchemeCard(
                 Text(
                     text = scheme.benefitHighlight,
                     style = MaterialTheme.typography.labelSmall,
-                    color = CivicNavy900,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -212,7 +213,7 @@ fun SchemeCard(
                 Text(
                     text = matchResult.ruleSummary,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryLight,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
                     maxLines = 2

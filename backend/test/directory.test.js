@@ -82,7 +82,7 @@ async function seedLawyer(userId, name, opts) {
      VALUES ($1,$2,$3,'Tamil Nadu',$4,$5,$6,$7,$8,$9,$10,$11,$12)
      ON CONFLICT (user_id) DO UPDATE SET verification_status = EXCLUDED.verification_status`,
     [
-      userId, name, `${STAMP}/${userId}`,
+      userId, name, `BAR/${name}`,
       opts.years, opts.specializations, opts.languages,
       opts.state, opts.district, opts.status,
       SECRET_EMAIL, SECRET_PHONE, opts.accepting !== false
@@ -99,7 +99,28 @@ async function cleanup(names) {
   }
 }
 
+/**
+ * Refuse to run against a server that still has rate limiting on.
+ *
+ * These suites create 4-5 accounts per run. Against a normal server the signup
+ * window (20 per 15 minutes) is exhausted after a couple of runs, and the
+ * failures that follow look like product bugs: lawyers never get profiles, so
+ * later assertions report 401 and 500 on unrelated routes.
+ */
+async function assertTestMode() {
+  const probe = await request('POST', '/auth/login', {
+    body: { username: '__ratelimit_probe__', password: 'x' }
+  });
+  if (probe.status === 429) {
+    throw new Error(
+      'The server on this port is rate limiting. Start it with ' +
+      '`npm run dev:test` (or RATE_LIMIT_DISABLED=true) before running this suite.'
+    );
+  }
+}
+
 async function main() {
+  await assertTestMode();
   const names = [
     `${STAMP}citizen`, `${STAMP}citizen2`,
     `${STAMP}verified`, `${STAMP}pending`, `${STAMP}suspended`

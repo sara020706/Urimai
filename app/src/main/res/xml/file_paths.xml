@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Shared paths for FileProvider.
+
+  Only the one cache subdirectory holding downloaded verification documents is
+  exposed, not the whole cache: a broader path would let any app that receives a
+  URI from us reach files it has no business reading.
+-->
+<paths>
+    <cache-path
+        name="verification_docs"
+        path="verification_docs/" />
+</paths>

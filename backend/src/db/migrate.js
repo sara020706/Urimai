@@ -269,7 +269,27 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS status_reason TEXT;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS status_changed_at TIMESTAMPTZ;
-ALTER TABLE users ADD COLUMN IF NOT EXISTS token_valid_from TIMESTAMPTZ NOT NULL DEFAULT now();
+-- Nullable on purpose: a value here means "every token issued before this
+-- moment is revoked". Defaulting it to now() made every new account carry a
+-- revocation marker racing its own freshly-issued token, because jwt.sign
+-- floors iat to the second while this column has millisecond precision.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS token_valid_from TIMESTAMPTZ;
+
+-- Clear the historical defaults. Those rows were never deliberately revoked;
+-- the value was just the row's creation time.
+DO $$ BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+     WHERE table_name = 'users' AND column_name = 'token_valid_from'
+       AND is_nullable = 'NO'
+  ) THEN
+    ALTER TABLE users ALTER COLUMN token_valid_from DROP NOT NULL;
+    ALTER TABLE users ALTER COLUMN token_valid_from DROP DEFAULT;
+    UPDATE users SET token_valid_from = NULL
+     WHERE token_valid_from IS NOT NULL
+       AND status_changed_at IS NULL;
+  END IF;
+END $$;
 `;
 
 // ---------------------------------------------------------------------------

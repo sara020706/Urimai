@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
@@ -43,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.data.remote.DirectoryLawyerResponse
@@ -87,14 +89,14 @@ fun FindLawyerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Find a lawyer") },
+                title = { Text(stringResource(R.string.title_find_lawyer)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    TextButton(onClick = onViewMyRequests) { Text("My requests") }
+                    TextButton(onClick = onViewMyRequests) { Text(stringResource(R.string.title_my_requests)) }
                 }
             )
         }
@@ -242,10 +244,10 @@ fun LawyerProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Lawyer profile") },
+                title = { Text(stringResource(R.string.title_lawyer_profile)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -325,7 +327,7 @@ fun LawyerProfileScreen(
             ) {
                 Column(modifier = Modifier.padding(14.dp)) {
                     Text(
-                        "How contact works",
+                        stringResource(R.string.promise_contact_title),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = CivicNavy700
@@ -431,7 +433,7 @@ private fun ContactRequestDialog(
                 }
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }
 
@@ -445,15 +447,16 @@ private fun ContactRequestDialog(
 @Composable
 fun MyContactRequestsScreen(
     requests: List<MyContactRequestResponse>,
+    isLoading: Boolean = false,
     onBack: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My requests") },
+                title = { Text(stringResource(R.string.title_my_requests)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -461,10 +464,14 @@ fun MyContactRequestsScreen(
     ) { padding ->
         if (requests.isEmpty()) {
             Column(modifier = Modifier.padding(padding)) {
-                EmptyState(
-                    title = "No requests yet",
-                    body = "Find a lawyer and ask for their contact details."
-                )
+                if (isLoading) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                } else {
+                    EmptyState(
+                        title = "No requests yet",
+                        body = "Find a lawyer and ask for their contact details."
+                    )
+                }
             }
             return@Scaffold
         }

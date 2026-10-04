@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +59,8 @@ fun ProfileViewEditScreen(
     uploadedDocuments: List<UploadedDocumentEntity> = emptyList(),
     onUploadDocument: (documentName: String, fileUri: String, fileName: String, mimeType: String?) -> Unit = { _, _, _, _ -> },
     onRemoveUpload: (UploadedDocumentEntity) -> Unit = {},
+    onReadDocument: (UploadedDocumentEntity) -> Unit = {},
+    onViewDocument: (UploadedDocumentEntity) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var editableProfile by remember { mutableStateOf(profile) }
@@ -66,7 +69,7 @@ fun ProfileViewEditScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         CivicHeader(
             title = "Citizen Profile",
@@ -85,8 +88,8 @@ fun ProfileViewEditScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -96,7 +99,7 @@ fun ProfileViewEditScreen(
                         text = "Profile Parameters",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     OutlinedTextField(
@@ -183,13 +186,13 @@ fun ProfileViewEditScreen(
                     )
 
                     // Checkboxes for situation flags
-                    HorizontalDivider(color = BorderLight)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline)
 
                     Text(
                         text = "Citizen Attributes",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     AttributeCheckboxRow(
@@ -222,8 +225,8 @@ fun ProfileViewEditScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -234,12 +237,12 @@ fun ProfileViewEditScreen(
                             text = "My Documents",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = CivicNavy900
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = "Upload documents once here — they'll be checked against every scheme you may qualify for.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryLight
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
@@ -254,6 +257,31 @@ fun ProfileViewEditScreen(
                                 },
                                 onRemove = onRemoveUpload
                             )
+
+                            // Offered only once a document exists. The result is
+                            // reviewed before anything reaches the profile.
+                            if (existingUpload != null) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    // Lets the citizen confirm they attached the
+                                    // right file. Uploading the wrong certificate
+                                    // was previously undetectable from the app.
+                                    androidx.compose.material3.TextButton(
+                                        onClick = { onViewDocument(existingUpload) },
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Text("View")
+                                    }
+                                    androidx.compose.material3.TextButton(
+                                        onClick = { onReadDocument(existingUpload) },
+                                        modifier = Modifier.weight(2f)
+                                    ) {
+                                        Text("Fill my details from this")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -280,7 +308,7 @@ fun ProfileViewEditScreen(
         // Bottom Save CTA
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = SurfaceLight,
+            color = MaterialTheme.colorScheme.surface,
             shadowElevation = 8.dp
         ) {
             Box(
@@ -332,7 +360,7 @@ private fun AttributeCheckboxRow(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = CivicNavy900
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

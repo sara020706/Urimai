@@ -22,6 +22,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
+/** A verification document downloaded to cache, with its metadata. */
+data class OpenDocument(
+    val file: java.io.File,
+    val meta: VerificationDocumentResponse
+) {
+    val isImage: Boolean
+        get() = meta.mimeType?.startsWith("image/") == true
+
+    val isPdf: Boolean
+        get() = meta.mimeType == "application/pdf"
+}
+
 /**
  * Administration, lawyer self-service, and notifications.
  *
@@ -222,6 +234,34 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _selectedLawyerDocs.value = repository.listLawyerDocuments(lawyer.userId)
         }
+    }
+
+    /** The document currently open in the viewer, plus what it is. */
+    private val _openDocument = MutableStateFlow<OpenDocument?>(null)
+    val openDocument: StateFlow<OpenDocument?> = _openDocument.asStateFlow()
+
+    private val _isDownloadingDocument = MutableStateFlow(false)
+    val isDownloadingDocument: StateFlow<Boolean> = _isDownloadingDocument.asStateFlow()
+
+    fun openVerificationDocument(document: VerificationDocumentResponse) {
+        val lawyerId = _selectedLawyer.value?.userId ?: return
+        viewModelScope.launch {
+            _isDownloadingDocument.value = true
+            _openDocument.value = null
+            val file = repository.downloadLawyerDocument(
+                lawyerId, document.id, document.fileName
+            )
+            if (file != null) {
+                _openDocument.value = OpenDocument(file, document)
+            } else {
+                _message.value = "Could not open that document."
+            }
+            _isDownloadingDocument.value = false
+        }
+    }
+
+    fun closeDocument() {
+        _openDocument.value = null
     }
 
     fun decideVerification(lawyerId: String, status: String, notes: String?, onDone: () -> Unit) {

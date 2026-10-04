@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +44,7 @@ fun SavedSchemesScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         CivicHeader(
             title = "Saved Schemes",
@@ -63,7 +64,7 @@ fun SavedSchemesScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = SurfaceLight)
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                     ) {
                         Column(
                             modifier = Modifier
@@ -75,19 +76,19 @@ fun SavedSchemesScreen(
                             Icon(
                                 imageVector = Icons.Default.BookmarkBorder,
                                 contentDescription = null,
-                                tint = TextTertiaryLight,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(48.dp)
                             )
                             Text(
                                 text = "No Saved Schemes Yet",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = CivicNavy900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "Tap the bookmark icon on any scheme card to save it for easy access, document readiness tracking, and follow-up.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondaryLight,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
                             )
                         }
@@ -100,7 +101,7 @@ fun SavedSchemesScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(containerColor = CivicNavy50),
-                        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+                        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
                     ) {
                         Column(
                             modifier = Modifier.padding(14.dp),
@@ -120,13 +121,13 @@ fun SavedSchemesScreen(
                                     text = "Aggregated Document Readiness",
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold,
-                                    color = CivicNavy900
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                             Text(
                                 text = "You have ${readyDocs.size} of ${aggregatedDocs.size} unique documents required across your saved schemes.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondaryLight,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 12.sp
                             )
                             LinearProgressIndicator(

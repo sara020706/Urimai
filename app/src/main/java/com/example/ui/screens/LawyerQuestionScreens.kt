@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
@@ -39,6 +39,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.data.remote.LawyerQuestionDetailResponse
@@ -63,34 +65,69 @@ private const val MAX_ANSWER = 10000
 fun LawyerQuestionFeedScreen(
     questions: List<LawyerQuestionSummaryResponse>,
     isLoading: Boolean,
+    onRefresh: () -> Unit = {},
     onOpenQuestion: (String) -> Unit,
     onViewMyAnswers: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    // Verification is a blocking account state, not a transient error, so it
+    // gets a banner that stays put rather than a snackbar that disappears
+    // before the lawyer has finished reading an empty list.
+    accessDenied: Boolean = false,
+    onOpenVerification: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Citizen questions") },
+                title = { Text(stringResource(R.string.title_citizen_questions)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
                     androidx.compose.material3.TextButton(onClick = onViewMyAnswers) {
-                        Text("My answers")
+                        Text(stringResource(R.string.nav_my_answers))
                     }
                 }
             )
         }
     ) { padding ->
-        Column(
+        com.example.ui.components.UrimaiRefreshable(
+            isRefreshing = isLoading,
+            onRefresh = onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (isLoading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (accessDenied) {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = AmberContainer),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            "Your account is not verified yet",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            "You cannot open or answer citizen questions until an " +
+                                "administrator approves your professional details.",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Spacer(Modifier.height(10.dp))
+                        androidx.compose.material3.TextButton(onClick = onOpenVerification) {
+                            Text("Check verification status")
+                        }
+                    }
+                }
+            }
             if (questions.isEmpty() && !isLoading) {
                 EmptyState(
                     title = "No open questions",
@@ -159,6 +196,7 @@ fun LawyerQuestionFeedScreen(
                 }
             }
         }
+        }
     }
 }
 
@@ -191,7 +229,7 @@ fun AnswerQuestionScreen(
                 title = { Text(if (isEditing) "Your answer" else "Answer question") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )

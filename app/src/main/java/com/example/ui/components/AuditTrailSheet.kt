@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +33,7 @@ fun AuditTrailSection(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = CivicNavy50),
-        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
     ) {
         Column(
             modifier = Modifier
@@ -59,7 +60,7 @@ fun AuditTrailSection(
                         text = "How did we reach this result?",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -74,7 +75,7 @@ fun AuditTrailSection(
             Text(
                 text = "Tap to inspect the transparent step-by-step evaluation trace.",
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryLight
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             AnimatedVisibility(visible = expanded) {
@@ -84,7 +85,7 @@ fun AuditTrailSection(
                         .padding(top = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    HorizontalDivider(color = BorderLight)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline)
 
                     // Step 1: Citizen Profile snapshot
                     TraceStepCard(
@@ -107,7 +108,7 @@ fun AuditTrailSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceLight)
+                            .background(MaterialTheme.colorScheme.surface)
                             .padding(10.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
@@ -115,7 +116,7 @@ fun AuditTrailSection(
                             text = "Step 3: Deterministic Rule Matrix",
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
-                            color = CivicNavy900
+                            color = MaterialTheme.colorScheme.onSurface
                         )
 
                         matchResult.criteriaResults.forEach { eval ->
@@ -217,7 +218,7 @@ private fun TraceStepCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .background(SurfaceLight)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -242,12 +243,12 @@ private fun TraceStepCard(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
-                color = CivicNavy900
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondaryLight,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 11.sp
             )
         }
@@ -261,7 +262,7 @@ private fun TraceStepCard(
             Text(
                 text = status,
                 style = MaterialTheme.typography.labelSmall,
-                color = CivicNavy900,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold
             )

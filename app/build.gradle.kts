@@ -45,8 +45,31 @@ android {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
+
+      // The release build must point at a real, HTTPS backend. There is no
+      // sensible default for this, so the build fails loudly when it is unset
+      // rather than shipping an APK that silently talks to nothing.
+      val releaseApi = providers.gradleProperty("URIMAI_API_BASE_URL")
+        .orElse(providers.environmentVariable("URIMAI_API_BASE_URL"))
+        .getOrElse("")
+      check(releaseApi.isEmpty() || releaseApi.startsWith("https://")) {
+        "URIMAI_API_BASE_URL must be an https:// URL for release builds (got: $releaseApi)"
+      }
+      buildConfigField("String", "API_BASE_URL", "\"$releaseApi\"")
+      buildConfigField("boolean", "HTTP_LOGGING", "false")
     }
-    debug { signingConfig = signingConfigs.getByName("debugConfig") }
+    debug {
+      signingConfig = signingConfigs.getByName("debugConfig")
+
+      // Debug points at your machine. 10.0.2.2 is the emulator's alias for the
+      // host; for a physical phone on the same Wi-Fi, set URIMAI_DEV_API_BASE_URL
+      // to http://<your-LAN-IP>:4000/ (the emulator alias is not routable there).
+      val devApi = providers.gradleProperty("URIMAI_DEV_API_BASE_URL")
+        .orElse(providers.environmentVariable("URIMAI_DEV_API_BASE_URL"))
+        .getOrElse("http://10.0.2.2:4000/")
+      buildConfigField("String", "API_BASE_URL", "\"$devApi\"")
+      buildConfigField("boolean", "HTTP_LOGGING", "true")
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -100,7 +123,7 @@ dependencies {
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.androidx.lifecycle.viewmodel.compose)
   implementation(libs.androidx.navigation.compose)
-  // implementation(libs.coil.compose)
+  implementation(libs.coil.compose)
   implementation(libs.converter.moshi)
   implementation(libs.firebase.ai)
   // Uncomment to use Firestore:

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +49,7 @@ fun AnalyzingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -84,7 +85,7 @@ fun AnalyzingScreen(
             text = "Analyzing Schemes for You",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = CivicNavy900,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
 
@@ -93,7 +94,7 @@ fun AnalyzingScreen(
         Text(
             text = "Evaluating against verified central and state eligibility rules",
             style = MaterialTheme.typography.bodyMedium,
-            color = TextSecondaryLight,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
 
@@ -103,8 +104,8 @@ fun AnalyzingScreen(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-            border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -138,7 +139,7 @@ fun AnalyzingScreen(
                                 modifier = Modifier
                                     .size(20.dp)
                                     .clip(CircleShape)
-                                    .background(BorderLight)
+                                    .background(MaterialTheme.colorScheme.outline)
                             )
                         }
 
@@ -149,7 +150,7 @@ fun AnalyzingScreen(
                             color = when {
                                 isDone -> CivicNavy900
                                 isCurrent -> CivicNavy900
-                                else -> TextTertiaryLight
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
                             },
                             fontSize = 13.sp
                         )

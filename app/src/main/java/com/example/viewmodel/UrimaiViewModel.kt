@@ -141,10 +141,15 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun signUp(username: String, password: String, displayName: String) {
+    fun signUp(
+        username: String,
+        password: String,
+        displayName: String,
+        role: String? = null
+    ) {
         viewModelScope.launch {
             _authState.value = _authState.value.copy(isLoading = true, errorMessage = null)
-            when (val result = authRepository.signUp(username, password, displayName)) {
+            when (val result = authRepository.signUp(username, password, displayName, role)) {
                 is AuthResult.Success -> {
                     _authState.value = AuthUiState(
                         isLoggedIn = true,
@@ -181,6 +186,111 @@ class UrimaiViewModel(application: Application) : AndroidViewModel(application) 
                 toggleDocumentOwnedIfMissing(documentName)
                 persistProfile()
             }
+        }
+    }
+
+    // --- Certificate reading (OCR) -----------------------------------------
+    //
+    // The result is advisory. It is held here for the review screen and never
+    // written to the profile until the citizen confirms it field by field.
+
+    private val aiRepository = com.example.data.repository.AiRepository(application)
+
+    private val _extraction =
+        MutableStateFlow<com.example.data.remote.ExtractProfileResponse?>(null)
+    val extraction: StateFlow<com.example.data.remote.ExtractProfileResponse?> =
+        _extraction.asStateFlow()
+
+    private val _isExtracting = MutableStateFlow(false)
+    val isExtracting: StateFlow<Boolean> = _isExtracting.asStateFlow()
+
+    private val _extractionError = MutableStateFlow<String?>(null)
+    val extractionError: StateFlow<String?> = _extractionError.asStateFlow()
+
+    fun clearExtraction() {
+        _extraction.value = null
+        _extractionError.value = null
+    }
+
+    // --- Viewing an uploaded document -------------------------------------
+    // Reuses OpenDocument so the existing DocumentViewerScreen renders both the
+    // admin's verification documents and a citizen's own certificates.
+
+    private val _openDocument = MutableStateFlow<OpenDocument?>(null)
+    val openDocument: StateFlow<OpenDocument?> = _openDocument.asStateFlow()
+
+    private val _isDownloadingDocument = MutableStateFlow(false)
+    val isDownloadingDocument: StateFlow<Boolean> = _isDownloadingDocument.asStateFlow()
+
+    fun viewOwnDocument(document: com.example.data.model.UploadedDocumentEntity) {
+        viewModelScope.launch {
+            _isDownloadingDocument.value = true
+            _openDocument.value = null
+            val file = documentRepository.downloadOwnDocument(document.id, document.fileName)
+            if (file == null) {
+                // Surfaced by the same snackbar that reports extraction failures.
+                _extractionError.value = "We could not open that document."
+            } else {
+                _openDocument.value = OpenDocument(
+                    file = file,
+                    meta = com.example.data.remote.VerificationDocumentResponse(
+                        id = document.id,
+                        docType = document.documentName,
+                        fileName = document.fileName,
+                        mimeType = document.mimeType,
+                        byteSize = null,
+                        uploadedAt = document.uploadedAt
+                    )
+                )
+            }
+            _isDownloadingDocument.value = false
+        }
+    }
+
+    fun closeOwnDocument() {
+        _openDocument.value = null
+    }
+
+    /** Read a certificate the citizen has already uploaded. */
+    fun extractFromDocument(documentId: String) {
+        viewModelScope.launch {
+            _isExtracting.value = true
+            _extraction.value = null
+            _extractionError.value = null
+            handleExtraction(aiRepository.extractFromUploadedDocument(documentId))
+            _isExtracting.value = false
+        }
+    }
+
+    /** Read a certificate the citizen just picked, without storing it. */
+    fun extractFromFile(fileUri: String, fileName: String, mimeType: String?) {
+        viewModelScope.launch {
+            _isExtracting.value = true
+            _extraction.value = null
+            _extractionError.value = null
+            handleExtraction(aiRepository.extractFromFile(fileUri, fileName, mimeType))
+            _isExtracting.value = false
+        }
+    }
+
+    private fun handleExtraction(outcome: com.example.data.repository.ExtractionOutcome) {
+        when (outcome) {
+            is com.example.data.repository.ExtractionOutcome.Success ->
+                _extraction.value = outcome.response
+            // Distinguished so the message is actionable: "try a clearer photo"
+            // is something the citizen can act on; "AI is unavailable" is not.
+            com.example.data.repository.ExtractionOutcome.Unreadable ->
+                _extractionError.value =
+                    "We could not read that document. Try a clearer photo."
+            com.example.data.repository.ExtractionOutcome.UnsupportedType ->
+                _extractionError.value = "Use a JPEG, PNG or PDF."
+            com.example.data.repository.ExtractionOutcome.TooLarge ->
+                _extractionError.value = "That file is too large. The limit is 10 MB."
+            com.example.data.repository.ExtractionOutcome.RateLimited ->
+                _extractionError.value = "Too many attempts. Try again later."
+            com.example.data.repository.ExtractionOutcome.Unavailable ->
+                _extractionError.value =
+                    "Automatic reading is unavailable. You can enter details by hand."
         }
     }
 

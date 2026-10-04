@@ -2,6 +2,13 @@ const jwt = require('jsonwebtoken');
 const pool = require('./../db/pool');
 const { wrap } = require('../lib/async');
 
+/**
+ * Slack between a JWT's whole-second `iat` and the sub-second
+ * `token_valid_from` column, so a token is never considered older than the
+ * account it was just issued for.
+ */
+const TOKEN_CLOCK_ALLOWANCE_SECONDS = 1;
+
 function requireAuth(req, res, next) {
   const header = req.headers.authorization || '';
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
@@ -47,11 +54,25 @@ async function loadUser(req, res, next) {
     return res.status(401).json({ error: 'Account no longer exists.', code: 'ACCOUNT_MISSING' });
   }
 
-  // JWT `iat` is in seconds; token_valid_from is a timestamp.
-  if (req.tokenIssuedAt != null) {
-    const validFromSeconds = Math.floor(new Date(user.token_valid_from).getTime() / 1000);
-    if (req.tokenIssuedAt < validFromSeconds) {
-      return res.status(401).json({ error: 'Session has been revoked. Please sign in again.', code: 'TOKEN_REVOKED' });
+  // token_valid_from is NULL unless the account has actually been revoked
+  // (blocked, suspended, or an explicit sign-out-everywhere). Only then is
+  // there anything to compare.
+  //
+  // It used to default to now() for every row, which raced the token it was
+  // issued alongside: jwt.sign floors `iat` to the second, so a signup at
+  // 12:00:00.150 produced a token stamped 150ms before its own account row and
+  // was revoked on the next request. About one signup in six.
+  //
+  // A real revocation is always at least seconds after the tokens it kills, so
+  // a one-second allowance for the flooring costs nothing.
+  if (req.tokenIssuedAt != null && user.token_valid_from != null) {
+    const issuedAtMs = req.tokenIssuedAt * 1000;
+    const validFromMs = new Date(user.token_valid_from).getTime();
+    if (issuedAtMs < validFromMs - TOKEN_CLOCK_ALLOWANCE_SECONDS * 1000) {
+      return res.status(401).json({
+        error: 'Session has been revoked. Please sign in again.',
+        code: 'TOKEN_REVOKED'
+      });
     }
   }
 

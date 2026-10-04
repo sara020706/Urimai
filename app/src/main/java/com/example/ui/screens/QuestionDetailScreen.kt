@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.MoreVert
@@ -38,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.data.remote.AnswerResponse
@@ -61,25 +63,31 @@ fun QuestionDetailScreen(
     detail: QuestionDetailResponse?,
     isLoading: Boolean,
     onClose: (String) -> Unit,
-    onReportAnswer: (answerId: String, reason: String) -> Unit,
+    onReport: (targetType: String, targetId: String, reason: String) -> Unit,
     onContactLawyer: (lawyerId: String) -> Unit,
     onBack: () -> Unit
 ) {
-    var reportTarget by remember { mutableStateOf<String?>(null) }
+    // Pair of (targetType, targetId): the same dialog reports either.
+    var reportTarget by remember { mutableStateOf<Pair<String, String>?>(null) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your question") },
+                title = { Text(stringResource(R.string.title_your_question)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
                     val question = detail?.question
-                    if (question != null && question.status != "CLOSED") {
-                        TextButton(onClick = { onClose(question.id) }) { Text("Close") }
+                    if (question != null) {
+                        IconButton(onClick = { reportTarget = "QUESTION" to question.id }) {
+                            Icon(Icons.Filled.Flag, contentDescription = stringResource(R.string.cd_report_question))
+                        }
+                        if (question.status != "CLOSED") {
+                            TextButton(onClick = { onClose(question.id) }) { Text(stringResource(R.string.action_close)) }
+                        }
                     }
                 }
             )
@@ -153,7 +161,7 @@ fun QuestionDetailScreen(
                     items(detail.answers, key = { it.id }) { answer ->
                         AnswerCard(
                             answer = answer,
-                            onReport = { reportTarget = answer.id },
+                            onReport = { reportTarget = "ANSWER" to answer.id },
                             onContact = { onContactLawyer(answer.lawyerUserId) }
                         )
                     }
@@ -172,11 +180,12 @@ fun QuestionDetailScreen(
         }
     }
 
-    reportTarget?.let { answerId ->
+    reportTarget?.let { (targetType, targetId) ->
         ReportDialog(
+            targetType = targetType,
             onDismiss = { reportTarget = null },
             onConfirm = { reason ->
-                onReportAnswer(answerId, reason)
+                onReport(targetType, targetId, reason)
                 reportTarget = null
             }
         )
@@ -207,7 +216,7 @@ private fun AnswerCard(
                         )
                         Icon(
                             Icons.Filled.CheckCircle,
-                            contentDescription = "Verified lawyer",
+                            contentDescription = stringResource(R.string.cd_verified_lawyer),
                             tint = EmeraldText,
                             modifier = Modifier.size(16.dp)
                         )
@@ -277,6 +286,7 @@ private val REPORT_REASONS = listOf(
 
 @Composable
 private fun ReportDialog(
+    targetType: String,
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit
 ) {
@@ -284,11 +294,13 @@ private fun ReportDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Report this answer") },
+        title = {
+            Text(if (targetType == "ANSWER") "Report this answer" else stringResource(R.string.cd_report_question))
+        },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    "A moderator will review it. The lawyer is not told who reported.",
+                    "A moderator will review it. The author is not told who reported.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -314,10 +326,10 @@ private fun ReportDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(selected) }) { Text("Report") }
+            TextButton(onClick = { onConfirm(selected) }) { Text(stringResource(R.string.action_report)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }

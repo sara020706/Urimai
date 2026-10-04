@@ -12,8 +12,9 @@
     "test:isolation": "node test/isolation.test.js",
     "test": "npm run test:surface",
     "test:directory": "node test/directory.test.js",
-    "test:all": "npm run test:surface && npm run test:isolation && npm run test:directory",
-    "dev:test": "node -e \"process.env.RATE_LIMIT_DISABLED='true';require('./src/server.js')\""
+    "test:all": "npm run test:surface && npm run test:token && npm run test:isolation && npm run test:directory",
+    "dev:test": "node -e \"process.env.RATE_LIMIT_DISABLED='true';require('./src/server.js')\"",
+    "test:token": "node test/tokenFreshness.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

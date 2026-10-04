@@ -70,6 +70,48 @@ class AdminRepository(private val context: Context) {
     suspend fun listLawyerDocuments(lawyerId: String): List<VerificationDocumentResponse> =
         listOrEmpty { ApiClient.getService(context).adminListLawyerDocuments(lawyerId) }
 
+    /**
+     * Download a verification document to a private cache file.
+     *
+     * The bytes come over an authenticated stream, so they cannot be handed to
+     * an image loader as a URL; they are written to the app's own cache and the
+     * file is returned. Previously this endpoint had no client method at all,
+     * which meant admins approved or rejected applications without ever seeing
+     * the credentials.
+     *
+     * The server audits every read of a verification document.
+     */
+    suspend fun downloadLawyerDocument(
+        lawyerId: String,
+        docId: String,
+        fileName: String
+    ): java.io.File? = withContext(Dispatchers.IO) {
+        try {
+            val response = ApiClient.getService(context)
+                .adminDownloadLawyerDocument(lawyerId, docId)
+            val body = response.body()
+            if (!response.isSuccessful || body == null) {
+                Log.w(TAG, "document download failed: HTTP ${response.code()}")
+                return@withContext null
+            }
+
+            // Keep the extension: the viewer picks a renderer from it, and
+            // FileProvider hands it to an external app for anything we cannot
+            // render ourselves.
+            val safeName = fileName.replace(Regex("[^A-Za-z0-9._-]"), "_").takeLast(80)
+            val dir = java.io.File(context.cacheDir, "verification_docs").apply { mkdirs() }
+            val target = java.io.File(dir, "${docId}_$safeName")
+
+            body.byteStream().use { input ->
+                target.outputStream().use { output -> input.copyTo(output) }
+            }
+            target
+        } catch (e: Exception) {
+            Log.w(TAG, "document download error: ${e.message}")
+            null
+        }
+    }
+
     suspend fun decideVerification(
         lawyerId: String,
         status: String,

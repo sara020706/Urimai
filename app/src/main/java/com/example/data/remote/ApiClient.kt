@@ -1,6 +1,7 @@
 package com.example.data.remote
 
 import android.content.Context
+import com.example.BuildConfig
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -8,9 +9,17 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-// Prototype-only base URL. Point this at your deployed backend, or
-// 10.0.2.2 (emulator loopback alias for the host machine) while running locally.
-const val BASE_URL = "http://10.0.2.2:4000/"
+// Set per build type in app/build.gradle.kts, not here. Debug defaults to the
+// emulator's host alias and can be overridden with URIMAI_DEV_API_BASE_URL;
+// release requires URIMAI_API_BASE_URL and rejects anything but https://.
+val BASE_URL: String = BuildConfig.API_BASE_URL.ifEmpty {
+    // An unconfigured release build would otherwise fail later as a confusing
+    // "connection refused" against the empty string. Say what is actually wrong.
+    error(
+        "No API base URL is configured. Build with " +
+            "-PURIMAI_API_BASE_URL=https://your-backend.example.com/"
+    )
+}
 
 object ApiClient {
 
@@ -36,13 +45,21 @@ object ApiClient {
             chain.proceed(request)
         }
 
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
-        }
-
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
-            .addInterceptor(logging)
+            .apply {
+                // Release builds log nothing. Even at BASIC the interceptor
+                // writes every request line to logcat, which on a shared or
+                // rooted device is a readable trace of what a citizen looked
+                // up -- scheme ids, question ids, lawyer ids.
+                if (BuildConfig.HTTP_LOGGING) {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BASIC
+                        }
+                    )
+                }
+            }
             .build()
 
         val moshi = Moshi.Builder().build()

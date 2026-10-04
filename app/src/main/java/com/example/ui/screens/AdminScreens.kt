@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
@@ -33,6 +33,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material.icons.filled.Logout
+import com.example.ui.components.NotificationAction
+import com.example.ui.components.UrimaiLoadingBar
+import com.example.ui.components.UrimaiTopBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +44,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.data.remote.AdminLawyerResponse
@@ -64,19 +70,34 @@ import com.example.ui.theme.EmeraldText
 fun AdminDashboardScreen(
     pendingLawyerCount: Int,
     openReportCount: Int,
+    unreadNotificationCount: Int,
+    isLoading: Boolean,
     onOpenLawyerQueue: () -> Unit,
     onOpenUsers: () -> Unit,
     onOpenReports: () -> Unit,
     onOpenAuditLog: () -> Unit,
-    onBack: () -> Unit
+    onOpenNotifications: () -> Unit,
+    onLogOut: () -> Unit,
+    currentLanguage: com.example.data.model.AppLanguage,
+    onLanguageChange: (com.example.data.model.AppLanguage) -> Unit
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Administration") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+            // No back button: this is a landing screen reached with popUpTo(0),
+            // so back would have popped an empty stack and exited the app.
+            UrimaiTopBar(
+                title = stringResource(R.string.title_administration),
+                actions = {
+                    com.example.ui.components.LanguageSelector(
+                        currentLanguage = currentLanguage,
+                        onLanguageSelected = onLanguageChange
+                    )
+                    NotificationAction(
+                        unreadCount = unreadNotificationCount,
+                        onClick = onOpenNotifications
+                    )
+                    IconButton(onClick = onLogOut) {
+                        Icon(Icons.Filled.Logout, contentDescription = stringResource(R.string.action_log_out))
                     }
                 }
             )
@@ -90,33 +111,36 @@ fun AdminDashboardScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            UrimaiLoadingBar(isLoading)
+
             AdminTile(
-                title = "Lawyer applications",
-                subtitle = if (pendingLawyerCount > 0) {
-                    "$pendingLawyerCount awaiting review"
-                } else {
-                    "Nothing awaiting review"
+                title = stringResource(R.string.title_lawyer_applications),
+                subtitle = when {
+                    isLoading -> "Checking…"
+                    pendingLawyerCount > 0 -> "$pendingLawyerCount awaiting review"
+                    else -> "Nothing awaiting review"
                 },
                 highlight = pendingLawyerCount > 0,
                 onClick = onOpenLawyerQueue
             )
             AdminTile(
-                title = "Reported content",
-                subtitle = if (openReportCount > 0) {
-                    "$openReportCount open report${if (openReportCount == 1) "" else "s"}"
-                } else {
-                    "No open reports"
+                title = stringResource(R.string.title_reported_content),
+                subtitle = when {
+                    isLoading -> "Checking…"
+                    openReportCount > 0 ->
+                        "$openReportCount open report${if (openReportCount == 1) "" else "s"}"
+                    else -> "No open reports"
                 },
                 highlight = openReportCount > 0,
                 onClick = onOpenReports
             )
             AdminTile(
-                title = "Users",
+                title = stringResource(R.string.nav_users),
                 subtitle = "Search, suspend or block accounts",
                 onClick = onOpenUsers
             )
             AdminTile(
-                title = "Audit log",
+                title = stringResource(R.string.title_audit_log),
                 subtitle = "Every administrative action, with who and why",
                 onClick = onOpenAuditLog
             )
@@ -173,10 +197,10 @@ fun LawyerQueueScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Lawyer applications") },
+                title = { Text(stringResource(R.string.title_lawyer_applications)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -255,10 +279,10 @@ fun LawyerApplicationScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Review application") },
+                title = { Text(stringResource(R.string.title_review_application)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -360,7 +384,7 @@ fun LawyerApplicationScreen(
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Approve")
+                Text(stringResource(R.string.action_approve))
             }
             OutlinedButton(
                 onClick = { pendingDecision = "MORE_INFO_REQUESTED" },
@@ -374,7 +398,7 @@ fun LawyerApplicationScreen(
                 enabled = !isSubmitting,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Reject")
+                Text(stringResource(R.string.action_reject))
             }
             if (lawyer.verificationStatus == "VERIFIED") {
                 OutlinedButton(
@@ -455,10 +479,10 @@ private fun DecisionDialog(
                 onClick = { onConfirm(notes.trim().ifBlank { null }) },
                 enabled = canConfirm
             ) {
-                Text("Confirm")
+                Text(stringResource(R.string.action_confirm))
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }
 
@@ -479,10 +503,10 @@ fun AdminUsersScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Users") },
+                title = { Text(stringResource(R.string.nav_users)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -549,17 +573,17 @@ fun AdminUsersScreen(
                                 if (user.accountStatus != "ACTIVE") {
                                     TextButton(onClick = {
                                         onSetStatus(user.id, "ACTIVE", null)
-                                    }) { Text("Reactivate") }
+                                    }) { Text(stringResource(R.string.action_reactivate)) }
                                 }
                                 if (user.accountStatus != "SUSPENDED") {
                                     TextButton(onClick = {
                                         target = user to "SUSPENDED"
-                                    }) { Text("Suspend") }
+                                    }) { Text(stringResource(R.string.action_suspend)) }
                                 }
                                 if (user.accountStatus != "BLOCKED") {
                                     TextButton(onClick = {
                                         target = user to "BLOCKED"
-                                    }) { Text("Block") }
+                                    }) { Text(stringResource(R.string.action_block)) }
                                 }
                             }
                         }
@@ -597,9 +621,9 @@ fun AdminUsersScreen(
                 TextButton(onClick = {
                     onSetStatus(user.id, status, reason.trim().ifBlank { null })
                     target = null
-                }) { Text("Confirm") }
+                }) { Text(stringResource(R.string.action_confirm)) }
             },
-            dismissButton = { TextButton(onClick = { target = null }) { Text("Cancel") } }
+            dismissButton = { TextButton(onClick = { target = null }) { Text(stringResource(R.string.action_cancel)) } }
         )
     }
 }
@@ -611,6 +635,7 @@ fun AdminReportsScreen(
     reports: List<ContentReportResponse>,
     selectedContent: ReportedContentResponse?,
     isLoading: Boolean,
+    onRefresh: () -> Unit = {},
     onOpenReport: (String) -> Unit,
     onResolve: (reportId: String, action: String, note: String?) -> Unit,
     onBack: () -> Unit
@@ -620,22 +645,25 @@ fun AdminReportsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Reported content") },
+                title = { Text(stringResource(R.string.title_reported_content)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         }
     ) { padding ->
-        Column(
+        com.example.ui.components.UrimaiRefreshable(
+            isRefreshing = isLoading,
+            onRefresh = onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (isLoading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             if (reports.isEmpty() && !isLoading) {
                 EmptyState(title = "Nothing reported", body = "The queue is empty.")
             } else {
@@ -709,6 +737,7 @@ fun AdminReportsScreen(
                 }
             }
         }
+        }
     }
 }
 
@@ -723,10 +752,10 @@ fun AdminAuditLogScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Audit log") },
+                title = { Text(stringResource(R.string.title_audit_log)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )

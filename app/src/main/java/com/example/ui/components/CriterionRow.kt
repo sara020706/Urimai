@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -91,7 +92,7 @@ fun CriterionRow(
                         text = criterion.title,
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -119,7 +120,7 @@ fun CriterionRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(SurfaceLight.copy(alpha = 0.8f))
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
                     .padding(10.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -130,14 +131,14 @@ fun CriterionRow(
                     Text(
                         text = "Required:",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryLight,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Medium
                     )
                     Text(
                         text = criterion.requirementDisplay,
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.SemiBold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -148,7 +149,7 @@ fun CriterionRow(
                     Text(
                         text = "Your info:",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryLight,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Medium
                     )
                     Text(
@@ -199,7 +200,7 @@ fun CriterionRow(
                         .padding(top = 4.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    HorizontalDivider(color = BorderLight.copy(alpha = 0.5f))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.Top
@@ -220,13 +221,13 @@ fun CriterionRow(
                             Text(
                                 text = criterion.whyWeAskReason,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondaryLight,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 11.sp
                             )
                             Text(
                                 text = criterion.explanationNote,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TextTertiaryLight,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 11.sp
                             )
                         }

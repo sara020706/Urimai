@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,19 +40,20 @@ fun AuthScreen(
     errorMessage: String?,
     isLoading: Boolean,
     onLogin: (username: String, password: String) -> Unit,
-    onSignUp: (username: String, password: String, displayName: String) -> Unit,
+    onSignUp: (username: String, password: String, displayName: String, role: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var displayName by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var signUpAsLawyer by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(scrollState)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,12 +82,12 @@ fun AuthScreen(
             text = "Urimai",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = CivicNavy900
+            color = MaterialTheme.colorScheme.onSurface
         )
         Text(
             text = if (mode == AuthMode.LOGIN) "Log in to continue" else "Create your account",
             style = MaterialTheme.typography.bodyMedium,
-            color = TextSecondaryLight,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
 
@@ -94,8 +96,8 @@ fun AuthScreen(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-            border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
         ) {
             Column(
                 modifier = Modifier.padding(20.dp),
@@ -142,6 +144,11 @@ fun AuthScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .testTag("auth_display_name_input")
+                    )
+
+                    AccountTypeSelector(
+                        isLawyer = signUpAsLawyer,
+                        onChange = { signUpAsLawyer = it }
                     )
                 }
 
@@ -200,7 +207,12 @@ fun AuthScreen(
                         if (mode == AuthMode.LOGIN) {
                             onLogin(username, password)
                         } else {
-                            onSignUp(username, password, displayName)
+                            onSignUp(
+                                username,
+                                password,
+                                displayName,
+                                if (signUpAsLawyer) "LAWYER" else "USER"
+                            )
                         }
                     },
                     enabled = !isLoading && username.isNotBlank() && password.isNotBlank(),
@@ -251,8 +263,90 @@ fun AuthScreen(
         Text(
             text = "Demo prototype — accounts are stored only on this device.",
             style = MaterialTheme.typography.bodySmall,
-            color = TextTertiaryLight,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
+    }
+}
+
+/**
+ * Choose between a citizen and a legal-specialist account at sign-up.
+ *
+ * Picking "legal specialist" only sets the role. It grants nothing: the account
+ * stays unverified until an administrator reviews the submitted credentials,
+ * and the text says so plainly rather than implying instant access.
+ */
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+private fun AccountTypeSelector(
+    isLawyer: Boolean,
+    onChange: (Boolean) -> Unit
+) {
+    androidx.compose.foundation.layout.Column(
+        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            "I am signing up as",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        AccountTypeOption(
+            title = "A citizen",
+            subtitle = "Find government schemes you may be eligible for.",
+            selected = !isLawyer,
+            onClick = { onChange(false) }
+        )
+        AccountTypeOption(
+            title = "A legal specialist",
+            subtitle = "Answer citizen questions once an administrator has " +
+                "verified your Bar Council credentials.",
+            selected = isLawyer,
+            onClick = { onChange(true) }
+        )
+    }
+}
+
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+private fun AccountTypeOption(
+    title: String,
+    subtitle: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    androidx.compose.material3.Card(
+        onClick = onClick,
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = if (selected) CivicNavy100 else MaterialTheme.colorScheme.surface
+        ),
+        border = if (selected) {
+            androidx.compose.foundation.BorderStroke(1.dp, CivicNavy700)
+        } else {
+            androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        },
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.foundation.layout.Row(
+            modifier = Modifier.padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)
+        ) {
+            androidx.compose.material3.RadioButton(selected = selected, onClick = onClick)
+            androidx.compose.foundation.layout.Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (selected) CivicNavy700 else MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
     }
 }

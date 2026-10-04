@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -84,7 +85,7 @@ fun TrustPill(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .background(CivicNavy50)
-            .border(1.dp, BorderLight, RoundedCornerShape(16.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(16.dp))
             .padding(horizontal = 10.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp)
@@ -117,7 +118,7 @@ fun LanguageSelector(
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))
                 .background(CivicNavy50)
-                .border(1.dp, BorderLight, RoundedCornerShape(20.dp))
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(20.dp))
                 .clickable { expanded = true }
                 .padding(horizontal = 10.dp, vertical = 6.dp)
                 .testTag("language_selector_button"),
@@ -156,7 +157,7 @@ fun LanguageSelector(
                         Text(
                             text = lang.nativeLabel,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                            color = if (isSelected) CivicNavy800 else TextSecondaryLight
+                            color = if (isSelected) CivicNavy800 else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
                     onClick = {
@@ -206,13 +207,13 @@ fun CivicHeader(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(SurfaceVariantLight)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
                         .testTag("back_button")
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = CivicNavy900
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -220,14 +221,14 @@ fun CivicHeader(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
-                    color = CivicNavy900,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
                 if (subtitle != null) {
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryLight
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -246,7 +247,7 @@ fun PrivacyNoticeCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = CivicNavy50),
-        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(BorderLight))
+        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -264,12 +265,12 @@ fun PrivacyNoticeCard(
                     text = "Privacy & Data Protection",
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = CivicNavy900
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = "Your information is used solely to calculate scheme recommendations in this prototype. We never ask for Aadhaar numbers, PAN cards, or passwords.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondaryLight,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp,
                     lineHeight = 15.sp
                 )
@@ -315,7 +316,7 @@ fun HowItWorksBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = SurfaceLight
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
         Column(
             modifier = Modifier
@@ -345,17 +346,17 @@ fun HowItWorksBottomSheet(
                         text = "How Urimai Works",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = CivicNavy900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = "AI-assisted, rule-backed civic intelligence",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondaryLight
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            HorizontalDivider(color = BorderLight)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline)
 
             val steps = listOf(
                 Triple("1. Tell us about yourself", "Provide basic background or describe yourself in simple everyday language.", Icons.Default.Person),
@@ -388,12 +389,12 @@ fun HowItWorksBottomSheet(
                             text = title,
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold,
-                            color = CivicNavy900
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = desc,
                             style = MaterialTheme.typography.bodySmall,
-                            color = TextSecondaryLight
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
