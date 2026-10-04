@@ -24,7 +24,12 @@ const jwt = require('jsonwebtoken');
 
 const JWKS_URL = 'https://www.googleapis.com/oauth2/v3/certs';
 const GOOGLE_ISSUERS = ['https://accounts.google.com', 'accounts.google.com'];
-const JWKS_TIMEOUT_MS = Number(process.env.GOOGLE_JWKS_TIMEOUT_MS || 8000);
+const JWKS_TIMEOUT_MS = Number(process.env.GOOGLE_JWKS_TIMEOUT_MS || 12000);
+// A cold JWKS fetch is the one network call standing between a user and a
+// successful login, and connect timeouts to googleapis.com do happen. One
+// retry costs nothing on the happy path and avoids failing a sign-in over a
+// single blip when no key is cached yet.
+const JWKS_ATTEMPTS = Number(process.env.GOOGLE_JWKS_ATTEMPTS || 2);
 
 class GoogleNotConfigured extends Error {
   constructor() {
@@ -69,23 +74,28 @@ async function fetchJwks(force) {
   const fresh = jwksCache.keys && Date.now() - jwksCache.fetchedAt < JWKS_TTL_MS;
   if (fresh && !force) return jwksCache.keys;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), JWKS_TIMEOUT_MS);
-  try {
-    const response = await fetch(JWKS_URL, { signal: controller.signal });
-    if (!response.ok) throw new Error(`JWKS HTTP ${response.status}`);
-    const body = await response.json();
-    if (!body || !Array.isArray(body.keys)) throw new Error('JWKS payload malformed');
-    jwksCache = { keys: body.keys, fetchedAt: Date.now() };
-    return body.keys;
-  } catch (err) {
-    // A stale key still verifies tokens signed before the rotation, so serving
-    // it beats failing every login while Google is briefly unreachable.
-    if (jwksCache.keys) return jwksCache.keys;
-    throw new GoogleTokenInvalid('Could not reach Google to verify the sign-in.');
-  } finally {
-    clearTimeout(timer);
+  let lastError;
+  for (let attempt = 0; attempt < JWKS_ATTEMPTS; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), JWKS_TIMEOUT_MS);
+    try {
+      const response = await fetch(JWKS_URL, { signal: controller.signal });
+      if (!response.ok) throw new Error(`JWKS HTTP ${response.status}`);
+      const body = await response.json();
+      if (!body || !Array.isArray(body.keys)) throw new Error('JWKS payload malformed');
+      jwksCache = { keys: body.keys, fetchedAt: Date.now() };
+      return body.keys;
+    } catch (err) {
+      lastError = err;
+    } finally {
+      clearTimeout(timer);
+    }
   }
+
+  // A stale key still verifies tokens signed before the rotation, so serving
+  // it beats failing every login while Google is briefly unreachable.
+  if (jwksCache.keys) return jwksCache.keys;
+  throw new GoogleTokenInvalid('Could not reach Google to verify the sign-in.');
 }
 
 async function publicKeyForKid(kid) {
