@@ -426,8 +426,41 @@ Notes:
 );
 
 /** Lets the client decide whether to offer AI features at all. */
-router.get('/status', ...authed, wrap(async (_req, res) => {
-  res.json({ available: gemini.isConfigured(), model: gemini.DEFAULT_MODEL });
+/**
+ * Whether AI assistance actually works, not merely whether a key is set.
+ *
+ * The previous version reported available:true whenever GEMINI_API_KEY was
+ * non-empty, which is how a completely broken integration (every call failing
+ * 503) still looked healthy. `probe=1` performs a real upstream call and, when
+ * the configured model is rejected, reports which models the key CAN use --
+ * the difference between a bad key and a bad model name is otherwise invisible.
+ */
+router.get('/status', ...authed, wrap(async (req, res) => {
+  const configured = gemini.isConfigured();
+  const payload = { available: configured, model: gemini.DEFAULT_MODEL };
+
+  if (!configured || req.query.probe !== '1') {
+    return res.json(payload);
+  }
+
+  try {
+    await gemini.generateContent([{ text: 'Reply with the single word: ok' }], {
+      maxOutputTokens: 16
+    });
+    payload.probe = 'ok';
+  } catch (err) {
+    payload.available = false;
+    payload.probe = 'failed';
+    payload.upstreamStatus = err.upstreamStatus || null;
+    try {
+      payload.usableModels = (await gemini.listModels()).slice(0, 25);
+    } catch (listErr) {
+      // A failure here points at the key itself rather than the model name.
+      payload.usableModels = null;
+      payload.listStatus = listErr.upstreamStatus || null;
+    }
+  }
+  res.json(payload);
 }));
 
 module.exports = router;

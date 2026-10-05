@@ -92,8 +92,23 @@ async function generateContent(parts, options = {}) {
   }
 
   if (!response.ok) {
-    // Never echo the upstream body: it can quote the request, and on an auth
-    // failure it may name the key.
+    // Logged server-side only. The response body still never reaches the
+    // client (it can quote the request, and on an auth failure it may name the
+    // key), but without this an operator sees only a generic 503 and cannot
+    // tell a bad model name from a bad key from a quota block.
+    let detail = '';
+    try {
+      const body = await response.json();
+      detail = (body && body.error && body.error.message) || '';
+    } catch (_) {
+      detail = '';
+    }
+    console.error(
+      '[gemini] upstream %d for model %s: %s',
+      response.status,
+      options.model || DEFAULT_MODEL,
+      String(detail).slice(0, 300)
+    );
     throw new GeminiFailed('The AI service rejected the request.', response.status);
   }
 
@@ -110,6 +125,36 @@ async function generateContent(parts, options = {}) {
   return text;
 }
 
+/**
+ * Which models this API key can actually use.
+ *
+ * Exists because a wrong GEMINI_MODEL and a wrong GEMINI_API_KEY both surface
+ * as the same generic 503, and there is otherwise no way to tell them apart
+ * without the key in hand.
+ */
+async function listModels() {
+  if (!isConfigured()) throw new GeminiNotConfigured();
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models', {
+      headers: { 'x-goog-api-key': String(process.env.GEMINI_API_KEY).trim() },
+      signal: controller.signal
+    });
+    if (!response.ok) {
+      throw new GeminiFailed('Could not list models.', response.status);
+    }
+    const body = await response.json();
+    return (body.models || [])
+      // Only models that can actually serve generateContent.
+      .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
+      .map((m) => String(m.name || '').replace(/^models\//, ''));
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /** Strip markdown fences a model sometimes wraps JSON in, then parse. */
 function parseJsonResponse(raw) {
   const clean = String(raw)
@@ -123,6 +168,7 @@ function parseJsonResponse(raw) {
 
 module.exports = {
   isConfigured,
+  listModels,
   generateContent,
   parseJsonResponse,
   GeminiNotConfigured,
