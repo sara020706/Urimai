@@ -109,4 +109,5 @@
     <string name="legal_help_chat_subtitle">कानून और कानूनी प्रक्रियाओं पर तुरंत उत्तर। सामान्य जानकारी, सलाह नहीं।</string>
     <string name="auth_continue_with_google">Google से जारी रखें</string>
     <string name="auth_or">या</string>
+    <string name="nav_my_questions_short">मेरे प्रश्न</string>
 </resources>

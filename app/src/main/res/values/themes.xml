@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Pinned to the LIGHT device default.
+
+  Theme.DeviceDefault follows the OS dark-mode setting, which meant a phone in
+  dark mode painted the launch window navy before Compose drew anything: a
+  dark flash on every cold start, even though the app itself is light.
+
+  The window background is set explicitly for the same reason. It is what the
+  system shows between the activity starting and the first frame.
+-->
 <resources>
 
-    <style name="Theme.MyApplication" parent="android:Theme.DeviceDefault.NoActionBar" />
+    <style name="Theme.MyApplication" parent="android:Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
 </resources>

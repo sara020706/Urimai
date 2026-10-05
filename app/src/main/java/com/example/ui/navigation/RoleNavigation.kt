@@ -62,11 +62,16 @@ fun citizenTabs(unread: Int): List<NavTab> = listOf(
             UrimaiDestinations.SAVED_SCHEMES
         )
     ),
+    // Legal help opens the AI assistant directly: it answers immediately, at
+    // any hour, and most questions never need a lawyer. The human paths are
+    // children of this tab rather than its entry point -- reachable from the
+    // chat's own actions, and still highlighted as "Legal help" while open.
     NavTab(
-        route = UrimaiDestinations.MY_QUESTIONS,
+        route = UrimaiDestinations.LEGAL_CHAT,
         labelRes = R.string.nav_legal_help,
         icon = Icons.Filled.QuestionAnswer,
         childRoutes = setOf(
+            UrimaiDestinations.MY_QUESTIONS,
             UrimaiDestinations.ASK_QUESTION,
             UrimaiDestinations.QUESTION_DETAIL
         )

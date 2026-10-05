@@ -120,4 +120,5 @@
     <string name="legal_help_chat_subtitle">Instant answers about law and legal processes. General information, not advice.</string>
     <string name="auth_continue_with_google">Continue with Google</string>
     <string name="auth_or">or</string>
+    <string name="nav_my_questions_short">My questions</string>
 </resources>

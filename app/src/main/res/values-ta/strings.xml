@@ -112,4 +112,5 @@
     <string name="legal_help_chat_subtitle">சட்டம் மற்றும் சட்ட நடைமுறைகள் குறித்த உடனடி பதில்கள். பொதுவான தகவல், ஆலோசனை அல்ல.</string>
     <string name="auth_continue_with_google">Google மூலம் தொடரவும்</string>
     <string name="auth_or">அல்லது</string>
+    <string name="nav_my_questions_short">என் கேள்விகள்</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.example
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,7 +23,20 @@ import com.example.viewmodel.UrimaiViewModel
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
+    // Light system bars, forced. The app is pinned to its light palette, so the
+    // status and navigation icons must be dark to stay visible -- a bare
+    // enableEdgeToEdge() takes its icon colour from the OS dark-mode setting
+    // and renders white-on-white on a phone in dark mode.
+    enableEdgeToEdge(
+      statusBarStyle = SystemBarStyle.light(
+        Color.TRANSPARENT,
+        Color.TRANSPARENT
+      ),
+      navigationBarStyle = SystemBarStyle.light(
+        Color.TRANSPARENT,
+        Color.TRANSPARENT
+      )
+    )
     setContent {
       val viewModel: UrimaiViewModel = viewModel()
       val qnaViewModel: QnaViewModel = viewModel()

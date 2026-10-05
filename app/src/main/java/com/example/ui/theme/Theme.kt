@@ -61,12 +61,17 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun MyApplicationTheme(
-    // Screens now resolve their surface and text colours through the scheme
-    // rather than painting light constants directly, so following the system
-    // setting is safe. Semantic colours (pass/caution/fail containers) are
-    // intentionally fixed: they mean something, and both variants were chosen
-    // to read on either background.
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    // Pinned light, deliberately, rather than following isSystemInDarkTheme().
+    //
+    // Urimai is a civic document app: the palette, the status colours and the
+    // printed-form feel were all designed on a light surface, and that is the
+    // product's identity. A phone in system dark mode flipped the whole app to
+    // navy, which is not the intended look.
+    //
+    // DarkColorScheme below is kept and still correct, so passing
+    // darkTheme = true (or restoring isSystemInDarkTheme() here) is all that is
+    // needed to offer dark mode as an explicit user setting later.
+    darkTheme: Boolean = false,
     dynamicColor: Boolean = false, // Use our handcrafted civic theme for consistent branding
     content: @Composable () -> Unit,
 ) {

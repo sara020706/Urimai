@@ -45,6 +45,9 @@ fun LegalChatScreen(
     onRetry: () -> Unit,
     onClear: () -> Unit,
     onAskLawyer: () -> Unit,
+    // The lawyer Q&A moved under this tab, so its inbox has to be reachable
+    // from here or previously-asked questions become unreachable.
+    onViewMyQuestions: () -> Unit,
     onBack: () -> Unit
 ) {
     var input by rememberSaveable { mutableStateOf("") }
@@ -69,6 +72,9 @@ fun LegalChatScreen(
                     }
                 },
                 actions = {
+                    TextButton(onClick = onViewMyQuestions) {
+                        Text(stringResource(R.string.nav_my_questions_short))
+                    }
                     if (messages.isNotEmpty()) {
                         TextButton(onClick = onClear) {
                             Text(stringResource(R.string.action_new_chat))

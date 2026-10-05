@@ -815,6 +815,10 @@ fun UrimaiApp(
                 onAskLawyer = {
                     navController.navigate(UrimaiDestinations.ASK_QUESTION)
                 },
+                onViewMyQuestions = {
+                    qnaViewModel.loadMyQuestions()
+                    navController.navigate(UrimaiDestinations.MY_QUESTIONS)
+                },
                 onBack = { navController.popBackStack() }
             )
         }

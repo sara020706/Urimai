@@ -10,6 +10,13 @@ plugins {
 // with -PURIMAI_DEV_API_BASE_URL (debug) or -PURIMAI_API_BASE_URL (release).
 val DEPLOYED_API_BASE_URL = "https://backend-delta-red-60.vercel.app/"
 
+// Google OAuth *web* client id. Public by design -- it ships inside every APK
+// and identifies the app to Google; it is not a secret. The client *secret* is
+// deliberately not here and is not needed: ID tokens are verified against
+// Google's public keys.
+val DEFAULT_GOOGLE_CLIENT_ID =
+  "509413302467-s83kd3r3m0h6v7jed00dfjniur0cmk4e.apps.googleusercontent.com"
+
 android {
   namespace = "com.example"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
@@ -25,11 +32,15 @@ android {
 
     // The Google WEB client id (not the Android one): Credential Manager
     // returns a token audienced to the web client, and the backend checks that
-    // audience. Empty is a supported state -- the app simply hides the Google
-    // button rather than showing one that cannot work.
+    // audience.
+    //
+    // Defaulted rather than left empty. An empty value builds fine and fails
+    // only on the device, as NoCredentialException surfaced to the user as
+    // "No Google account was found" -- which blames their phone for a missing
+    // build flag. Override with -PURIMAI_GOOGLE_CLIENT_ID=... if needed.
     val googleClientId = providers.gradleProperty("URIMAI_GOOGLE_CLIENT_ID")
       .orElse(providers.environmentVariable("URIMAI_GOOGLE_CLIENT_ID"))
-      .getOrElse("")
+      .getOrElse(DEFAULT_GOOGLE_CLIENT_ID)
     buildConfigField("String", "GOOGLE_CLIENT_ID", "\"$googleClientId\"")
   }
 
