@@ -15,7 +15,7 @@ val DEPLOYED_API_BASE_URL = "https://backend-delta-red-60.vercel.app/"
 // deliberately not here and is not needed: ID tokens are verified against
 // Google's public keys.
 val DEFAULT_GOOGLE_CLIENT_ID =
-  "509413302467-s83kd3r3m0h6v7jed00dfjniur0cmk4e.apps.googleusercontent.com"
+  "93894774666-bmnms1pnof728s7ape1bhs51mrmn0kek.apps.googleusercontent.com"
 
 android {
   namespace = "com.example"
